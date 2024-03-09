@@ -1,0 +1,75 @@
+.SideBar_box {
+    padding: 2rem;
+    border-bottom: 1px solid var(--icons-color);
+    background-color: var(--main-bg-color);
+}
+
+.SideBar_closeBtn {
+    position: absolute;
+    top: 3rem;
+    right: 2rem;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+
+.SideBar_closeBtn:hover{
+    transform: rotate(45deg);
+}
+
+.SideBar_box p {
+    margin-top: 1rem;
+}
+
+.SideBar_social {
+    display: flex;
+    gap: 1rem;
+    font-size: 1rem;
+    align-items: center;
+}
+
+.SideBar_social a {
+    padding: .2rem;
+    border-radius: 50%;
+    transition: all .3s ease-in;
+    display: grid;
+    text-decoration: none;
+    color: black;
+}
+
+.SideBar_social a:hover {
+    background-color: var(--icons-color);
+    color: var(--shadow-dark-color);
+    box-shadow: 1px solid var(--icons-color);
+}
+
+.SideBar_menu {
+    padding: 2rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 1px solid var(--icons-color);
+}
+
+.SideBar_menu_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.SideBar_discover {
+    padding-inline: 1rem;
+}
+.SideBar_discover a{
+    text-decoration: none;
+    color: black;
+}
+.SideBar_discover p:hover {
+    background-color: var(--icons-color);
+}
+.SideBar_button {
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

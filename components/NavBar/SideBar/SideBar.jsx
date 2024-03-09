@@ -1,11 +1,12 @@
 import React , {useState}from 'react'
 import Link from 'next/link'
 import {GrClose} from 'react-icons/gr'
+import Image from 'next/image';
 
 import {TiSocialFacebook, TiSocialLinkedin, TiSocialTwitter, TiSocialYoutube, TiSocialInstagram, TiArrowSortedDown, TiArrowSortedUp} from 'react-icons/ti';
 // INTERNAL INPUT
 import Style from './SideBar.module.css';
-import images from '../../../img';
+import images from "../../../img";
 import Button from '../../Button/Button';
 const SideBar = ({setOpenSideMenu}) => {
   const [openDiscover, setOpenDiscover] = useState(false);
@@ -78,7 +79,7 @@ const SideBar = ({setOpenSideMenu}) => {
     }
   };
   const openHelpMenu = () => {
-    if(!openHelpMenu){
+    if(!openHelp){
       setopenHelp(true)
     }else{
       setopenHelp(false)
@@ -92,9 +93,9 @@ const SideBar = ({setOpenSideMenu}) => {
       <GrClose className={Style.SideBar_closeBtn} onClick={() => closeSideBar()} />
 
       <div className={Style.SideBar_box}>
-      <image src={images.logo} alt= "logo"
-       with={150} 
-       height={150}/>
+        <Image src={images.logo} alt= "logo"
+        with={50} 
+        height={50}/>
        <p>Discover the most ourstanding articles on all topices of NFT  </p>
        <div className={Style.SideBar_social}>
         <a href="#">
@@ -123,8 +124,8 @@ const SideBar = ({setOpenSideMenu}) => {
       <div className={Style.SideBar_menu}>
         <div>
           <div className={Style.SideBar_menu_box} 
-          onclick={() => openDiscoverMenu() }>
-            <p>Discover</p>  
+          onClick={() => openDiscoverMenu() }>
+            <p>DISCOVER</p>  
             <TiArrowSortedDown/>  
           </div>
           {
@@ -140,8 +141,8 @@ const SideBar = ({setOpenSideMenu}) => {
           }
         </div>
         <div>
-          <div className={Style.SideBar_menu_box} onclick={() => openHelpMenu()}>
-            <p>Help Center</p>
+          <div className={Style.SideBar_menu_box} onClick={() => openHelpMenu()}>
+            <p>HELP CENTER</p>
             <TiArrowSortedDown/>
           </div>
           {openHelp && (
@@ -156,8 +157,8 @@ const SideBar = ({setOpenSideMenu}) => {
         </div>
       </div>
       <div className={Style.SideBar_button}>
-          <Button btnName = "Create"/>
-          <Button btnName = "Connect Wallet"/>
+          <Button btnName = "Create" handleClick={() => {}}/>
+          <Button btnName = "Connect Wallet" handleClick={() => {}}/>
       </div>
     </div>
   )

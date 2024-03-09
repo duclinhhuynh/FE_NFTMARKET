@@ -1,7 +1,19 @@
-.box {
-
-}
-.helpCenter {
+.helpCenter a{
     text-decoration: none;
     color: black;
+    position: absolute;
+}
+
+.helpCenter {
+    padding: .8rem 1rem;
+    transition: all .3s ease-in;
+    z-index: 222222222;
+    display: flex;
+    align-items: center;
+}
+
+.helpCenter:hover {
+    background-color: var(--icons-color);
+    color: var(--shadow-dark-color);
+    border-radius: .3rem;
 }

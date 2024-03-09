@@ -7,7 +7,7 @@ import {BsSearch} from 'react-icons/bs';
 import {CgMenuLeft, CgMenuRight} from 'react-icons/cg';
 
 //INTERNAL IMPORT
-import { Style } from './Navbar.module.css';
+import Style from './Navbar.module.css';
 // Example in NavBar.js
 import { Discover, HelpCenter, Notification, Profile, Sidebar } from './index';
 import {Button} from "../componentsindex"
@@ -33,7 +33,7 @@ const NavBar = () => {
       setNotification(false);
       setProfile(false);
     }else {
-      setDiscover(false);
+      setDiscover(false); 
       setHelp(false);
       setNotification(false);
       setProfile(false);
@@ -55,7 +55,7 @@ const NavBar = () => {
   const openProfile = () => {
     if(!profile){
       setProfile(true)
-      setHelp(true)
+      setHelp(false)
       setDiscover(false)
       setNotification(false)
     }else {
@@ -76,14 +76,14 @@ const NavBar = () => {
         <div className={Style.navbar_container_left}>
           <div className={Style.logo}>
             <Image src={images.logo} alt='NFT Marketplace'
-              width={100}
-              height={100}
+              width={50}
+              height={50}
             />
           </div>
           <div className={Style.navbar_container_left_box_input}>
             <div className={Style.navbar_container_left_box_input_box}>
               <input type="text" placeholder='Search'/>
-              <BsSearch onClick={() =>{}} className = {Style.search_con} />
+              <BsSearch onClick={() =>{}} className = {Style.search_icon} />
             </div>
           </div>
         </div>
@@ -116,7 +116,7 @@ const NavBar = () => {
             </div>
             {/* CREATE BUTTON SECTION */}
             <div className={Style.navbar_container_right_button}>
-              <Button btnText="Create"/>
+              <Button btnName="Create" handleClick={() =>{}}/>
             </div>
             {/* USER PROFILE */}
             <div className={Style.navbar_container_right_profile_box}>
@@ -140,7 +140,7 @@ const NavBar = () => {
       </div>
       {/* SIDBAR COMPONENT */}
       {openSideMenu && (
-        <div className={Style.Sidebar}>
+        <div className={Style.sideBar}>
           <Sidebar setOpenSideMenu = {setOpenSideMenu} />
         </div>
       )}
