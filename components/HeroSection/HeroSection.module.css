@@ -47,7 +47,7 @@
     }
 }
 
-@media screen and (max-width: 45em) {
+@media screen and (max-width: 50em) {
     .heroSection_box {
         width: 80%;
         flex-direction: column;
