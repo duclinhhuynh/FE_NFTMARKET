@@ -108,7 +108,7 @@ const BigNFTSlider = () => {
                         <div className={Style.bigNFTSlider_box_left_creator_profile_info}>
                             <p>Creator</p>
                             <h4>{sliderData[idNumber].name} 
-                            <span><MdVerified/></span>
+                            <span>&nbsp;<MdVerified/></span>
                             </h4>
                         </div>
                         <div className={Style.bigNFTSlider_box_left_creator_collection}>
@@ -175,8 +175,8 @@ const BigNFTSlider = () => {
                 <div className={Style.bigNFTSlider_box_right_box}>
                     <Image className={Style.bigNFTSlider_box_right_box_img}
                      src={sliderData[idNumber].nftImage} alt="NFT IMAGE"
-                     width={800}
-                     height={600}
+                     width={900}
+                     height={630}
                      />
                     <div className={Style.bigNFTSlider_box_right_box_like}>
                         <AiFillHeart/>

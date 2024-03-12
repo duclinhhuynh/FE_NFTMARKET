@@ -10,7 +10,7 @@
 
 .bigNFTSlider_box_left {
     grid-column: 1 / 7;
-    grid-row: 1 /-1;
+    grid-row: 1 / -1;
     background-color: var(--main-bg-color);
     box-shadow: var(--box-shadow-2);
     border-radius: 1rem;
@@ -63,6 +63,11 @@
     margin-bottom: -.7rem;
     margin-top: 1rem;
 }
+
+.bigNFTSlider_box_left_creator_profile_info h4 {
+    display: flex;
+    align-items: center;
+}
 .bigNFTSlider_box_left_creator 
 .bigNFTSlider_box_left_creator_collection {
     display: flex;
@@ -71,7 +76,11 @@
 }
 
 .bigNFTSlider_box_left_creator_icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 4rem;
+    /* margin-right: 1rem; Adjust the value as needed */
 }
 
 .bigNFTSlider_box_left_creator_collection_info {
@@ -82,6 +91,7 @@
     justify-content: center;
 }
 .bigNFTSlider_box_left_bidding_box {
+    width: 100%;
     border: 3px solid var(--shadow-dark-color);
     margin-block: 2rem;
     padding: 0 4rem;
@@ -95,11 +105,11 @@
 
 .bigNFTSlider_box_left_bidding_box small {
     background-color: var(--shadow-dark-color);
-    padding: 1rem 2rem;
+    padding: 0.78rem 2rem;
     border-radius: .5rem;
     font-weight: 600;
     margin-top: -1rem;
-    display: block;
+    /* display: block; */
 }
 .bigNFTSlider_box_left_bidding_box p {
     display: flex;
@@ -107,7 +117,7 @@
     justify-content: center;
 }
 .bigNFTSlider_box_left_bidding_box_icon {
-    font-size: 1rem;
+    font-size: 2rem;
 }
 
 .bigNFTSlider_box_left_bidding_box_timer_item {
@@ -175,13 +185,14 @@
 
 .bigNFTSlider_box_right_box_like{
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 3rem;
+    right: 3rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 1.2rem;
-    background-color: var(--icon-color);
+    background-color: var(--shadow-dark-color);
+    border-radius: 2rem;
     color: red;
     padding: 0.5rem 1rem;
 }
@@ -210,7 +221,7 @@
     }
     .bigNFTSlider_box_left_creator {
         gap: 1rem;
-        /* grid-template-columns: 1.3fr 1fr; */
+        grid-template-columns: 1.3fr 1fr;
     }
     .bigNFTSlider_box_left_creator_profile_info {
         font-size: .8rem;
