@@ -7,6 +7,7 @@ import nft_image_2 from "./nft_image_2.webp"
 import nft_image_3 from "./nft_image_3.webp"
 import nft_image_4 from "./nft_image_4.jpg"
 import update from "./update.png"
+import category from "./category.jpg"
 
 export default {
     user1, 
@@ -17,6 +18,6 @@ export default {
     nft_image_2,
     nft_image_3,
     nft_image_4,
-    update
-
+    update,
+    category
 }
