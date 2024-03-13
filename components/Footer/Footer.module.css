@@ -72,6 +72,13 @@
     padding: 1rem 2rem;
 }
 /* //MEDIA QUERY */
+
+@media screen  and (max-width: 1024px){
+    .footer_box {
+        width:90%;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 @media screen  and (max-width: 45em){
     .footer_box {
         width:90%;

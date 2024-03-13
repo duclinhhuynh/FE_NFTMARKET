@@ -5,7 +5,7 @@ import {BsCircleFill} from 'react-icons/bs'
 import Style from "./Category.module.css"
 import images from '../../img';
 const Category = () => {
-    const CategoryArray = [1, 2, 3, 4, 5, 6];
+    const CategoryArray = [1, 2, 3, 4, 5];
   return (
     <div className={Style.box_category}>
         <div className={Style.category}>
