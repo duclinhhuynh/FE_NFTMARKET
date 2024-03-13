@@ -1,6 +1,6 @@
 import React from 'react';
 import Style from '../styles/index.module.css';
-import { HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter} from '../components/componentsindex';
+import { HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard} from '../components/componentsindex';
 
 const Home = () => {
   return (
@@ -10,6 +10,7 @@ const Home = () => {
       <BigNFTSlider/>
       <Title heading="Featured NFTs" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Filter/>
+      <NFTCard/>
       <Title heading="Browse by category" paragraph="Explore the NFTs in the most featured categories. "/>
       <Category/>
       <Subscribe/>

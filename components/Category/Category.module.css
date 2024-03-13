@@ -30,7 +30,7 @@
 .category_box_title {
     display: flex;
     align-items: center;
-    /* padding: 1rem; */
+    padding: .5rem;
     gap: .5rem;
 }
 
