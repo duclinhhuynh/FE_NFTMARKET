@@ -49,7 +49,7 @@
 
 @media screen and (max-width: 50em) {
     .heroSection_box {
-        width: 80%;
+        width: 100%;
         flex-direction: column;
     }
     .heroSection_box_left h1 {

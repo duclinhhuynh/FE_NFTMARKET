@@ -26,7 +26,7 @@
 .bigNFTSlider_box_right {
     grid-column: 6 / -1;
     grid-row: 1 / -1; 
-    padding: 1rem;
+    /* padding: 1rem; */
     background-color: var(--main-bg-color);
     border-radius: 2.5rem;
     box-shadow: var(--main-bg-color);
@@ -40,8 +40,7 @@
 /* CREATOR SECTION */
 
 .bigNFTSlider_box_left_creator {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
     align-items: center;
 }
 
@@ -60,8 +59,8 @@
 }
 
 .bigNFTSlider_box_left_creator_profile_info p{
-    margin-bottom: -.7rem;
-    margin-top: 1rem;
+    margin-bottom: -.5rem;
+    padding-top: .5rem;
 }
 
 .bigNFTSlider_box_left_creator_profile_info h4 {
@@ -109,7 +108,6 @@
     border-radius: .5rem;
     font-weight: 600;
     margin-top: -1rem;
-    /* display: block; */
 }
 .bigNFTSlider_box_left_bidding_box p {
     display: flex;
@@ -117,7 +115,7 @@
     justify-content: center;
 }
 .bigNFTSlider_box_left_bidding_box_icon {
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 .bigNFTSlider_box_left_bidding_box_timer_item {
@@ -132,12 +130,11 @@
     justify-content: space-around; /* Adjust as needed */
     gap: 1rem; /* Adjust as needed */
     text-align: center;
-    padding: 1rem 0rem  3rem 0;
     border-bottom: 1px solid var(--shadow-dark-color);
 }
 
 .bigNFTSlider_box_left_bidding_box_timer_item p {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 900;
     line-height: 0;
 }
@@ -200,7 +197,8 @@
 
 @media screen and (max-width: 65em){
     .bigNFTSlider_box{
-        width: 90%;
+        width: 95%;
+
         /* padding-top: 28rem; */
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -215,6 +213,10 @@
     
     .bigNFTSlider_box_right {
         /* margin: -70rem; */
+    }
+    .bigNFTSlider_box_right_box_like {
+        top: 1.5rem;
+        right: 1.5rem;
     }
     .bigNFTSlider_box_right_box_img{
         height: auto;
@@ -236,6 +238,9 @@
         font-size: .8rem;
     }
 
+    .bigNFTSlider_box_left_bidding_box small {
+        display: block;
+    }
     .bigNFTSlider_box_left_bidding_box_icon {
         font-size: 1rem;
     }

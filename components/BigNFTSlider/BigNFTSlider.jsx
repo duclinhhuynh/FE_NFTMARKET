@@ -7,8 +7,11 @@ import {TbArrowBigLeftLines, TbArrowBigRight, TbArrowBigRightLine} from 'react-i
 import Style from "./BigNFTSlider.module.css"
 import images from '../../img'
 import Button from "../Button/Button"
-
+// axios
+import axios from 'axios';
+import { fetchPrice } from '../../api/api';
 const BigNFTSlider = () => {
+    const [ethPrice, setEthPrice] = useState(null);
     const [idNumber, setIdNumber] = useState(1);
     const sliderData = [
         {
@@ -90,7 +93,18 @@ const BigNFTSlider = () => {
         }
     }, [idNumber]);
 
-
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetchPrice();
+                setEthPrice(response.ethereum.usd);
+            } catch (error) {
+                console.error('Error fetching ETH price:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
 
   return (
     <div className={Style.bigNFTSlider}>
@@ -125,7 +139,7 @@ const BigNFTSlider = () => {
                     <div className={Style.bigNFTSlider_box_left_bidding_box}>
                         <small>Current Bid</small>
                         <p className={Style.bigNFTSlider_box_left_bidding_box_icon}>{sliderData[idNumber].price} <span
-                        >&nbsp;&nbsp; $221,1</span></p>
+                        >&nbsp;&nbsp; ${ethPrice && (ethPrice * parseFloat(sliderData[idNumber].price.split(' ')[0])).toFixed(2)}</span></p>
                     </div>
                 </div>
                 <p className={Style.bigNFTSlider_box_left_bidding_box_auction}>
@@ -146,10 +160,6 @@ const BigNFTSlider = () => {
                     <div className={Style.bigNFTSlider_box_left_bidding_box_timer_item}>
                         <p>{sliderData[idNumber].time.minutes}</p>
                         <span>minutes</span>
-                    </div>
-                    <div className={Style.bigNFTSlider_box_left_bidding_box_timer_item}>
-                        <p>{sliderData[idNumber].time.minutes}</p>
-                        <span>Hours</span>
                     </div>
                     <div className={Style.bigNFTSlider_box_left_bidding_box_timer_item}>
                         <p>{sliderData[idNumber].time.seconds}</p>
