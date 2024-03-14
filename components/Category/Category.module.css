@@ -40,13 +40,13 @@
 }
 
 
-@media screen and (min-device-width:320px ) and (max-device-width:425px){
+@media screen and (min-device-width:320px ) and (max-device-width:430px){
     .category {
         grid-template-columns: 1fr;
     }
 }
 
-@media screen and (min-device-width:427px ) and (max-device-width:770px){
+@media screen and (min-device-width:432px ) and (max-device-width:770px){
     .category {
         grid-template-columns: repeat(2,1fr);
     }
