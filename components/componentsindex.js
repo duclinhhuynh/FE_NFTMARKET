@@ -10,4 +10,5 @@ import Category from "./Category/Category";
 import Filter from "./Filter/Filter";
 import NFTCard from "./NFTCard/NFTCard";
 import Collection from "./Collection/Collection";
-export { Button, Footer, NavBar, HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection};
+import FollowerTab from "./FollowerTab/FollowerTab";
+export { Button, Footer, NavBar, HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection, FollowerTab};

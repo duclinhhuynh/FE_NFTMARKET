@@ -82,7 +82,7 @@ const Collection = () => {
                 </div>
             )
         }
-    </div>
+        </div>
   );
 }
 

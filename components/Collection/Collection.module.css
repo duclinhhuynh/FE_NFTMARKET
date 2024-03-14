@@ -5,6 +5,7 @@
 }
 .collection_box {
     width: 80%;
+    margin: 0 auto;
 }
 
 .collection_title {
@@ -80,6 +81,7 @@
 }
 @media screen and (min-device-width:432px ) and (max-device-width:770px){
     .collection_box {
+        width: 100%;
         grid-template-columns: repeat(2,1fr);
     }
 }
@@ -89,7 +91,7 @@
     } */
 
     .collection_box {
-        width: 90%;
+        width: 95%;
         grid-template-columns: repeat(3,1fr);
         
     }

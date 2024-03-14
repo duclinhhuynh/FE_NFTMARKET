@@ -13,25 +13,25 @@ const DaysComponents = () => {
                     className={Style.daysComponent_box_img_img}
                     alt='profile background'
                     width={400}
-                    height={400}
-                    // objectFit='covers'
+                    height={200}
+                    objectFit='covers'
                 />
             </div>
             <div className={Style.daysComponent_box_profile}>
                 <Image src={images.update}
-                    width={100}
+                    width={200}
                     height={100}
                     className={Style.daysComponent_box_img_1}
                     objectFit='covers'
                 />
                 <Image src={images.update}
-                    width={100}
+                    width={200}
                     height={100}
                     className={Style.daysComponent_box_img_2}
                     objectFit='covers'
                 />
                  <Image src={images.update}
-                    width={100}
+                    width={200}
                     height={100}
                     className={Style.daysComponent_box_img_3}
                     objectFit='covers'
@@ -40,7 +40,7 @@ const DaysComponents = () => {
             <div className={Style.daysComponent_box_title}>
                 <h2>Amazing Collection</h2>
                 <div className={Style.daysComponent_box_title_info}>
-                    <div className={Style.daysComponent_box_title_info_profile}>
+                    <div className={Style.daysComponent_box_title_info_profile} >
                         <Image src={images.user1} alt='profile'
                             width={30}
                             height={30}
