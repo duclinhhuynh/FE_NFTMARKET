@@ -3,10 +3,11 @@ import Image from 'next/image'
 import Style from './FollowerTabCard.module.css'
 import images from '../../../img'
 import {MdVerified} from 'react-icons/md'
+import {TiTick} from 'react-icons/ti'
 const FollowerTabCard = ({i, el}) => {
     const [following, setFollowing] = useState(false)
     const followMe = () => {
-        if(!followMe){
+        if(!following){
             setFollowing(true);
         }else{
             setFollowing(false);
@@ -31,8 +32,8 @@ const FollowerTabCard = ({i, el}) => {
             </div>
             <div className={Style.FollowerTabCard_box_profile}>
                 <Image className={Style.FollowerTabCard_box_profile_img} alt='picture'
-                   width={70} 
-                   height={70}
+                   width={50} 
+                   height={50}
                    src={images.user1}
                    objectFit='cover'
                 />
@@ -46,8 +47,9 @@ const FollowerTabCard = ({i, el}) => {
                  </div>
                  <div className={Style.FollowerTabCard_box_info_following}>
                     {following ? (
-                        <a href="" onClick={() => followMe()}>
-                            Follow{""} <span><TiTick/></span>
+                        <a onClick={() => followMe()}>
+                            Follow{""}{" "} 
+                            <span><TiTick/></span>
                         </a>
                     ) : (
                         <a onClick={() => followMe()}>

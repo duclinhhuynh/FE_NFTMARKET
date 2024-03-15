@@ -8,6 +8,12 @@ import nft_image_3 from "./nft_image_3.webp"
 import nft_image_4 from "./nft_image_4.jpg"
 import update from "./update.png"
 import category from "./category.jpg"
+import music from "./musice.png"
+import music1 from "./musice1.webp"
+import music2 from "./music1.gif"
+import mac from "./mac.gif"
+import NFT_follow from "./nft_ms.png"
+
 
 export default {
     user1, 
@@ -19,5 +25,10 @@ export default {
     nft_image_3,
     nft_image_4,
     update,
-    category
+    category,
+    music,
+    music1,
+    music2,
+    mac,
+    NFT_follow
 }

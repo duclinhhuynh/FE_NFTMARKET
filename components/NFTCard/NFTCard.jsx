@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 import {BsImages} from 'react-icons/bs'
 import Image from 'next/image'
 // IMPORT 
 import images from '../../img'
 import Style from "./NFTCard.module.css"
+import { fetchPrice } from '../../api/api'
 const NFTCard = () => {
     const featureArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     const [like, setLike] = useState(true)
+     const [ethPrices, setEthPrices] = useState(null);
     const likeNft = () => {
         if(!like){
             setLike(true)
@@ -15,6 +17,18 @@ const NFTCard = () => {
             setLike(false)
         }
     }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetchPrice();
+                setEthPrices(response.ethereum.usd);
+            } catch (error) {
+                console.error('Error fetching ETH price:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
     return (
         <div className={Style.NFTCard}>
             {featureArray.map((el, i) => (
@@ -52,7 +66,9 @@ const NFTCard = () => {
                                 <div className={Style.NFTCard_box_update_details_price_box_box}>
                                     <div className={Style.NFTCard_box_update_details_price_box_bid}>
                                         <small>Current Bid</small>
-                                        <p>1.000ETH</p>
+                                        <p>2ETH<span>&nbsp;&nbsp;$
+                                                {ethPrices &&
+                                                    (ethPrices * 2).toFixed(0)}</span></p>
                                     </div>
                                     <div className={Style.NFTCard_box_update_details_price_box_stock}>
                                         <small>61 in stock </small>

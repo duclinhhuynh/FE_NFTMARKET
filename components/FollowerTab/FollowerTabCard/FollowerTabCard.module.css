@@ -46,7 +46,7 @@
 
 .FollowerTabCard_box_profile_img {
     border-radius: 50%;
-    padding: .8rem;
+    padding: .4rem;
     background-color: var(--main-bg-color);
     z-index: 1;
     /* margin: 1rem; */

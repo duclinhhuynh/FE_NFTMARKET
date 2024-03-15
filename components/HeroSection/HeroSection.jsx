@@ -9,7 +9,7 @@ const HeroSection = () => {
     <div className={Style.heroSection}>
         <div className={Style.heroSection_box}>
             <div className={Style.heroSection_box_left}>
-                <h1>Discover, collect, and sell</h1>
+                <h1>Discover, collect, and sell NFTs 🖼</h1>
                 <p>A place with endless fun and the most engaging community</p>
                 <Button btnName='Start your search'></Button>
             </div>
