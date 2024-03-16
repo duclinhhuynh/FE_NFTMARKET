@@ -13,6 +13,10 @@ import music1 from "./musice1.webp"
 import music2 from "./music1.gif"
 import mac from "./mac.gif"
 import NFT_follow from "./nft_ms.png"
+import user2 from  "./user2.png"
+import user3 from  "./user3.png"
+import user4 from  "./user4.png"
+import user5 from  "./user5.png"
 
 
 export default {
@@ -30,5 +34,9 @@ export default {
     music1,
     music2,
     mac,
-    NFT_follow
+    NFT_follow,
+    user2,
+    user3,
+    user4,
+    user5
 }

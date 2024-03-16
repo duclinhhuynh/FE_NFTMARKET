@@ -4,10 +4,12 @@
     grid-template-rows: repeat(4, 6rem);
     /* gap:  1rem; */
     overflow: hidden;
+    transform: all .3s ease-in;
     border-radius: 2rem;
+}
+.audioCard_box:hover {
     box-shadow: var(--box-shadow);
 }
-
 .audioCard_box_like_time {
     grid-column: 1 / -1;
     grid-row: 1 / 2;

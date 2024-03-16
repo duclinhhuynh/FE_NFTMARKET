@@ -1,6 +1,7 @@
 .audioPlayer_box {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    /* justify-content: space-between; */
+    grid-template-columns: 2fr 5fr 1fr;
     align-items: center;
     gap: 1.3rem;
     line-height: 0;
@@ -44,4 +45,10 @@
     background-color: var(--main-bg-color);
     border-radius: 50%;
     margin-left: auto;
+}
+
+.audioPlayer_box_like_box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
