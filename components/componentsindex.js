@@ -13,4 +13,6 @@ import Collection from "./Collection/Collection";
 import FollowerTab from "./FollowerTab/FollowerTab";
 import AudioLive from "./AudioLive/AudioLive";
 import LikeProfile from "./LikeProfile/LikeProfile";
-export { Button, Footer, NavBar, HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection, FollowerTab, AudioLive, LikeProfile};
+import Slider from "./Slider/Slider";
+import Brand from "./Brand/Brand"
+export { Button, Footer, NavBar, HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection, FollowerTab, AudioLive, LikeProfile, Slider, Brand};

@@ -94,7 +94,7 @@
     }
 
     .followerTab_title h2 {
-        font-size: .7rem;
+        font-size: 2rem;
     }
 
     .followerTab_member_box {
@@ -107,7 +107,7 @@
     }
 
     .followerTab_tabs_btn button {
-        font-size: 1rem;
+        font-size: .7rem;
     }
 }
 @media screen and (min-device-width: 432px) and (max-device-width: 768px) {
