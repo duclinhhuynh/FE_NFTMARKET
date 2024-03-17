@@ -8,7 +8,7 @@ const Service = () => {
     <div className={Style.service}>
         <div className={Style.service_box}>
             <div className={Style.service_box_item}>
-                <Image src={images.service1} alt='Fillter & discover' width={100} height={100}/>
+                <Image src={images.filter} alt='Fillter & discover' width={100} height={100}/>
                 <p className={Style.service_box_item_step}>
                     <span>step1</span>
                 </p>
@@ -19,7 +19,7 @@ const Service = () => {
 
             </div>
             <div className={Style.service_box_item}>
-                <Image src={images.service1} alt='Fillter & discover' width={100} height={100}/>
+                <Image src={images.connect} alt='Fillter & discover' width={100} height={100}/>
                 <p className={Style.service_box_item_step}>
                     <span>step1</span>
                 </p>
@@ -30,7 +30,7 @@ const Service = () => {
 
             </div>
             <div className={Style.service_box_item}>
-                <Image src={images.service1} alt='Connect Wallet' width={100} height={100}/>
+                <Image src={images.earn} alt='Connect Wallet' width={100} height={100}/>
                 <p className={Style.service_box_item_step}>
                     <span>step1</span>
                 </p>
@@ -41,7 +41,7 @@ const Service = () => {
 
             </div>
             <div className={Style.service_box_item}>
-                <Image src={images.service1} alt='Fillter & discover' width={100} height={100}/>
+                <Image src={images.trading} alt='Fillter & discover' width={100} height={100}/>
                 <p className={Style.service_box_item_step}>
                     <span>step1</span>
                 </p>

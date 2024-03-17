@@ -9,8 +9,10 @@ const Brand = () => {
         <div className={Style.Brand_box}>
             <div className={Style.Brand_box_left}>
                 <Image src={images.logo} alt='brand logo'
-                    width={100}
-                    height={100}
+                    width={50}
+                    height={50}
+                    objectFit='cover'
+                    className={Style.Brand_box_left_img}
                 />
                 <h1>Earn free crypto with carv</h1>
                 <p>A creative agency that lead and inspire</p>
@@ -20,9 +22,11 @@ const Brand = () => {
                 </div>
             </div>
             <div className={Style.Brand_box_right}>
-                <Image src={images.hero} alt="brand logo"
+                <Image src={images.brand} alt="brand logo"
                     width={800}
                     height={600}
+                    objectFit='cover'
+                    className={Style.Brand_box_right_img}
                 />
             </div>
             <div className={Style.Brand_box_right}>
