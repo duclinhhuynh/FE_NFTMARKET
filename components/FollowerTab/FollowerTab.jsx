@@ -4,10 +4,93 @@ import {RiUserFollowFill, RiUserUnfollowFill, RiAwardLine}  from 'react-icons/ri
 //INTERNAL IMPORT
 import Style from "./FollowerTab.module.css"
 import FollowerTabCard from './FollowerTabCard/FollowerTabCard'
+import images from '../../img';
 const Follower = () => {
-  const CardArray = [1, 2, 3, 4];
-  const FollowingArray = [1, 2, 3, 4, 5, 6, 7 , 8];
-  const NewsArray = [1, 2, 3, 4, 5];
+  const CardArray = [
+    {
+      background: images.create2,
+      user: images.user2,
+    },
+    {
+      background: images.create7,
+      user: images.user5,
+    },
+    {
+      background: images.create1,
+      user: images.user1,
+    },
+    {
+      background: images.create5,
+      user: images.user5,
+    },
+    {
+      background: images.create6,
+      user: images.user1,
+    },{
+      background: images.create4,
+      user: images.user4,
+    }
+    ,{
+      background: images.create3,
+      user: images.user3,
+    }
+  ];
+  const FollowingArray = [
+  {
+    background: images.create1,
+    user: images.user1,
+  },
+  {
+    background: images.create5,
+    user: images.user5,
+  },
+  {
+    background: images.create6,
+    user: images.user3,
+  },{
+    background: images.create4,
+    user: images.user4,
+  },
+  {
+    background: images.create2,
+    user: images.user2,
+  },
+  {
+    background: images.create2,
+    user: images.user2,
+  },
+  ,{
+    background: images.create3,
+    user: images.user3,
+  }];
+  const NewsArray = [ 
+  {
+    background: images.create2,
+    user: images.user2,
+  },
+  {
+    background: images.create1,
+    user: images.user1,
+  },
+  {
+    background: images.create5,
+    user: images.user5,
+  },
+  {
+    background: images.create6,
+    user: images.user4,
+  },{
+    background: images.create4,
+    user: images.user4,
+  },
+  {
+    background: images.create2,
+    user: images.user2,
+  }
+  ,{
+    background: images.create3,
+    user: images.user3,
+  }];
   const [popular, setPopular] = useState(true)
   const [following, setFollowing] = useState(false)
   const [news, setNews] = useState(false)

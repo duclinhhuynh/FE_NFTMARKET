@@ -2,7 +2,7 @@
     margin: 0 auto;
     width: 80%;
     padding-block: 2rem;
-    /* padding-bottom: 10rem; */
+    padding-bottom: 8rem;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     align-items: center;
@@ -221,7 +221,7 @@
         margin: 0;
     }
     .bigNFTSlider_box_left_button {
-        padding-block:0 rem ;
+        padding-block:1rem ;
     }
     
     .bigNFTSlider_box_right {

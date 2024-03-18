@@ -4,9 +4,28 @@ import {motion} from 'framer-motion'
 // INTERNAL IMPORT 
 import Style from "./Slider.module.css"
 import SliderCard from './SliderCard/SliderCard'
+import images from "../../img"
 
 const Slilder = () => {
-  const sliderArray = [1, 2, 3, 4, 5, 6];
+  const sliderArray = [{
+    music: images.music4
+  },
+  {
+    music: images.music5
+  },
+  {
+    music: images.music1
+  },
+  {
+    music: images.music6
+  },
+  {
+    music: images.music9
+  },
+  {
+    music: images.music10
+  },
+];
   const [width, setWidth] = useState(0);
   const dragSlider = useRef();
 

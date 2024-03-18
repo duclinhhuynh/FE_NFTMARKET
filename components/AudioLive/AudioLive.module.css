@@ -5,7 +5,7 @@
 .audioLive_box {
     width: 90%;
     margin: 0 auto;
-    padding-block: 2rem 8rem;
+    padding-block: 2rem 5rem;
 
     display: grid;
     grid-template-columns: 3fr 1fr;

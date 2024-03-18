@@ -1,7 +1,7 @@
 .FollowerTabCard_box {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    background-color: var(--main-bg-color);
+    background-color: var(--shadow-light-color);
     border-radius: 2rem;
     transition: all .2s ease-in;
     cursor: pointer;
@@ -82,18 +82,24 @@
     line-height: 0;
 }
 
-.FollowerTabCard_box_info_following a{
-    background-color: var(--shadow-dark-color);
+.FollowerTabCard_box_info_following_before{
+    background-color: var(--background-btn);
+    color: #fff;
     padding: .7rem 1.5rem;
     border-radius: 2rem;
-    border: 1px solid var(--shadow-dark-color);
+    /* border: 1px solid var(--background-btn); */
     transition: all .3s ease-in;
 }
 
-.FollowerTabCard_box_info_following a:hover{
+.FollowerTabCard_box_info_following_before :hover{
+    /* background-color: transparent; */
+    background-color: #095d88;
+    cursor: pointer;
+}
+.FollowerTabCard_box_info_following_after {
+    background-color: var(--main-bg-color);
     background-color: transparent;
 }
-
  .FollowerTabCard_box_img_img {
     width: 100%;
 }

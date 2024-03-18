@@ -5,7 +5,7 @@ import images from '../../../img'
 import {MdVerified} from 'react-icons/md'
 import {TiTick} from 'react-icons/ti'
 const FollowerTabCard = ({i, el}) => {
-    const [following, setFollowing] = useState(false)
+    const [following, setFollowing] = useState(true)
     const followMe = () => {
         if(!following){
             setFollowing(true);
@@ -22,11 +22,11 @@ const FollowerTabCard = ({i, el}) => {
         </div>
         <div className={Style.FollowerTabCard_box}>
             <div className={Style.FollowerTabCard_box_img}>
-                <Image src={images.category} 
+                <Image src={el.background} 
                 className={Style.FollowerTabCard_box_img_img}
                 alt="profile background"
                 width={400}
-                height={200}
+                height={300}
                 objectFit='cover'
                 />
             </div>
@@ -34,7 +34,7 @@ const FollowerTabCard = ({i, el}) => {
                 <Image className={Style.FollowerTabCard_box_profile_img} alt='picture'
                    width={50} 
                    height={50}
-                   src={images.user1}
+                   src={el.user}
                    objectFit='cover'
                 />
             </div>
@@ -47,13 +47,13 @@ const FollowerTabCard = ({i, el}) => {
                  </div>
                  <div className={Style.FollowerTabCard_box_info_following}>
                     {following ? (
-                        <a onClick={() => followMe()}>
-                            Follow{""}{" "} 
-                            <span><TiTick/></span>
+                        <a onClick={() => followMe()} className={Style.FollowerTabCard_box_info_following_before}>
+                            Follow{""}{" "}             
                         </a>
                     ) : (
-                        <a onClick={() => followMe()}>
-                            Following
+                        <a onClick={() => followMe()} className={Style.FollowerTabCard_box_info_following_after}>
+                            Following{""}{" "}
+                            <span><TiTick/></span>
                         </a>
                     )}
                  </div>

@@ -76,6 +76,11 @@
     cursor: pointer;
  }
 
+ .navbar_container_right_notif_img {
+    width: 40px;
+    height: 40px;
+ }
+
  .navbar_container_right_button {
     position: relative;
     cursor: pointer;

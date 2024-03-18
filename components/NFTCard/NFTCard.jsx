@@ -7,7 +7,35 @@ import images from '../../img'
 import Style from "./NFTCard.module.css"
 import { fetchPrice } from '../../api/api'
 const NFTCard = () => {
-    const featureArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const featureArray = [{
+        nft: images.music6
+    },
+    {
+        nft: images.music10
+    },
+    {
+        nft: images.music9
+    },
+    {
+        nft: images.music13
+    },
+    {
+        nft: images.music3
+    },
+    {
+        nft: images.create1
+    },
+    {
+        nft: images.create2
+    },
+    {
+        nft: images.create3
+    },
+    {
+        nft: images.music7
+    }
+
+]
     const [like, setLike] = useState(true)
      const [ethPrices, setEthPrices] = useState(null);
     const likeNft = () => {
@@ -34,7 +62,7 @@ const NFTCard = () => {
             {featureArray.map((el, i) => (
                 <div className={Style.NFTCard_box} key={i + 1}>
                     <div className={Style.NFTCard_box_img}>
-                        <Image src={images.nft_image_1} alt='NFT images' 
+                        <Image src={el.nft} alt='NFT images' 
                         width={500}
                         height={400}
                         objectFit="contain"

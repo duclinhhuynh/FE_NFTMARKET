@@ -109,7 +109,7 @@ const NavBar = () => {
             </div>
             {/* NOTIFICATION */}
             <div className={Style.navbar_container_right_notif}>
-              <p onClick={(e) => openNotification(e)}><IoIosNotifications /></p>
+              <p onClick={(e) => openNotification(e)}><IoIosNotifications className={Style.navbar_container_right_notif_img}/></p>
                 {
                  notification && <Notification/>
                 }
