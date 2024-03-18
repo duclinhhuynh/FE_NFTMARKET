@@ -75,7 +75,7 @@ import war2 from "./war2.jpg"
 import war3 from "./war3.jpg"
 import war4 from "./war4.jpg"
 import war5 from "./war5.jpg"
-
+import bg1 from "./bg1.png"
 
 
 
@@ -83,6 +83,7 @@ import war5 from "./war5.jpg"
 
 
 export default {
+    bg1,
     war1,
     war2,
     war3,
