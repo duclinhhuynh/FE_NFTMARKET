@@ -29,7 +29,7 @@ const AuthorProfileCard = () => {
         navigator.clipboard.writeText(copyText.value);
     };
     const openReport = () => {
-        if(!share){
+        if(!report){
             setReport(true)
             setShare(false)
         }else{
@@ -45,6 +45,7 @@ const AuthorProfileCard = () => {
                 className={Style.AuthorProfileCard_box_img_img}
                 width={220}
                 height={220}
+                objectFit='cover'
                 />
             </div>
             <div className={Style.AuthorProfileCard_box_info}>
