@@ -1,0 +1,23 @@
+.NFTDetailsPage {
+    width: 90%;
+    margin-block: 5rem;
+}
+
+.NFTDetailsPage_box {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    /* gap: 5rem; */
+}
+
+@media screen and (max-width:35em) {
+    .NFTDetailsPage {
+        margin-block: 2rem;
+    }
+
+    .NFTDetailsPage_box {
+        width: 90%;
+        grid-template-columns: 1fr;
+    }
+}
