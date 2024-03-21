@@ -12,6 +12,7 @@ const Collection = () => {
     const [popular, setPopular] = useState(true);
     const [following, setFollowing] = useState(false);
     const [news, setNews] = useState(false);
+    const [activeBtn, setActiveBtn] = useState(1);
 
     const CardArray = [
         {
@@ -155,6 +156,7 @@ const Collection = () => {
             setPopular(true);
             setFollowing(false);
             setNews(false);
+            setActiveBtn(1)
         }
     }
     const openFollower = () => {
@@ -162,6 +164,7 @@ const Collection = () => {
             setPopular(false);
             setFollowing(true);
             setNews(false);
+            setActiveBtn(2)
         }
     }
     const openNews = () => {
@@ -169,6 +172,7 @@ const Collection = () => {
             setPopular(false);
             setFollowing(false);
             setNews(true);
+            setActiveBtn(3)
         }
     }
   return (
@@ -177,13 +181,13 @@ const Collection = () => {
             <h2>Top List Creators</h2>
             <div className={Style.collection_collections}>
                 <div className={Style.collection_collections_btn}>
-                    <button onClick={() => openPopular()}>
+                    <button onClick={() => openPopular()} className={`${activeBtn === 1 ? Style.active : ""}`}>
                         <BsFillAlarmFill/> 24 hours
                     </button>
-                    <button onClick={() => openFollower()}>
+                    <button onClick={() => openFollower()} className={`${activeBtn === 2 ? Style.active : ""}`}>
                         <BsCalendar3/> 7 days
                     </button>
-                    <button onClick={() => openNews()}>
+                    <button onClick={() => openNews()} className={`${activeBtn === 3 ? Style.active : ""}`}>
                         <BsFillCalendarDateFill/> 30 days
                     </button>
                 </div>

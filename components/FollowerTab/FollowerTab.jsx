@@ -6,6 +6,7 @@ import Style from "./FollowerTab.module.css"
 import FollowerTabCard from './FollowerTabCard/FollowerTabCard'
 import images from '../../img';
 const Follower = () => {
+  const [activeBtn, setActiveBtn] = useState(1);
   const CardArray = [
     {
       background: images.create2,
@@ -100,6 +101,7 @@ const Follower = () => {
       setPopular(true)
       setFollowing(false)
       setNews(false)
+      setActiveBtn(1)
     }
   };
 
@@ -108,6 +110,7 @@ const Follower = () => {
       setPopular(false)
       setFollowing(true)
       setNews(false)
+      setActiveBtn(2)
     }
   }
 
@@ -116,6 +119,7 @@ const Follower = () => {
       setPopular(false)
       setFollowing(false)
       setNews(true)
+      setActiveBtn(3)
     }
   }
   return (
@@ -124,13 +128,13 @@ const Follower = () => {
           <h2>Top Creators List ....</h2>
           <div className={Style.followerTab_tabs}>
             <div className={Style.followerTab_tabs_btn}>
-              <button onClick={()=> openPopular()}>
+              <button onClick={()=> openPopular()} className={`${activeBtn === 1 ? Style.active : ""}`}>
                 <RiUserFollowFill/> Popular
               </button>
-              <button onClick={()=> openFollower()}>
+              <button onClick={()=> openFollower()} className={`${activeBtn === 2 ? Style.active : ""}`}>
                 <RiUserUnfollowFill/> Following
               </button>
-              <button onClick={()=> openNews()}>
+              <button onClick={()=> openNews()} className={`${activeBtn === 3 ? Style.active : ""}`}>
                 <RiAwardLine/> NoteWorthy
               </button>
             </div>
