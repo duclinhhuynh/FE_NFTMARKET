@@ -76,6 +76,10 @@ import war3 from "./war3.jpg"
 import war4 from "./war4.jpg"
 import war5 from "./war5.jpg"
 import bg1 from "./bg1.png"
+import metamark from "./metamark.png"
+import walletconnect from "./walletconnect.png"
+import OKX from "./OKX.png"
+import rainbow from './rainbow.png'
 
 
 
@@ -83,6 +87,10 @@ import bg1 from "./bg1.png"
 
 
 export default {
+    rainbow,
+    OKX,
+    walletconnect,
+    metamark,
     bg1,
     war1,
     war2,
