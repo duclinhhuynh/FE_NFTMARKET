@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-
+import { MdOutlineRocketLaunch } from "react-icons/md";
 //ITERNAL IMPORT
 import Style from "../styles/aboutus.module.css";
 import {Brand} from '../components/componentsindex';
@@ -42,7 +42,9 @@ const aboutus = () => {
         <div className={Style.aboutus_box}>
             <div className={Style.aboutus_box_hero}>
                 <div className={Style.aboutus_box_hero_left}>
-                    <h1>About us</h1>
+                    <h1>
+                        <MdOutlineRocketLaunch/>
+                        About us</h1>
                     <p>We 're imparial and indepenet , and every day we create distinctive,
                         content which inform , educate and entertain million of people in 
                     </p>
