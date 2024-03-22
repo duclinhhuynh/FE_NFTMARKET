@@ -14,7 +14,7 @@ const HelpCenter = () => {
     },
     {
       name: "About",
-      link: "about"
+      link: "aboutus"
     },
     {
       name: "Sign Up",

@@ -80,6 +80,7 @@ import metamark from "./metamark.png"
 import walletconnect from "./walletconnect.png"
 import OKX from "./OKX.png"
 import rainbow from './rainbow.png'
+import co from './co.jpg'
 
 
 
@@ -87,6 +88,7 @@ import rainbow from './rainbow.png'
 
 
 export default {
+    co,
     rainbow,
     OKX,
     walletconnect,
