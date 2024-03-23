@@ -68,7 +68,7 @@
     }
 }
 
-@media screen and (min-width:425px) and (max-width:768px) {
+@media screen and (min-width:425px) and (max-width:1024px) {
     .upload_box_slider_div {
         display: grid;
         grid-template-columns: repeat(3, 1fr);

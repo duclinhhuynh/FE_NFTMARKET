@@ -81,6 +81,7 @@ import walletconnect from "./walletconnect.png"
 import OKX from "./OKX.png"
 import rainbow from './rainbow.png'
 import co from './co.jpg'
+import upload_img from './upload_img.jpg'
 
 
 
@@ -88,6 +89,7 @@ import co from './co.jpg'
 
 
 export default {
+    upload_img,
     co,
     rainbow,
     OKX,

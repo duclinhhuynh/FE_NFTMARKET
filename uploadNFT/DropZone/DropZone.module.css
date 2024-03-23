@@ -5,7 +5,6 @@
 }
 
 .DropZone_box { /* Set a maximum width */
-    width: max-content;
     margin: 0 auto;
     border: 5px  dotted var(--icons-color);
     border-radius: 1rem;
@@ -22,15 +21,16 @@
 
 .DropZone_box_input_img_img {
     border-radius: 1rem;
+    width: 100%;
     /* filter: invert(); */
 }
 
 .DropZone_box_aside {
+    /* visibility: hidden; */
     padding: 2rem;
     border: 3px dotted var(--icons-color);
     margin-top: 3rem;
     border-radius: 1rem;
-    width: max-content;
     margin: auto;
 }
 
@@ -50,7 +50,7 @@
 .DropZone_box_aside_box_preview_one {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     font-weight: 700;
     font-size: 1.2rem;
 }

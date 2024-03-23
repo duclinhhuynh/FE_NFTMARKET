@@ -1,14 +1,15 @@
 .button {
     background-color: var(--icons-color);
     padding: 1rem 2rem;
+    padding-left: 1.6rem;
     border: 1px solid var(--icons-color);
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-radius: 2rem;
     color: var(--shadow-light-color);
     cursor: pointer;
     transition: all .2s ease-in;
     box-shadow: var(--box-shadow);
-    padding: .5rem 0.8rem;
+    text-align: center; /* Center align text */
 }
 
 .button:hover{

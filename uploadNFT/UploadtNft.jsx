@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { MdOutlineHttp, MdOutlineAttachFile } from 'react-icons/md';
-import { FaPercent } from 'react-icons/fa';
 import { TiSocialInstagram, TiTick } from 'react-icons/ti';
+import { LuTableProperties } from "react-icons/lu";
+import { BiCategory } from "react-icons/bi";
+import { FaPercent } from "react-icons/fa";
 import Image from 'next/image';
 
 import formStyle from '../accountPage/Form/Form.module.css';
@@ -24,27 +26,27 @@ const UploadNFT = () => {
   const categoryArray = [
     {
       image: images.art1,
-      category: "Sports",
+      category: "Sports Crypto Legend - Professor",
     },
     {
       image: images.art2,
-      category: "Music",
+      category: "Music Crypto Legend - Professor",
     },
     {
       image: images.art3,
-      category: "Digital",
+      category: "Digital Crypto Legend - Professor",
     },
     {
       image: images.art4,
-      category: "Sports",
+      category: "Sports Crypto Legend - Professor",
     },
     {
       image: images.art5,
-      category: "Time",
+      category: "Time Crypto Legend - Professor",
     },
     {
       image: images.art6,
-      category: "Photography",
+      category: "Photography Crypto Legend - Professor",
     },
   ];
 
@@ -60,7 +62,7 @@ const UploadNFT = () => {
         royalties={royalties}
         fileSize={fileSize}
         category={category}
-        image={images.NFT_follow}
+        image={images.upload_img}
         properties={properties}
       />
       <div className={formStyle.upload_box}>
@@ -134,57 +136,59 @@ const UploadNFT = () => {
             ))}
           </div>
         </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="royalties">royalties</label>
-          <div className={formStyle.Form_box_input_box}>
-            <div className={formStyle.Form_box_input_box_icon}>
-              <TiSocialInstagram />
+        <div className={formStyle.Form_box_input_social}>
+          <div className={formStyle.Form_box_input}>
+            <label htmlFor="royalties">Royalties</label>
+            <div className={formStyle.Form_box_input_box}>
+              <div className={formStyle.Form_box_input_box_icon}>
+                <FaPercent />
+              </div>
+              <input
+                type="text"
+                placeholder="Enter Royalties"
+                value={royalties}
+                onChange={(e) => setRoyalties(e.target.value)}
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Enter properties"
-              value={royalties}
-              onChange={(e) => setRoyalties(e.target.value)}
-            />
           </div>
-        </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="size">Size</label>
-          <div className={formStyle.Form_box_input_box}>
-            <div className={formStyle.Form_box_input_box_icon}>
-              <AiTwotoneAccountBook />
+          <div className={formStyle.Form_box_input}>
+            <label htmlFor="size">Size</label>
+            <div className={formStyle.Form_box_input_box}>
+              <div className={formStyle.Form_box_input_box_icon}>
+                <MdOutlineAttachFile />
+              </div>
+              <input
+                type="text"
+                placeholder="240 MB"
+                value={fileSize}
+                onChange={(e) => setFileSize(e.target.value)}
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Enter properties"
-              value={fileSize}
-              onChange={(e) => setFileSize(e.target.value)}
-            />
           </div>
-        </div>
-        <div className={formStyle.Form_box_input}>
-          <label htmlFor="properties">Properties</label>
-          <div className={formStyle.Form_box_input_box}>
-            <div className={formStyle.Form_box_input_box_icon}>
-              <AiTwotonePropertySafety />
+          <div className={formStyle.Form_box_input}>
+            <label htmlFor="properties">Properties</label>
+            <div className={formStyle.Form_box_input_box}>
+              <div className={formStyle.Form_box_input_box_icon}>
+                <LuTableProperties />
+              </div>
+              <input
+                type="text"
+                placeholder="Enter properties"
+                value={properties}
+                onChange={(e) => setProperties(e.target.value)}
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Enter properties"
-              value={properties}
-              onChange={(e) => setProperties(e.target.value)}
-            />
           </div>
         </div>
         <div className={formStyle.Form_box_input}>
           <label htmlFor="category">Category</label>
           <div className={formStyle.Form_box_input_box}>
             <div className={formStyle.Form_box_input_box_icon}>
-              <AiTwotonePropertySafety />
+              <BiCategory />
             </div>
             <input
               type="text"
-              placeholder="Enter category"
+              placeholder="select"
               value={category}
               onChange={(e) => category(e.target.value)}
             />
