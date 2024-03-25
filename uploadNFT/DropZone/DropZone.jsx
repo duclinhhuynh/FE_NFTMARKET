@@ -4,12 +4,16 @@ import Image from 'next/image'
 import Style from './DropZone.module.css'
 import images from '../../img'
 // import { accessSync } from 'fs'
-const DropZone = ({title, heading, subHeading, itemName, website, description,
-  royalties,fileSize, properties,category, image,
+const DropZone = ({title, heading, subHeading, name, website, description,
+  royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
    const onDrop = useCallback(async(acceptFile) => {
-    setFileUrl(acceptFile[0]);
+    console.log(acceptFile[0]);
+   const url = uploadToIPFS(acceptFile[0]);
+   setFileUrl(url);
+   setImage(url);
+   console.log(url)
    });
    const {getRootProps, getInputProps} = useDropzone({
       onDrop,
@@ -24,7 +28,7 @@ const DropZone = ({title, heading, subHeading, itemName, website, description,
         <div className={Style.DropZone_box_input}>
           <p>{title}</p>
           <div className={Style.DropZone_box_input_img}>
-            <Image src={image} alt='upload' width={100} height={100}
+            <Image src={images.upload_img} alt='upload' width={100} height={100}
             className={Style.DropZone_box_input_img_img_one}
             objectFit='cover'
             />
@@ -36,7 +40,7 @@ const DropZone = ({title, heading, subHeading, itemName, website, description,
       {fileUrl && (
         <aside className={Style.DropZone_box_aside}>
           <div className={Style.DropZone_box_aside_box}>
-            <Image src={images.art2} alt='nft'
+            <Image src={fileUrl} alt='nft'
             width={200}
             height={200}
             objectFit='cover'
@@ -45,7 +49,7 @@ const DropZone = ({title, heading, subHeading, itemName, website, description,
             <div className={Style.DropZone_box_aside_box_preview}>
               <div className={Style.DropZone_box_aside_box_preview_one}>
                 <p> <samp>NFT: </samp>
-                {itemName || ""}
+                {name || ""}
                 </p>
                 <p><samp>Website: </samp>
                 {website || ""}

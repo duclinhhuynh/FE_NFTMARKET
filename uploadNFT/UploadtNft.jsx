@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { MdOutlineHttp, MdOutlineAttachFile } from 'react-icons/md';
 import { TiSocialInstagram, TiTick } from 'react-icons/ti';
@@ -5,6 +6,7 @@ import { LuTableProperties } from "react-icons/lu";
 import { BiCategory } from "react-icons/bi";
 import { FaPercent } from "react-icons/fa";
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import formStyle from '../accountPage/Form/Form.module.css';
 import images from '../img';
@@ -13,16 +15,17 @@ import { DropZone } from '../uploadNFT/UploadNFTIndex';
 import Style from './UploadNFT.module.css'
 import { AiTwotoneAccountBook, AiTwotonePropertySafety } from 'react-icons/ai';
 
-const UploadNFT = () => {
+const UploadNFT = ({uploadToIPFS, createNFT}) => {
+  const [price, setPrice] = useState('')
   const [active, setActive] = useState(0);
-  const [itemName, setItemName] = useState('');
+  const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
   const [description, setDescription] = useState('');
   const [royalties, setRoyalties] = useState('');
   const [fileSize, setFileSize] = useState('');
   const [properties, setProperties] = useState('');
   const [category, setCategory] = useState(0);
-
+  const [image, setImage] = useState(null);
   const categoryArray = [
     {
       image: images.art1,
@@ -49,31 +52,32 @@ const UploadNFT = () => {
       category: "Photography Crypto Legend - Professor",
     },
   ];
-
+  const router = useRouter()
   return (
     <div className={formStyle.upload}>
       <DropZone
         title="JPG, PNG, WEBM, MAX 100MB"
         heading="Drag & drop file"
         subHeading="or Browse media on your device"
-        itemName={itemName}
+        name={name}
         website={website}
         description={description}
         royalties={royalties}
         fileSize={fileSize}
         category={category}
-        image={images.upload_img}
         properties={properties}
+        setImage = {setImage}
+        uploadToIPFS = {uploadToIPFS}
       />
       <div className={formStyle.upload_box}>
         <div className={formStyle.Form_box_input}>
-          <label htmlFor="itemName">Item Name</label>
+          <label htmlFor="name">Item Name</label>
           <input
             type="text"
             placeholder="Enter item name"
             className={formStyle.Form_box_input_userName}
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className={formStyle.Form_box_input}>
@@ -179,6 +183,20 @@ const UploadNFT = () => {
               />
             </div>
           </div>
+          <div className={formStyle.Form_box_input}>
+            <label htmlFor="Price">Price</label>
+            <div className={formStyle.Form_box_input_box}>
+              <div className={formStyle.Form_box_input_box_icon}>
+                <LuTableProperties />
+              </div>
+              <input
+                type="text"
+                placeholder="Enter Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
         <div className={formStyle.Form_box_input}>
           <label htmlFor="category">Category</label>
@@ -196,9 +214,25 @@ const UploadNFT = () => {
         </div>
         <div className={Style.upload_box_btn}>
           <Button
-            btnName="Upload Profile"
+            btnName="Upload"
+            handleClick= {async() => createNFT(
+              name, 
+              price, 
+              image, 
+              description, 
+              router, 
+              // website, 
+              // royalties, 
+              // fileSize, 
+              // category
+              )}
+            classStyle={formStyle.upload_box_btn_style}
+          />
+          <Button
+            btnName="Preview"
             handleClick={() => {
               // Handle upload logic
+              
             }}
             classStyle={formStyle.upload_box_btn_style}
           />

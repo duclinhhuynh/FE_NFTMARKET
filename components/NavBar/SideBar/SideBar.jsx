@@ -8,7 +8,7 @@ import {TiSocialFacebook, TiSocialLinkedin, TiSocialTwitter, TiSocialYoutube, Ti
 import Style from './SideBar.module.css';
 import images from "../../../img";
 import Button from '../../Button/Button';
-const SideBar = ({setOpenSideMenu}) => {
+const SideBar = ({setOpenSideMenu, currentAccount, connectWallet}) => {
   const [openDiscover, setOpenDiscover] = useState(false);
   const [openHelp, setopenHelp] = useState(false);
   // DICOVER NAVIGATION
@@ -157,8 +157,14 @@ const SideBar = ({setOpenSideMenu}) => {
         </div>
       </div>
       <div className={Style.SideBar_button}>
-          <Button btnName = "Create" handleClick={() => {}}/>
-          <Button btnName = "Connect Wallet" handleClick={() => {}}/>
+        {currentAccount == "" 
+              ? (<Button btnName="Connect Wallet" handleClick={() => connectWallet()}/> )
+              : (
+              <a href="/uploadNft">
+                <Button btnName="Create" handleClick={() => {}}/>
+              </a>
+                )
+          }
       </div>
     </div>
   )
