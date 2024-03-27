@@ -6,12 +6,8 @@ async function main() {
         const deploymentTransaction = await NFTMarketplaceFactory.deploy();
 
         // Check if deploymentTransaction is a contract instance
-        if (deploymentTransaction instanceof ethers.Contract) {
-            console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.address}`);
-        } else {
-            console.error("Deployment failed: Invalid deployment transaction");
-            console.error("Deployment transaction:", deploymentTransaction);
-        }
+        await deploymentTransaction.waitForDeployment();
+        console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.target}`);
     } catch (error) {
         console.error("Deployment failed:", error);
         process.exit(1);
@@ -19,9 +15,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
+    console.error("Error in main function:", error);
     process.exit(1);
 });
-
-
-// 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853

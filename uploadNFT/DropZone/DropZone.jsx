@@ -8,13 +8,17 @@ const DropZone = ({title, heading, subHeading, name, website, description,
   royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
-   const onDrop = useCallback(async(acceptFile) => {
-    console.log(acceptFile[0]);
-   const url = uploadToIPFS(acceptFile[0]);
-   setFileUrl(url);
-   setImage(url);
-   console.log(url)
-   });
+  const onDrop = useCallback(async (acceptedFiles) => {
+    try {
+      console.log(acceptedFiles[0]);
+      const url = await uploadToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
+        setFileUrl(url);
+        setImage(url);
+        console.log("url of drop ", url);
+    } catch (error) {
+      console.error("Error uploading file to IPFS:", error);
+    }
+  }, [setFileUrl, setImage]);
    const {getRootProps, getInputProps} = useDropzone({
       onDrop,
       accept: "image/*",

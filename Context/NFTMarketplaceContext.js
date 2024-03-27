@@ -4,10 +4,6 @@ import web3Modal from 'web3modal';
 import {ethers} from 'ethers'
 import Router from "next/router"
 import axios from "axios";
-import { NFTStorage} from 'nft.storage';
-import {create as ipfsHttpClient} from "ipfs-http-client"
-
-const client = new NFTStorage({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDA3ZkEyM2JhODFiNjM4RjczZjQxNTU4OTI5ZDUzNmQxZkI0ZEJGOTMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTcxMTI3MTAxMDk5OSwibmFtZSI6Ik5GVE1hcmtldHBsYWNlIn0.yTp6lFSTXc8skjvla6EMZeICV7-V1J-biFKFOWTTvyc' });
 
 //INTERNAL IMPORT
 import { NFTMarketplaceAddress, NFTMarketplaceABI } from "./Constants";
@@ -23,6 +19,7 @@ const fetchContract = (signerOrProvider) =>
 
     const connectingWithSmartContract = async () => {
         try {
+            const ethers = require("ethers");
             const web3ModalInstance = new web3Modal();
             const connection = await web3ModalInstance.connect();
             const provider = new ethers.providers.Web3Provider(connection);
@@ -78,67 +75,100 @@ export const NFTMarketplaceProvider = ({children}) => {
     }
 
     // upload to ipfs function
-    const uploadToIPFS = async (file) => {
-        try {
-            const { cid } = await client.storeBlob(new Blob([file]));
-            const url = `${cid}.ipfs.nftstorage.link`;
-            return url;
-        } catch (error) {
-            console.error("Error uploading to IPFS:", error);
-        }
-    };
+    const api_key  = 'ceac63b9defd3ff2e5ec'
+
+    const api_serect = '2442f9cbc26fbae2473c1a2d57d7915e5ab54290e80915523bd72d6c5f88b1bc'
     
-    // createNFT function 
-const createNFT = async (name, description, price, image, router) => {
-    try {
-        if (!name || !description || !price || !image) return console.log("Data missing");
-
-        const data = {
-            name,
-            description,
-            image: new File([image], 'image.jpg', { type: 'image/jpeg' }) // Convert image data to File object
+    const pinata_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjZWFjNjNiOWRlZmQzZmYyZTVlYyIsInNjb3BlZEtleVNlY3JldCI6IjI0NDJmOWNiYzI2ZmJhZTI0NzNjMWEyZDU3ZDc5MTVlNWFiNTQyOTBlODA5MTU1MjNiZDcyZDZjNWY4OGIxYmMiLCJpYXQiOjE3MTE1MDAxMzl9.7IXPHi0dYCu_-ZGKn8-HLZlPfvHKou5KJ9H0qARV9Jo'
+        // upload to ipfs function
+        const uploadToIPFS = async (file) => {
+            try {
+                const formData = new FormData();
+                formData.append("file", file);
+        
+                const resFile = await axios({
+                    method: "post",
+                    url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+                    data: formData,
+                    headers: {
+                        pinata_api_key: api_key,
+                        pinata_secret_key: api_serect,
+                        Authorization: `Bearer ${pinata_JWT}`,
+                        // Set appropriate Content-Type header for FormData
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+        
+                const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
+                console.log("imgHash", imgHash);
+                return imgHash;
+            } catch (error) {
+                console.error("Error while uploading to IPFS:", error);
+                throw error;
+            }
         };
+        
+        // createNFT function 
+        const createNFT = async (name, price, imageurl, description, router) => {
+            if (!name || !description || !price || !imageurl) {
+              console.log("Data Is Missing");
+              return;
+            }
+            const data = JSON.stringify({ name, description,imageurl});
+            console.log("data", data);
+            try {
+              const resFile = await axios({
+                method: "POST",
+                url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+                data: data,
+                headers: {
+                  pinata_api_key: api_key,
+                  pinata_secret_key: api_serect,
+                //   "Content-Type": `application/json`,
+                  Authorization: `Bearer ${pinata_JWT}`,
+                },
+              });
+              console.log("iphashres",resFile.data.IpfsHash);
+              // Upload image file to Pinata IPFS
+              const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
+              console.log(imgHash);
+              await createSale(imgHash, price);
+            } catch (error) {
+              console.log("Error while creating NFT:", error);
+            }
+          };
+    
+        
+        
+        // createSale function
+       const createSale = async (url, formInputPrice, isReselling, id) => {
+    try {
+        const ethers = require("ethers");
+        console.log(url, formInputPrice, isReselling, id);
+        const price = ethers.utils.parseUnits(formInputPrice, "ether");
+        const contract = await connectingWithSmartContract();
 
-        try {
-            // Upload data to NFT.Storage
-            const metadata = await client.store(data);
+        const listingPrice = await contract.getListingPrice();
 
-            // Retrieve the URL of the uploaded NFT from the metadata
-            const url = metadata.url;
+        const transaction = !isReselling
+            ? await contract.createToken(url, price, { value: listingPrice.toString() })
+            : await contract.reSellToken(url, price, { value: listingPrice.toString() });
 
-            // Proceed with the creation of NFT sale using the URL
-            await createSale(url, price);
+        const receipt = await transaction.wait();
+        console.log("Transaction receipt:", receipt);
 
-            // router.push('/your_nft_page'); // Redirect to your NFT page after successful creation
-        } catch (error) {
-            console.log("Error while uploading NFT to NFT.Storage:", error);
+        // Check if transaction was successful
+        if (receipt.status === 1) {
+            console.log("Sale created successfully.");
+        } else {
+            console.error("Transaction failed. Sale creation unsuccessful.");
         }
     } catch (error) {
-        console.log("Error while creating NFT:", error);
+        console.error("Error while creating sale:", error);
+        // Handle the error here, you can throw it again if needed
+        throw error;
     }
 };
-
-    
-    
-    // createSale function
-    const createSale = async(url, formInputPrice, isReselling, id) => {
-        try {
-            const price = ethers.utils.parseUnits(formInputPrice, "ether");
-            const contract = await connectingWithSmartContract()
-            const listingPrice = await contract.getListingPrice();
-            
-            const transaction = !isReselling 
-                ? await contract.createToken(url, price,
-                {value: listingPrice.toString()})
-                : await contract.resellToken(url, price, {
-                    value: listingPrice.toString()
-                })
-                await transaction.wait();
-                console.log(transaction)
-        } catch (error) {
-            console.log("error while creating sale")
-        }
-    }
 
     // --FETCH nft functino 
     const fetchNFTS = async () => {
