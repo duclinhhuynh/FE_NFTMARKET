@@ -6,7 +6,7 @@ import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
 import images from '../../img'; // Check this import for correctness
 import Style from './NFTDetailsImg.module.css';
 
-const NFTDetailsImg = () => {
+const NFTDetailsImg = ({nft}) => {
     const [description, setDescription] = useState(true);
     const [details, setDetails] = useState(true);
     const [like, setLike] = useState(false);
@@ -40,7 +40,7 @@ const NFTDetailsImg = () => {
                     </div>
                     <div className={Style.NFTDetailsImg_box_NFT_img}>
                         <Image
-                            src={images.cartoon2} // Ensure this path is correct
+                            src={nft.imageurl} // Ensure this path is correct
                             className={Style.NFTDetailsImg_box_NFT_img_img}
                             alt='NFT image'
                             width={700}
@@ -55,7 +55,7 @@ const NFTDetailsImg = () => {
                 </div>
                 {description && (
                     <div className={Style.NFTDetailsImg_box_description_box}>
-                        <p>Tattooed Kitty Gang (“TKG”) is a collection of 666 badass kitty gangsters, with symbol of tattoos, living in the Proud Kitty Gang (“PKG”) metaverse. Each TKG is an 1/1 ID as gangster member & all the joint rights.</p>
+                        <p>{nft.description}</p>
                     </div>
                 )}
                 <div className={Style.NFTDetailsImg_box_details} onClick={openDetails}>
@@ -68,12 +68,12 @@ const NFTDetailsImg = () => {
                         <p>
                             <small>Contract Address</small>
                             <br />
-                            0x8725f94099EE9C426B87170EefE6855B87EC5fAc
+                            {nft.seller}
                         </p>
                         <p>
                             <small>Token ID</small>
                             <br />
-                            10000323282
+                            {nft.tokenId}
                         </p>
                     </div>
                 )}

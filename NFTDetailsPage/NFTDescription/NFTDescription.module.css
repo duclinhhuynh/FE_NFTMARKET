@@ -134,8 +134,8 @@
 }
 
 .NFTDescription_box_profile_biding_box_price {
-    display: flex;
-    line-height: 0;
+    /* display: flex; */
+    line-height: 1;
     margin-top: 4rem;
     display: grid;
     grid-template-columns: 4fr 1fr;
@@ -160,7 +160,7 @@
 
 .NFTDescription_box_profile_biding_box_price_bid p{
     padding: 1rem;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 900;
 }
 
@@ -256,7 +256,7 @@
         font-size: 1rem;
     }
     .NFTDescription_box_profile_biding_box_price_bid p {
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
     .NFTDescription_box_profile_biding_box_price {
         gap: 1rem;

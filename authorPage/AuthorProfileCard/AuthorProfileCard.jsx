@@ -11,7 +11,7 @@ import Style from './AuthorProfileCard.module.css'
 import images from '../../img'
 import {Button} from '../../components/componentsindex'
 
-const AuthorProfileCard = () => {
+const AuthorProfileCard = ({currentAccount}) => {
     const [share, setShare] = useState(false);
     const [report, setReport] = useState(false);    
     const openShare = () => {
@@ -52,7 +52,7 @@ const AuthorProfileCard = () => {
                 <h2>Done ro {""}<span><MdVerified/></span>{""}</h2>
                 <div className={Style.AuthorProfileCard_box_info_address}>
                     <input type="text" 
-                    value={"0x8725f94099EE9C426B87170EefE6855B87EC5fAc"}
+                    value={currentAccount}
                     id='myInput'
                     />
                     <FiCopy onClick={() => copyAddress()} 

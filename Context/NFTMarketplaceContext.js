@@ -13,6 +13,7 @@ const pinata_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24
 //INTERNAL IMPORT
 import { NFTMarketplaceAddress, NFTMarketplaceABI } from "./Constants";
 import path from "path";
+
 //Fetching smart contract
 const fetchContract = (signerOrProvider) => 
     new ethers.Contract(
@@ -26,15 +27,16 @@ const fetchContract = (signerOrProvider) =>
 
     const connectingWithSmartContract = async () => {
         try {
-            const ethers = require("ethers");
             const web3ModalInstance = new Web3Modal();
             const connection = await web3ModalInstance.connect();
             const provider = new ethers.providers.Web3Provider(connection);
+            
             if (!provider) {
                 throw new Error("Web3 provider is undefined.");
             }
-            const signer = provider.getSigner(); // Fix typo here
-            const contract = fetchContract(signer);
+            
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer); // Assuming fetchContract is defined elsewhere
             return contract;
         } catch (error) {
             console.log("Something went wrong while connecting with smart contract:", error);
@@ -172,10 +174,7 @@ export const NFTMarketplaceProvider = ({children}) => {
          // --FETCH nft functino 
          const fetchNFTS = async () => {
             try {
-                const web3Modal = new Web3Modal();
-                const connection = await web3Modal.connect();
-                const provider = new ethers.providers.Web3Provider(connection);
-                const contract = fetchContract(provider);
+                const contract = await connectingWithSmartContract();
                 console.log("contract", contract);
                 const data = await contract.fetchMarketItem(); // Correct method name
                 const items = await Promise.all(
@@ -229,34 +228,52 @@ export const NFTMarketplaceProvider = ({children}) => {
                 const contract = await connectingWithSmartContract();
                 const data = type == "fetchItemsListed"
                 ? await contract.fetchItemsListed() 
-                : await contract.fetchNFTS();
-
+                : await contract.fetchMyNFT();
+                console.log("mynft",contract.fetchItemsListed());
                 const items = await Promise.all (
                     data.map(async ({tokenId, seller, owner, price: unfomattedPrice})=> {
                         const tokenURI = await contract.tokenURI(tokenId);
-                        const {
-                            data: {image, name, description},
-                        } = await axios.get(tokenURI)
-                        const price = ethers.utils.formatUnits(
-                            unfomattedPrice.toString(), 
-                            "ether"
-                        );
-                        return {
-                            price,
-                            tokenId: tokenId.toNumber(),
-                            seller,
-                            owner,
-                            image,
-                            name,
-                            description,
-                            tokenURI,
+                        try{
+                            const response = await fetch(tokenURI);
+                            // console.log("respon", response);
+                            const data = await response.json();
+                            // console.log("data",data)
+                            const jsonDataString = Object.keys(data)[0];
+                            const jsonData = JSON.parse(jsonDataString);
+                            // Extract name, description, and imageurl from the parsed JSON object
+                            const name = jsonData.hasOwnProperty('name') ? jsonData.name : 'Name not available';
+                            const description = jsonData.hasOwnProperty('description') ? jsonData.description : 'Description not available';
+                            const imageurl = jsonData.hasOwnProperty('imageurl') ? jsonData.imageurl : 'Image URL not available';
+                            console.log("name", name);
+                            const price = ethers.utils.formatUnits(
+                                unfomattedPrice.toString(), 
+                                "ether"
+                            );
+                            return {
+                                price,
+                                tokenId: tokenId.toNumber(),
+                                seller,
+                                owner,
+                                imageurl,
+                                name,
+                                description,
+                                tokenURI,
+                            }
+                        }catch (error){
+                            console.error("Error fetching tokenURI data:", error);
+                            throw error;
                         }
                     })
-                )
+                );
+                return items;
             } catch (error) {
-                
-            }
+                console.log(error)
+            };
         }
+
+        useEffect(() => {
+            fetchMyNFTsOrListedNFTs();
+        },[]);
          // BUY NFTs FUNCTION 
         const buyNFT = async (nft) => {
             try {
@@ -266,6 +283,8 @@ export const NFTMarketplaceProvider = ({children}) => {
                 const transaction = await contract.createMarketSale(nft.tokenId, {
                     value: price,
                 });
+                await transaction.wait();
+                router.push("/author");
             } catch (error) {
                 console.log("error while buying nft")
             }

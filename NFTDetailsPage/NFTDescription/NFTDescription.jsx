@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { MdVerified, MdCloudUpload, MdReportProblem, MdOutLineDeleteSweep } from 'react-icons/md';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaWallet } from 'react-icons/fa';
+import { FaPercentage, FaWallet } from 'react-icons/fa';
 import { TiSocialFacebook, TiSocialLinkedin, TiSocialTwitter, TiSocialYoutube, TiSocialInstagram, TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
 import { BiDollar, BiTransferAlt } from 'react-icons/bi';
 import Style from './NFTDescription.module.css';
 import images from '../../img';
 import { Button } from '../../components/componentsindex';
 import { NFTTabs } from '../NFTDetailsIndex';
-
-const NFTDescription = () => {
+import Link from 'next/link';
+import { fetchPrice } from '../../api/api';
+import { NFTMarketplaceContext } from '../../Context/NFTMarketplaceContext';
+import path from 'path';
+const NFTDescription = ({nft}) => {
     const [social, setSocial] = useState(false);
     const [NFTMenu, setNFTMenu] = useState(false);
     const [history, setHistory] = useState(true);
     const [provanannce, setProvanance] = useState(false);
     const [owner, setOwner] = useState(false);
     const [activeBtn, setActiveBtn] = useState(1);
+    const [ethPrice, setEthPrice] = useState(null);
 
     const historyArray = [images.user1, images.user2, images.user3, images.user4, images.user5];
     const provananceArray = [images.user3, images.user4, images.user5, images.user1, images.user2,];
@@ -67,7 +71,21 @@ const NFTDescription = () => {
         setOwner(false)
       }
     } 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetchPrice();
+                setEthPrice(response.ethereum.usd);
+            } catch (error) {
+                console.error('Error fetching ETH price:', error);
+            }
+        };
+    
+        fetchData();
+    }, []);
 
+    // SMART CONTRACT DATA
+    const {buyNFT, currentAccount} = useContext(NFTMarketplaceContext)
     return (
         <div className={Style.NFTDescription}>
             <div className={Style.NFTDescription_box}>
@@ -96,7 +114,7 @@ const NFTDescription = () => {
                     </div>
                 </div>
                 <div className={Style.NFTDescription_box_profile}>
-                    <h1>Bearx</h1>
+                    <h1>{nft.name}</h1>
                     <div className={Style.NFTDescription_box_profile_box}>
                         <div className={Style.NFTDescription_box_profile_box_left}>
                             <Image src={images.user1} alt='profile' width={40} height={40} className={Style.NFTDescription_box_profile_box_left_img} />
@@ -109,6 +127,7 @@ const NFTDescription = () => {
                             <Image src={images.user1} alt="profile" width={40} height={40} className={Style.NFTDescription_box_profile_box_left_img} />
                             <div className={Style.NFTDescription_box_profile_box_right_info}>
                                 <small>Creator</small><br />
+                                <Link href={{pathname: "/author", query: `${nft.seller}`}}></Link>
                                 <span>halaka sko <MdVerified /></span>
                             </div>
                         </div>
@@ -137,13 +156,27 @@ const NFTDescription = () => {
                       <div className={Style.NFTDescription_box_profile_biding_box_price}>
                           <div className={Style.NFTDescription_box_profile_biding_box_price_bid}>
                               <small>Current Bid</small>
-                              <p>1.0 ETH &nbsp;&nbsp;<span>(~$3,221)</span></p>
+                              <p>{nft.price} ETH ~&nbsp;&nbsp;<span>${ethPrice && (ethPrice * parseFloat(nft.price.split(' ')[0])).toFixed(2)}</span></p>
                           </div>
                           <span>[102 stock]</span>
                       </div>
                       <div className={Style.NFTDescription_box_profile_biding_box_button}>
-                          <Button icon={<FaWallet />} btnName="Make offer" handleClick={() => {}} classStyle={Style.button} />
-                          <Button icon={<FaWallet />} btnName="Make offer" handleClick={() => {}} classStyle={Style.button} />
+                        { currentAccount == nft.seller.toLowerCase() ? (
+                            <p>
+                                {console.log("current", currentAccount)}
+                                {console.log("seller:", nft.seller)}
+                                {console.log("owner:", nft.owner)}
+                                You can not buy your own NFT
+                            </p>
+                        ) : currentAccount == nft.owner.toLowerCase() ? (
+                          <Button icon={<FaWallet />} btnName="List on Martketplace" 
+                          handleClick={() => {}} classStyle={Style.button} />
+                        ) : (  
+                          <Button icon={<FaWallet />} btnName="Buy NFT" 
+                          handleClick={() => buyNFT(nft)} classStyle={Style.button} />
+                        )}
+                        <Button icon={<FaPercentage />} btnName="Make offer" 
+                          handleClick={() => buyNFT(nft)} classStyle={Style.button} />
                       </div>
                       <div className={Style.NFTDescription_box_profile_biding_box_tabs}>
                           <button className={`${activeBtn === 1 ? Style.active : ""}`} onClick={(e) => openTabs(e)}>Bid History</button>
