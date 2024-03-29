@@ -24,7 +24,7 @@ const NFTCardTwo = ({ NFTData }) => {
 
   return (
     <div className={Style.NFTCardTwo}>
-      {NFTData.map((el, i) => (
+      {NFTData?.map((el, i) => (
         <div className={Style.NFTCardTwo_box} key={i + 1}>
           <div className={Style.NFTCardTwo_box_like}>
             <div className={Style.NFTCardTwo_box_like_box}>
@@ -38,7 +38,7 @@ const NFTCardTwo = ({ NFTData }) => {
             </div>
           </div>
           <div className={Style.NFTCardTwo_box_img}>
-            <Image src={el} 
+            <Image src={el.imageurl} 
             alt="NFT" 
             width={500} height={300} 
             objectFit="cover" 
@@ -48,14 +48,14 @@ const NFTCardTwo = ({ NFTData }) => {
           <div className={Style.NFTCardTwo_box_info}>
             <div className={Style.NFTCardTwo_box_info_left}>
               <LikeProfile />
-              <p>Clone #{i + 1}</p>
+              <p>{el.name}</p>
             </div>
             <small>4 {i + 2}</small>
           </div>
           <div className={Style.NFTCardTwo_box_price}>
             <div className={Style.NFTCardTwo_box_price_box}>
               <small>Current Bid</small>
-              <p>1.{i + 1} ETH</p>
+              <p>{el.price}{i + 1} ETH</p>
             </div>
             <p className={Style.NFTCardTwo_box_price_stock}>
               <MdTimer />

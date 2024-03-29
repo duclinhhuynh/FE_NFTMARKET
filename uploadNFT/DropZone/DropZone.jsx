@@ -8,9 +8,10 @@ const DropZone = ({title, heading, subHeading, name, website, description,
   royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
+  const [droppedFiles, setDroppedFiles] = useState([]);
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
-      console.log(acceptedFiles[0]);
+      console.log("Dropped files:", acceptedFiles);
       const url = await uploadToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
         setFileUrl(url);
         setImage(url);
@@ -18,12 +19,13 @@ const DropZone = ({title, heading, subHeading, name, website, description,
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
     }
-  }, [setFileUrl, setImage]);
+  },[setImage, uploadToIPFS]);
    const {getRootProps, getInputProps} = useDropzone({
       onDrop,
-      accept: "image/*",
+      accept: "image/*, .gif",
       maxSize: 500000,
    })
+   
   return (
     
     <div className={Style.DropZone}>
@@ -44,7 +46,7 @@ const DropZone = ({title, heading, subHeading, name, website, description,
       {fileUrl && (
         <aside className={Style.DropZone_box_aside}>
           <div className={Style.DropZone_box_aside_box}>
-            <Image src={fileUrl} alt='nft'
+            <img src={fileUrl} alt='nft'
             width={200}
             height={200}
             objectFit='cover'
