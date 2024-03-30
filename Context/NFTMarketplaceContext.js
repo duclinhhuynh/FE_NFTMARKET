@@ -40,7 +40,6 @@ const fetchContract = (signerOrProvider) =>
             return contract;
         } catch (error) {
             console.log("Something went wrong while connecting with smart contract:", error);
-            throw error;
         }
     };
 export const NFTMarketplaceContext = React.createContext();
@@ -160,7 +159,7 @@ export const NFTMarketplaceProvider = ({children}) => {
 
                 const transaction = !isReselling
                     ? await contract.createToken(url, price, { value: listingPrice.toString() })
-                    : await contract.reSellToken(url, price, { value: listingPrice.toString() });
+                    : await contract.reSellToken(id, price, { value: listingPrice.toString() });
 
                 await transaction.wait();
                 router.push('/searchPage');
@@ -217,19 +216,21 @@ export const NFTMarketplaceProvider = ({children}) => {
             }
         };
         
-        
         useEffect(()=> {
             fetchNFTS();
         },[])
         
         // FETCHING MY NFT OR LISTED NFTS
         const fetchMyNFTsOrListedNFTs = async(type) => {
+            console.log("type fetch", type);
             try {
                 const contract = await connectingWithSmartContract();
-                const data = type == "fetchItemsListed"
-                ? await contract.fetchItemsListed() 
-                : await contract.fetchMyNFT();
-                console.log("mynft",contract.fetchItemsListed());
+                let data;
+                    if(type == "fetchItemsListed"){
+                        data = await contract.fetchItemsListed();
+                    }else
+                        data = await contract.fetchMyNFTs();
+                        // contract.fetchMyNFTs()
                 const items = await Promise.all (
                     data.map(async ({tokenId, seller, owner, price: unfomattedPrice})=> {
                         const tokenURI = await contract.tokenURI(tokenId);

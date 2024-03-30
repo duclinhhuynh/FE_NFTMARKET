@@ -11,7 +11,6 @@ import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
 const author = () => {
 
   //IMPORT SMART CONTRACT DATA
-
     const popularArray = [
         images.cartoon1,
         images.cartoon2,
@@ -30,24 +29,27 @@ const author = () => {
     const [myNFTs,setMyNFTs] = useState([]); 
 
     useEffect(() => {
+      fetchMyNFTsOrListedNFTs()
+        .then((items) => {
+        setMyNFTs(items);
+        console.log("item myNFT:",items)
+      });
+    },[]);
+    useEffect(() => {
       fetchMyNFTsOrListedNFTs("fetchItemsListed") 
       .then((items) => {
         setNfts(items);
+        console.log("item listed:",items)
       });
     }, []);
 
-    useEffect(() => {
-      fetchMyNFTsOrListedNFTs("fetchMyNFTs").then((items) => {
-        setMyNFTs(items);
-        console.log("item",items)
-      });
-    },[]);
+  
 
 
   return (
     <div className={Style.banner}>
         <Banner bannerImage={images.bg1}/>
-        <AuthorProfileCard/>
+        <AuthorProfileCard currentAccount={currentAccount}/>
         <AuthorTaps 
           setColleciables = {setColleciables} 
           setCreated={setCreated} 

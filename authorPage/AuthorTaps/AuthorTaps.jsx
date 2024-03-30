@@ -29,7 +29,7 @@ const AuthorTaps = ({
     const openTab = (e) => {
         const btnText = e.target.innerText;
         console.log(btnText)
-        if (btnText === "Collectiables") {
+        if (btnText === "Created") {
             setColleciables(true);
             setCreated(false);
             setFollower(false);
@@ -37,7 +37,7 @@ const AuthorTaps = ({
             setLike(false);
             setActiveBtn(1);
         } 
-        else if (btnText === "Created") {
+        else if (btnText === "Purchased") {
             setColleciables(false);
             setCreated(true);
             setFollower(false);
@@ -78,11 +78,11 @@ const AuthorTaps = ({
                     <div className={Style.AuthorTaps_box_left_btn}>
                         <button 
                             className={`${activeBtn === 1 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e)}>Collectiables
+                            onClick={(e) => openTab(e)}>Created
                         </button>
                         <button 
                             className={`${activeBtn === 2 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e)}>Created
+                            onClick={(e) => openTab(e)}>Purchased
                         </button>
                         <button 
                             className={`${activeBtn === 3 ? Style.active : ""}`}

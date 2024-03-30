@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { MdVerified, MdCloudUpload, MdReportProblem, MdOutLineDeleteSweep } from 'react-icons/md';
 import { BsThreeDots } from 'react-icons/bs';
 import { FaPercentage, FaWallet } from 'react-icons/fa';
@@ -9,7 +11,6 @@ import Style from './NFTDescription.module.css';
 import images from '../../img';
 import { Button } from '../../components/componentsindex';
 import { NFTTabs } from '../NFTDetailsIndex';
-import Link from 'next/link';
 import { fetchPrice } from '../../api/api';
 import { NFTMarketplaceContext } from '../../Context/NFTMarketplaceContext';
 import path from 'path';
@@ -26,6 +27,7 @@ const NFTDescription = ({nft}) => {
     const provananceArray = [images.user3, images.user4, images.user5, images.user1, images.user2,];
     const ownerArray = [images.user4, images.user5,images.user3,];
 
+    const router = useRouter();
     const openTabs = (e) => {
         const tab = e.target.innerText;
         if (tab === 'Bid History') {
@@ -163,14 +165,11 @@ const NFTDescription = ({nft}) => {
                       <div className={Style.NFTDescription_box_profile_biding_box_button}>
                         { currentAccount == nft.seller.toLowerCase() ? (
                             <p>
-                                {console.log("current", currentAccount)}
-                                {console.log("seller:", nft.seller)}
-                                {console.log("owner:", nft.owner)}
                                 You can not buy your own NFT
                             </p>
                         ) : currentAccount == nft.owner.toLowerCase() ? (
                           <Button icon={<FaWallet />} btnName="List on Martketplace" 
-                          handleClick={() => {}} classStyle={Style.button} />
+                          handleClick={() => router.push(`/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`)} classStyle={Style.button} />
                         ) : (  
                           <Button icon={<FaWallet />} btnName="Buy NFT" 
                           handleClick={() => buyNFT(nft)} classStyle={Style.button} />
