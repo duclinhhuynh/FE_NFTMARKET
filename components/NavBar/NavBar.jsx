@@ -12,6 +12,7 @@ import { Discover, HelpCenter, Notification, Profile, Sidebar } from './index';
 import {Button} from "../componentsindex"
 import images from "../../img";
 import { IoIosNotifications } from "react-icons/io";
+import { useRouter } from 'next/router';
 // IMPORT FROM SMART CONTRACT
 
 import {NFTMarketplaceContext} from '../../Context/NFTMarketplaceContext'
@@ -23,6 +24,7 @@ const NavBar = () => {
   const [notification, setNotification] = useState (false);
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
+  const router = useRouter()
   const openMenu = (e) => {
     const btnText = e.target.innerText;
     if(btnText == "Discover"){
@@ -85,6 +87,7 @@ const NavBar = () => {
             <Image src={images.logo} alt='NFT Marketplace'
               width={50}
               height={50}
+              onClick={() => router.push("/")}
             />
           </div>
           <div className={Style.navbar_container_left_box_input}>
@@ -125,9 +128,7 @@ const NavBar = () => {
             <div className={Style.navbar_container_right_button}>
               {currentAccount === "" ? (<Button btnName="Connect" handleClick={() => connectWallet()}/> )
               : (
-              <a href="/uploadNft">
-                <Button btnName="Create"/>
-              </a>
+                <Button btnName="Create" handleClick={() => router.push('/uploadNft')}/>
                 )
               }
             </div>
@@ -140,7 +141,7 @@ const NavBar = () => {
                 onClick={() => openProfile()}
                 className={Style.navbar_container_right_profile}
                 />
-                {profile && <Profile/>}
+                {profile && <Profile currentAccount = {currentAccount}/>}
               </div>
             </div>
             {/* MENU BUTTON */}

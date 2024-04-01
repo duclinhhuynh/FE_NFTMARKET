@@ -1,10 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Image from 'next/image';
 // INTERMAL IMPORT
 import Style from '../styles/connectWallets.module.css'
 import images from '../img';
+import {NFTMarketplaceContext} from '../Context/NFTMarketplaceContext';
+
 const connectWallet = () => {
     const [activeBtn, setactiveBtn] = useState();
+    const {currentAccount, connectWallet} = useContext(NFTMarketplaceContext);
     const providerArray = [
     {   
         provider: images.metamark,
@@ -35,7 +38,7 @@ const connectWallet = () => {
                     <div className={`${Style.connectWallet_box_provider_item}
                     ${activeBtn == i + 1 ? Style.active : ""}`} 
                     key={i + 1}
-                    onClick={() => setactiveBtn(i + 1)}
+                    onClick={() => (setactiveBtn(i + 1), connectWallet())}
                     >
                         <Image src={el.provider} alt={el.provider} 
                         width={50}

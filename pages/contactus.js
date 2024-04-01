@@ -59,10 +59,10 @@ const contactus = () => {
                         <div className={formStyle.Form_box_input}>
                             <label htmlFor="email">Email</label>
                             <div className={formStyle.Form_box_input_box}>
-                            <div className={formStyle.Form_box_input_box_icon}>
-                                <HiOutlineMail/>
-                            </div>
-                            <input type='text' placeholder='Email*'/>
+                                <div className={formStyle.Form_box_input_box_icon}>
+                                    <HiOutlineMail/>
+                                </div>
+                                <input type='text' placeholder='Email*'/>
                             </div>
                         </div>
                         <div className={formStyle.Form_box_input}>

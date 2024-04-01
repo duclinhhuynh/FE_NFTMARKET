@@ -30,11 +30,6 @@ const fetchContract = (signerOrProvider) =>
             const web3ModalInstance = new Web3Modal();
             const connection = await web3ModalInstance.connect();
             const provider = new ethers.providers.Web3Provider(connection);
-            
-            if (!provider) {
-                throw new Error("Web3 provider is undefined.");
-            }
-            
             const signer = provider.getSigner();
             const contract = fetchContract(signer); // Assuming fetchContract is defined elsewhere
             return contract;
@@ -140,6 +135,7 @@ export const NFTMarketplaceProvider = ({children}) => {
               const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
               console.log(imgHash);
               await createSale(imgHash, price);
+              router.push("/searchPage");
             } catch (error) {
               console.log("Error while creating NFT:", error);
             }
@@ -156,13 +152,11 @@ export const NFTMarketplaceProvider = ({children}) => {
                 const contract = await connectingWithSmartContract();
 
                 const listingPrice = await contract.getListingPrice();
-
-                const transaction = !isReselling
-                    ? await contract.createToken(url, price, { value: listingPrice.toString() })
-                    : await contract.reSellToken(id, price, { value: listingPrice.toString() });
+                const transaction = isReselling
+                 ? await contract.reSellToken(id, price, { value: listingPrice.toString()})
+                 : await contract.createToken(url, price, { value: listingPrice.toString()})
 
                 await transaction.wait();
-                router.push('/searchPage');
             } catch (error) {
                 console.error("Error while creating sale:", error);
                 // Handle the error here, you can throw it again if needed
@@ -173,8 +167,7 @@ export const NFTMarketplaceProvider = ({children}) => {
          // --FETCH nft functino 
          const fetchNFTS = async () => {
             try {
-                const contract = await connectingWithSmartContract();
-                console.log("contract", contract);
+            const contract = await connectingWithSmartContract();
                 const data = await contract.fetchMarketItem(); // Correct method name
                 const items = await Promise.all(
                     data.map(async ({ tokenId, seller, owner, price: unfomattedPrice }) => {
@@ -212,7 +205,6 @@ export const NFTMarketplaceProvider = ({children}) => {
                 return items;
             } catch (error) {
                 console.error("Error fetching NFTs:", error);
-                throw error;
             }
         };
         
@@ -301,6 +293,7 @@ export const NFTMarketplaceProvider = ({children}) => {
                 fetchNFTS,
                 fetchMyNFTsOrListedNFTs,
                 buyNFT,
+                createSale,
                 currentAccount,
             
             }}>

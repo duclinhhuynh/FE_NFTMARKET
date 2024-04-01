@@ -6,8 +6,8 @@ async function main() {
         const deploymentTransaction = await NFTMarketplaceFactory.deploy();
 
         // Check if deploymentTransaction is a contract instance
-        await deploymentTransaction.waitForDeployment();
-        console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.target}`);
+        await deploymentTransaction.deployed();
+        console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.address}`);
     } catch (error) {
         console.error("Deployment failed:", error);
         process.exit(1);

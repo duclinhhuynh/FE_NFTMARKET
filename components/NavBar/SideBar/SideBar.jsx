@@ -8,9 +8,11 @@ import {TiSocialFacebook, TiSocialLinkedin, TiSocialTwitter, TiSocialYoutube, Ti
 import Style from './SideBar.module.css';
 import images from "../../../img";
 import Button from '../../Button/Button';
+import { useRouter } from 'next/router';
 const SideBar = ({setOpenSideMenu, currentAccount, connectWallet}) => {
   const [openDiscover, setOpenDiscover] = useState(false);
   const [openHelp, setopenHelp] = useState(false);
+  const router = useRouter();
   // DICOVER NAVIGATION
   const discover = [
     {
@@ -160,9 +162,7 @@ const SideBar = ({setOpenSideMenu, currentAccount, connectWallet}) => {
         {currentAccount == "" 
               ? (<Button btnName="Connect Wallet" handleClick={() => connectWallet()}/> )
               : (
-              <a href="/uploadNft">
-                <Button btnName="Create" handleClick={() => {}}/>
-              </a>
+                <Button btnName="Create" handleClick={() => router.push("")}/>
                 )
           }
       </div>

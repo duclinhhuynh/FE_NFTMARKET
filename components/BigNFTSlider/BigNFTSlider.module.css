@@ -16,7 +16,7 @@
     border-radius: 1rem;
     padding: 2rem;
     z-index: 1111;
-    height: 90vh;
+    /* height: 90vh; */
 }
 .bigNFTSlider_box_left h2 {
     font-size: 3rem;
@@ -196,6 +196,10 @@
 }
 
 @media screen and (max-width:1222px){
+    .bigNFTSlider_box{
+        width: 95%;
+        /* display: flex; */
+    }
     .bigNFTSlider_box_left_bidding_box_timer {
         margin: 1rem;
     }
@@ -203,13 +207,14 @@
         padding-block: 0rem ;
     }
 }
-@media screen and (max-width: 65em){
+@media screen and (max-width: 650px){
     .bigNFTSlider_box{
         width: 95%;
-
         /* padding-top: 28rem; */
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        /* grid-template-columns: 1fr;
+        gap: 1rem; */
+        display: flex;
+        flex-direction: column;
     }
     .bigNFTSlider_box_left{
         grid-column: 7 / 1;
@@ -232,7 +237,7 @@
         right: 1.5rem;
     }
     .bigNFTSlider_box_right_box_img{
-        height: auto;
+        height: 400px;
     }
     .bigNFTSlider_box_left_creator {
         gap: 1rem;

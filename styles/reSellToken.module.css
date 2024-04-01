@@ -1,18 +1,36 @@
 .reSellToken {
-    width: 100%;
-    margin-block: 4rem;
+    width: 90%;
 }
 
-.reSellToken {
-    width: 60%;
-    margin: 0 auto;
+.reSellToken_box{
+    width: 70%;
+    margin: auto;
 }
-
-.reSellToken_box h1{
-    padding: 2rem;
-    font-size: 3rem;
+.contactus_box_box {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 5rem;
+    align-items: center;
+    align-self: flex-start;
+    margin-bottom: 10rem;
 }
 
 .reSellToken_box_image {
-    margin-block: 4rem;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .contactus_box_box{
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .reSellToken_box_value {
+        margin-top: -3rem;
+        margin-bottom: 3rem;
+    }
+    .reSellToken_box{
+        width: 70%;
+        margin: auto;
+    }
 }

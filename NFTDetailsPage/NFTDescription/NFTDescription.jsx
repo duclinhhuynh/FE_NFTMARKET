@@ -169,7 +169,8 @@ const NFTDescription = ({nft}) => {
                             </p>
                         ) : currentAccount == nft.owner.toLowerCase() ? (
                           <Button icon={<FaWallet />} btnName="List on Martketplace" 
-                          handleClick={() => router.push(`/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`)} classStyle={Style.button} />
+                            handleClick={() => router.push(`/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`)} 
+                            classStyle={Style.button}/>
                         ) : (  
                           <Button icon={<FaWallet />} btnName="Buy NFT" 
                           handleClick={() => buyNFT(nft)} classStyle={Style.button} />

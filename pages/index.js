@@ -1,7 +1,8 @@
 import React, {useState,useEffect, useContext } from 'react';
 import Style from '../styles/index.module.css';
 import { HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection,FollowerTab, AudioLive, LikeProfile, Slider, Brand, Video} from '../components/componentsindex';
-import NFTMarketplaceContext from '../Context/NFTMarketplaceContext';
+import {NFTMarketplaceContext} from '../Context/NFTMarketplaceContext';
+
 
 const Home = () => {
   const {checkIfWalletConnected} = useContext(NFTMarketplaceContext);
@@ -10,6 +11,20 @@ const Home = () => {
       checkIfWalletConnected();
     }, []);
   
+    const {fetchNFTS} = useContext(NFTMarketplaceContext);
+    const [nfts, setNfts] = useState([]);
+    const [nftCopy, setNFTCoppy] = useState([]);
+    
+    useEffect(() => {
+      fetchNFTS()
+        .then((item) => {
+          setNfts(item.reverse());
+          setNFTCoppy(item);
+        })
+        .catch((error) => {
+          console.error('Error fetching NFTs:', error);
+        });
+    }, []); 
   return (
     <div className={Style.homePage}>
       <HeroSection />
@@ -23,7 +38,7 @@ const Home = () => {
       <Collection/>
       <Title heading="Featured NFTs" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Filter/>
-      <NFTCard/>
+      <NFTCard NFTData = {nfts}/>
       <Title heading="Browse by category" paragraph="Explore the NFTs in the most featured categories. "/>
       <Category/>
       <Subscribe/>

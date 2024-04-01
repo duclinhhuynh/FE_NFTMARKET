@@ -5,12 +5,16 @@ import Style from "../styles/reSellToken.module.css"
 import fromStyle from '../accountPage/Form/Form.module.css'
 import {Button, Input, Loader} from '../components/componentsindex'
 import Image from 'next/image'
+import formStyle from '../accountPage/Form/Form.module.css'
+import { MdPriceChange } from "react-icons/md";
 //IMPORT SMART CONTRACT
 import { NFTMarketplaceContext,fetchNFTS } from '../Context/NFTMarketplaceContext'
 const reSellToken = () => {
   const {createSale} = useContext(NFTMarketplaceContext);
   const [price , setPrice] = useState("");
   const [image, setImage] = useState("");
+  const [name , setName] = useState("");
+  const [des, setDes] = useState("");
   const router = useRouter();
   const {id, tokenURI} = router.query;
   const fetchNFTS = async() => {
@@ -24,39 +28,72 @@ const reSellToken = () => {
       const name = jsonData.hasOwnProperty('name') ? jsonData.name : 'Name not available';
       const description = jsonData.hasOwnProperty('description') ? jsonData.description : 'Description not available';
       const imageurl = jsonData.hasOwnProperty('imageurl') ? jsonData.imageurl : 'Image URL not available';
-    setPrice(price)
-    setImage(imageurl);
-
+      setImage(imageurl);
+      setName(name);
+      setDes(description);
 };
   useEffect(() => {
     fetchNFTS();
   }, [id]);
   const resell = async () => {
-    await createSale(tokenURI, price , true, id);
-    router.push('/author');
+    try 
+    {
+      await createSale(tokenURI, price , true, id);
+      router.push('/author');
+      console.log("price of sale", price);
+    }catch (error){
+      console.log("Error while resell", error);
+    }
   }
   return (
     <div className={Style.reSellToken}>
       <div className={Style.reSellToken_box}>
         <h1>ReSell Your Token, Set Price</h1>
-        <div className={fromStyle.Form_box_input}>
-            <label htmlFor="name"></label>
-            <input type="number" 
-            min={1}
-            placeholder="resell"
-            className={fromStyle.Form_box_input_userName}
-            />
+        <div className={Style.contactus_box_box}>
+          <div className={Style.contactus_box_box_left}>
+              { image && (
+                <Image 
+                className={Style.reSellToken_box_image}
+                src={image} 
+                alt="resell nft" width={400}
+                 height={400}
+                objectFit='contain'
+                />
+              )}
+            </div>
+            <div className={Style.contactus_box_box_right}>
+                <div className={formStyle.Form_box_input}>
+                    <label htmlFor="name">UserName</label>
+                    <input type="text" placeholder={name}
+                      className={formStyle.Form_box_input_userName}/>
+                </div>
+                <div className={formStyle.Form_box_input}>
+                            <label htmlFor="description">Description</label>
+                            <textarea name='' id=''
+                            cols ="30" rows="6" 
+                            placeholder={des}
+                            ></textarea>
+                        </div>
+                <div className={fromStyle.Form_box_input}>
+                    <label htmlFor="name"></label>
+                    <div className={formStyle.Form_box_input_box}>
+                      <div className={formStyle.Form_box_input_box_icon}>
+                          <MdPriceChange/>
+                      </div>
+                      <input type="number" 
+                      min={0.00001}
+                      placeholder="resell price"
+                      onChange={(e) => setPrice(e.target.value)}
+                      />
+                    </div>
+                    </div>
+                </div>
+            </div>
+          <div className={Style.reSellToken_box_btn}>
+          <Button btnName="Resell NFT" handleClick={() => resell()}></Button>
+          </div>
         </div>
       </div>
-      <div className={Style.reSellToken_box_image}>
-        { image && (
-          <Image src={image} alt="resell nft" width={400} height={400}/>
-        )}
-      </div>
-      <div className={Style.reSellToken_box_btn}>
-        <Button btnName="Resell NFT" handleClick={() => resell()}></Button>
-      </div>
-    </div>
   )
 }
 
