@@ -29,7 +29,7 @@
     background-color: var(--main-bg-color);
 }
 
-.filter_box_left button:hover {
+.filter_box_left .active {
     border: 1px solid var(--icons-color);
     border-radius: 2rem;
     color: var(--icons-color);
@@ -85,7 +85,7 @@
 @media screen and (min-device-width:320px ) and (max-device-width:375px){
     .filter_box{
         display: grid;
-        gap: 4rem;
+        gap: 1rem;
 
     }
 
@@ -107,11 +107,14 @@
         grid-template-columns: repeat(2,1fr);
     }
 
-    .filter_box_right_box {
+    .filter_box_right{
+        width: 100%;
+        margin: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 4rem;
+    }
+    .filter_box_right_box {
         padding-inline: 2rem;
     }
 
@@ -127,8 +130,8 @@
 @media screen and (min-device-width:377px ) and (max-device-width:425px){
     .filter_box{
         display: grid;
-        gap: 4rem;
-
+        width: 100%;
+        gap: 1rem;
     }
 
     .filter_box_left{
@@ -146,12 +149,14 @@
         display: grid;
         grid-template-columns: repeat(2,1fr);
     }
-
-    .filter_box_right_box {
+    .filter_box_right{
+        width: 100%;
+        margin: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 4rem;
+    }
+    .filter_box_right_box {
         padding-inline: 2rem;
     }
 
@@ -167,9 +172,9 @@
 
 @media screen and (min-device-width:427px ) and (max-device-width:768px){
     .filter_box{
-        display: grid;
-        gap: 4rem;
-
+        display: flex;
+        flex-flow: wrap;
+        gap: 2rem;
     }
 
     .filter_box_left{
@@ -188,11 +193,12 @@
         grid-template-columns: repeat(2,1fr);
     }
 
-    .filter_box_right_box {
+    .filter_box_right{
+        width: 100%;
+        margin: auto;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4rem;
+    }
+    .filter_box_right_box {
         padding-inline: 2rem;
     }
 

@@ -5,7 +5,7 @@ import {RiUserFollowFill, RiUserUnfollowFill, RiAwardLine}  from 'react-icons/ri
 import Style from "./FollowerTab.module.css"
 import FollowerTabCard from './FollowerTabCard/FollowerTabCard'
 import images from '../../img';
-const Follower = () => {
+const Follower = ({TopCreators}) => {
   const [activeBtn, setActiveBtn] = useState(1);
   const CardArray = [
     {
@@ -144,7 +144,7 @@ const Follower = () => {
       {
         popular && (
           <div className={Style.followerTab_box}>
-            {CardArray.map((el, i) => (
+            {TopCreators.map((el, i) => (
               <FollowerTabCard key= {i + 1} i ={i} el ={el}/>
             ))}
           </div>

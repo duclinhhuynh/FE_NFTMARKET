@@ -158,7 +158,7 @@ const NFTDescription = ({nft}) => {
                       <div className={Style.NFTDescription_box_profile_biding_box_price}>
                           <div className={Style.NFTDescription_box_profile_biding_box_price_bid}>
                               <small>Current Bid</small>
-                              <p>{nft.price} ETH ~&nbsp;&nbsp;<span>${ethPrice && (ethPrice * parseFloat(nft.price.split(' ')[0])).toFixed(2)}</span></p>
+                              <p>{nft.price} ETH ~&nbsp;<span>${ethPrice && (ethPrice * parseFloat(nft.price.split(' ')[0])).toFixed(0)}</span></p>
                           </div>
                           <span>[102 stock]</span>
                       </div>

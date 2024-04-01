@@ -13,6 +13,12 @@ const Filter = () => {
     const [image, setImage] = useState(true);
     const [video, setVideo] = useState(true);
     const [music, setMusic] = useState(true);
+    const [nfts, setNfts] = useState(true);
+    const [arts, setArts] = useState(false);
+    const [musics, setMusics] = useState(false);
+    const [sport, setSport] = useState(false);
+    const [photography, setPhotography] = useState(false);
+    const [activeBtn, setActiveBtn] = useState(1);
     const openFilter = () => {
         if(!filter){
             setFilter(true);
@@ -41,15 +47,65 @@ const Filter = () => {
             setMusic(false)
         }
     }
+    const openNfts = () => {
+        if(!nfts){
+            setNfts(true);
+            setArts(false);
+            setMusics(false);
+            setSport(false);
+            setPhotography(false);
+            setActiveBtn(1)
+        }
+    }
+    const openArts = () => {
+        if(!arts){
+            setNfts(false);
+            setArts(true);
+            setMusics(false);
+            setSport(false);
+            setPhotography(false);
+            setActiveBtn(2)
+        }
+    }
+    const openMusics = () => {
+        if(!arts){
+            setNfts(false);
+            setArts(false);
+            setMusics(true);
+            setSport(false);
+            setPhotography(false);
+            setActiveBtn(3)
+        }
+    }
+    const openSports = () => {
+        if(!arts){
+            setNfts(false);
+            setArts(false);
+            setMusics(false);
+            setSport(true);
+            setPhotography(false);
+            setActiveBtn(4)
+        }
+    }
+    const openPhotography = () => {
+        if(!arts){
+            setNfts(false);
+            setArts(false);
+            setMusics(false);
+            setSport(false);
+            setPhotography(true);
+            setActiveBtn(5)
+        }
+    }
   return (
     <div className={Style.filter}>
         <div className={Style.filter_box}>
             <div className={Style.filter_box_left}>
-                <button onClick={() => {}}>NFTS</button>
-                <button onClick={() => {}}>Arts</button>
-                <button onClick={() => {}}>Musics</button>
-                <button onClick={() => {}}>Sports</button>
-                <button onClick={() => {}}>Photography</button>
+                <button onClick={() => openNfts()} className={`${activeBtn === 1 ? Style.active : ""}`}>NFTS</button>
+                <button onClick={() => openArts()} className={`${activeBtn === 2 ? Style.active : ""}`}>Arts</button>
+                <button onClick={() => openMusics()} className={`${activeBtn === 3 ? Style.active : ""}`}>Musics</button>
+                <button onClick={() => openSports()} className={`${activeBtn === 4 ? Style.active : ""}`}>Sports</button>
+                <button onClick={() => openPhotography()} className={`${activeBtn === 5 ? Style.active : ""}`}>Photography</button>
             </div>
             <div className={Style.filter_box_right}>
                 <div className={Style.filter_box_right_box}

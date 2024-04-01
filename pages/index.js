@@ -1,21 +1,23 @@
 import React, {useState,useEffect, useContext } from 'react';
 import Style from '../styles/index.module.css';
 import { HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection,FollowerTab, AudioLive, LikeProfile, Slider, Brand, Video, Loader} from '../components/componentsindex';
+// IMPORT CONTRACT DATA
 import {NFTMarketplaceContext} from '../Context/NFTMarketplaceContext';
-
+import { getTopCreators } from '../TopCreators/TopCreators';
 
 const Home = () => {
+  const {fetchNFTS} = useContext(NFTMarketplaceContext);
+  const [nfts, setNfts] = useState([]);
+  const [nftCopy, setNFTCoppy] = useState([]);
+  
   const {checkIfWalletConnected} = useContext(NFTMarketplaceContext);
-
+  // CREATOR LIST 
+  const creator = getTopCreators(nfts);
     useEffect(() => {
       checkIfWalletConnected();
     }, []);
   
-    const {fetchNFTS} = useContext(NFTMarketplaceContext);
-    const [nfts, setNfts] = useState([]);
-    const [nftCopy, setNFTCoppy] = useState([]);
-    
-    useEffect(() => {
+ useEffect(() => {
       fetchNFTS()
         .then((item) => {
           setNfts(item.reverse());
@@ -32,7 +34,7 @@ const Home = () => {
       <BigNFTSlider/>
       <Title heading="Lastest Audio Collection" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <AudioLive/>
-      <FollowerTab/>
+      {nfts.length == 0 ? <Loader/> : <FollowerTab TopCreators = {creator}/>}
       <Slider/>
       <Title heading="Filter By Collection" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Collection/>
