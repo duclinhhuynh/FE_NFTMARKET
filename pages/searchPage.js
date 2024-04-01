@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext} from 'react'
 
 // INTERNAL IMPORT 
 import Style from '../styles/serachPage.module.css'
-import {Slider, Brand} from '../components/componentsindex'
+import {Slider, Brand, Loader} from '../components/componentsindex'
 import { SearchBar } from '../searchPage/searchPageIndex'
 import {Filter} from '../components/componentsindex'
 import {NFTCardTwo, Banner} from "../collectionPage/collectionIndex"
@@ -62,7 +62,7 @@ const searchPage = () => {
           onClearSearch= {onClearSearch}
         />
         <Filter/>
-        <NFTCardTwo NFTData={nfts}/>
+        {nfts.length == 0 ? <Loader/> : <NFTCardTwo NFTData={nfts}/> }  
         <Slider/>
         <Brand/>
     </div>
