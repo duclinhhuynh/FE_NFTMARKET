@@ -18,19 +18,20 @@ Made with NodeJS, Hardhat, Solidity, ReactJS, NextJS
 
 Try running some of the following tasks:
 start:
+```shell
 npx hardhat node
 npx hardhat run scripts/deploy.js --network localhost
 npm run dev
-
+```
 after that using account when run npx hardhat node 
 import private key in your metamak 
 and add network in your metamask:
-
+```shell
 Network name: http://localhost:8545
 New RPC URL: http://localhost:8545)
 Chain ID: 1337
 Currency symbol: ETH
-
+```
 another way 
 you can also use polygon mumbai or another 
 networks: {
