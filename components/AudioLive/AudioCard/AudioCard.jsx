@@ -81,7 +81,7 @@ const AudioCard = () => {
           </div>
         </div>
         <div className={Style.audioCard_box_img}>
-          <Image src={images.music5} 
+          <Image src={images.music3} 
           alt="background"
           width={500}
           height={500}

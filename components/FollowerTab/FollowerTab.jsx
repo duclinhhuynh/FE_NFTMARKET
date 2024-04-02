@@ -153,7 +153,7 @@ const Follower = ({TopCreators}) => {
       {
         following && (
           <div className={Style.followerTab_box}>
-            {FollowingArray.map((el, i) => (
+            {TopCreators.map((el, i) => (
               <FollowerTabCard key= {i + 1} i ={i} el ={el}/>
             ))}
           </div>
@@ -162,7 +162,7 @@ const Follower = ({TopCreators}) => {
       {
         news && (
           <div className={Style.followerTab_box}>
-            {NewsArray.map((el, i) => (
+            {TopCreators.map((el, i) => (
               <FollowerTabCard key= {i + 1} i ={i} el ={el}/>
             ))}
           </div>

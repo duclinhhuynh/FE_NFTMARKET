@@ -68,7 +68,7 @@ const Filter = () => {
         }
     }
     const openMusics = () => {
-        if(!arts){
+        if(!musics){
             setNfts(false);
             setArts(false);
             setMusics(true);
@@ -78,7 +78,7 @@ const Filter = () => {
         }
     }
     const openSports = () => {
-        if(!arts){
+        if(!sport){
             setNfts(false);
             setArts(false);
             setMusics(false);
@@ -88,7 +88,7 @@ const Filter = () => {
         }
     }
     const openPhotography = () => {
-        if(!arts){
+        if(!photography){
             setNfts(false);
             setArts(false);
             setMusics(false);

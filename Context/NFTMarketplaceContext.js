@@ -5,11 +5,14 @@ import {ethers} from 'ethers'
 import { useRouter } from "next/router";
 import axios from "axios";
 
-const api_key  = 'ceac63b9defd3ff2e5ec'
+// const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+// const projectSecretKey  = process.env.NEXT_PUBLIC_SECRET_KEY;
+// const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString("base64")}`;
+const api_key  = '1bb65d408f739aeeff34';
 
-const api_serect = '2442f9cbc26fbae2473c1a2d57d7915e5ab54290e80915523bd72d6c5f88b1bc'
+const api_serect = '655ca77cc1c0b94f5aa1b30bb2ce78ed40dd0144b143e834e523afaf2a02ec38';
 
-const pinata_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjZWFjNjNiOWRlZmQzZmYyZTVlYyIsInNjb3BlZEtleVNlY3JldCI6IjI0NDJmOWNiYzI2ZmJhZTI0NzNjMWEyZDU3ZDc5MTVlNWFiNTQyOTBlODA5MTU1MjNiZDcyZDZjNWY4OGIxYmMiLCJpYXQiOjE3MTE1MDAxMzl9.7IXPHi0dYCu_-ZGKn8-HLZlPfvHKou5KJ9H0qARV9Jo'
+const pinata_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIxYmI2NWQ0MDhmNzM5YWVlZmYzNCIsInNjb3BlZEtleVNlY3JldCI6IjY1NWNhNzdjYzFjMGI5NGY1YWExYjMwYmIyY2U3OGVkNDBkZDAxNDRiMTQzZTgzNGU1MjNhZmFmMmEwMmVjMzgiLCJpYXQiOjE3MTIwNTU1Mjh9.egg-vIkPfHAyNeztpNCpJrXUyLPWZQ95rc627G_l3bc';
 //INTERNAL IMPORT
 import { NFTMarketplaceAddress, NFTMarketplaceABI } from "./Constants";
 import path from "path";
@@ -40,28 +43,33 @@ const fetchContract = (signerOrProvider) =>
 export const NFTMarketplaceContext = React.createContext();
 export const NFTMarketplaceProvider = ({children}) => {
     const titleData = "Discover, collect, and sell NFTS "
-
+    // --USESTAT
+    const [error, setError] = useState("");
+    const [openError, setOpenError] = useState(false);
+    const [currentAccount, setCurrentAccount] = useState("");
+    const router = useRouter ();
     // const checkContract = async() => {
     //     const contract = await connectingWithSmartContract();
     //     console.log("hell:", contract)
     // }
-    const [currentAccount, setCurrentAccount] = useState("")
     // check if wallet is connected
 
     // ==USESTATE
-    const router = useRouter ();
     const checkIfWalletConnected = async() => {
         try {
-            if(!window.ethereum) console.log("Install MetaMark");
+            if(!window.ethereum) 
+            return setOpenError(true),setError("Install MetaMark");
             const accounts = await window.ethereum.request({method: "eth_accounts"});
             if(accounts.length){
                 setCurrentAccount(accounts[0]);
             }else{
-                console.log("No Account");
+                setError("No account Found");
+                setOpenError(true);
             }
             console.log(currentAccount);
         } catch (error) {
-            console.log("something wring while connecting with smart contract")
+            setError("something wring while connecting with smart contract")
+            setOpenError(true);
         }
     }
 
@@ -71,12 +79,16 @@ export const NFTMarketplaceProvider = ({children}) => {
     // connect wallet function
     const connectWallet = async()=> {
         try {
-            if(!window.ethereum) console.log("Install MetaMark");
+            if(!window.ethereum)
+            return (setOpenError(true),
+            setError("Install Metamask")
+            )
             const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
             setCurrentAccount(accounts[0]);
             window.location.reload();
         } catch (error) {
-            console.log("Error while connecting");
+            setError("Error while connecting to wallet");
+            setOpenError(true);
         }
     }
 
@@ -114,7 +126,7 @@ export const NFTMarketplaceProvider = ({children}) => {
         const createNFT = async (name, price, imageurl, description, router) => {
             if (!name || !description || !price || !imageurl) {
               console.log("Data Is Missing");
-              return;
+              return setError("Data Is Missing"), setOpenError(true);
             }
             const data = JSON.stringify({ name, description,imageurl});
             console.log("data", data);
@@ -137,7 +149,8 @@ export const NFTMarketplaceProvider = ({children}) => {
               await createSale(imgHash, price);
               router.push("/searchPage");
             } catch (error) {
-              console.log("Error while creating NFT:", error);
+              setError("Error while creating");
+              setOpenError(true);
             }
           };
     
@@ -155,12 +168,11 @@ export const NFTMarketplaceProvider = ({children}) => {
                 const transaction = isReselling
                  ? await contract.reSellToken(id, price, { value: listingPrice.toString()})
                  : await contract.createToken(url, price, { value: listingPrice.toString()})
-
                 await transaction.wait();
             } catch (error) {
-                console.error("Error while creating sale:", error);
-                // Handle the error here, you can throw it again if needed
-                throw error;
+                setError("Error while creating sale:");
+                console.log("error while salde", error);
+                setOpenError(true);
             }
         };
  
@@ -197,14 +209,15 @@ export const NFTMarketplaceProvider = ({children}) => {
                                 tokenURI,
                             };
                         } catch (error) {
-                            console.error("Error fetching tokenURI data:", error);
-                            throw error;
+                            setError("Error fetching tokenURI data:");
+                            setOpenError(true);
                         }
                     })
                 );
                 return items;
             } catch (error) {
-                console.error("Error fetching NFTs:", error);
+                setError("Error fetching data");
+                setOpenError(true);
             }
         };
         
@@ -279,7 +292,8 @@ export const NFTMarketplaceProvider = ({children}) => {
                 await transaction.wait();
                 router.push("/author");
             } catch (error) {
-                console.log("error while buying nft")
+                setError("Error while buying NFT");
+                setOpenError(true);
             }
         }
     return(
@@ -295,7 +309,10 @@ export const NFTMarketplaceProvider = ({children}) => {
                 buyNFT,
                 createSale,
                 currentAccount,
-            
+                setError,
+                error,
+                openError,
+                setOpenError,
             }}>
             {children}
         </NFTMarketplaceContext.Provider>

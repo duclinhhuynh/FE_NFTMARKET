@@ -10,6 +10,7 @@
     display: grid;
     grid-template-columns: 1.5fr 2fr;
     align-items: center;
+    gap: 2rem;
 }
 
 .subscribe_box_left h2 {
@@ -68,6 +69,7 @@
     font-size: 2rem;
 }
 .subcribe_box_right_image {
+    border-radius: 2rem;
     max-width: 100%;
     height: auto;
 }

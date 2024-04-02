@@ -9,7 +9,7 @@ import Link from 'next/link';
 import Style from './Navbar.module.css';
 // Example in NavBar.js
 import { Discover, HelpCenter, Notification, Profile, Sidebar } from './index';
-import {Button} from "../componentsindex"
+import {Button, Error} from "../componentsindex"
 import images from "../../img";
 import { IoIosNotifications } from "react-icons/io";
 import { useRouter } from 'next/router';
@@ -37,11 +37,12 @@ const NavBar = () => {
       setHelp(true); 
       setNotification(false);
       setProfile(false);
-    }else {
-      setDiscover(false); 
+    }else{
+      setDiscover(false);
       setHelp(false);
       setNotification(false);
       setProfile(false);
+      setOpenSideMenu(false);
     }
   };
 
@@ -75,9 +76,29 @@ const NavBar = () => {
       setOpenSideMenu(false);
     }
   };
-
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      // Kiểm tra xem sự kiện click có xảy ra trong navbar không
+      if (!e.target.closest(`.${Style.NavBar}`)) {
+        // Đóng tất cả các menu
+        setDiscover(false);
+        setHelp(false);
+        setNotification(false);
+        setProfile(false);
+        setOpenSideMenu(false);
+      }
+    };
+  
+    // Thêm event listener cho sự kiện click
+    document.addEventListener('click', handleDocumentClick);
+  
+    // Xóa event listener khi component unmount
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
   // SMART CONTRACT SECTION
-  const {currentAccount, connectWallet} = useContext(NFTMarketplaceContext);
+  const {currentAccount, connectWallet, openError} = useContext(NFTMarketplaceContext);
 
   return (
     <div className={Style.NavBar}>
@@ -161,6 +182,7 @@ const NavBar = () => {
           />
         </div>
       )}
+      {openError && <Error/>}
     </div>
   )
 }

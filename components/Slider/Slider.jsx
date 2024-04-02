@@ -8,22 +8,22 @@ import images from "../../img"
 
 const Slilder = () => {
   const sliderArray = [{
-    music: images.music4
+    music: images.music7
   },
   {
-    music: images.music5
-  },
-  {
-    music: images.music1
-  },
-  {
-    music: images.music6
+    music: images.music8
   },
   {
     music: images.music9
   },
   {
     music: images.music10
+  },
+  {
+    music: images.music13
+  },
+  {
+    music: images.music2
   },
 ];
   const [width, setWidth] = useState(0);

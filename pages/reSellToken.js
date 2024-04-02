@@ -38,9 +38,9 @@ const reSellToken = () => {
   const resell = async () => {
     try 
     {
-      await createSale(tokenURI, price , true, id);
+      console.log("url resale", price, tokenURI, id);
+      await createSale(tokenURI, price, null, id);
       router.push('/author');
-      console.log("price of sale", price);
     }catch (error){
       console.log("Error while resell", error);
     }
@@ -65,6 +65,7 @@ const reSellToken = () => {
                 <div className={formStyle.Form_box_input}>
                     <label htmlFor="name">UserName</label>
                     <input type="text" placeholder={name}
+                      readOnly
                       className={formStyle.Form_box_input_userName}/>
                 </div>
                 <div className={formStyle.Form_box_input}>
@@ -72,6 +73,7 @@ const reSellToken = () => {
                             <textarea name='' id=''
                             cols ="30" rows="6" 
                             placeholder={des}
+                            readOnly
                             ></textarea>
                         </div>
                 <div className={fromStyle.Form_box_input}>
@@ -81,7 +83,6 @@ const reSellToken = () => {
                           <MdPriceChange/>
                       </div>
                       <input type="number" 
-                      min={0.00001}
                       placeholder="resell price"
                       onChange={(e) => setPrice(e.target.value)}
                       />

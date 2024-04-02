@@ -83,12 +83,15 @@ import rainbow from './rainbow.png'
 import co from './co.jpg'
 import upload_img from './upload_img.jpg'
 import loader from './loader.gif'
-
+import error from './error.gif'
+import error1 from './error1.gif'
 
 
 
 
 export default {
+    error1,
+    error,
     loader,
     upload_img,
     co,

@@ -52,7 +52,7 @@ const NFTCardTwo = ({ NFTData }) => {
                 <LikeProfile />
                 <p>{el.name}</p>
               </div>
-              <small>4 {i + 2}</small>
+              <small>4{i + 2}</small>
             </div>
             <div className={Style.NFTCardTwo_box_price}>
               <div className={Style.NFTCardTwo_box_price_box}>

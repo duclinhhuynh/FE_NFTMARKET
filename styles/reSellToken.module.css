@@ -17,6 +17,7 @@
 
 .reSellToken_box_image {
     width: 100%;
+    border-radius: 1rem;
 }
 
 @media screen and (max-width: 768px) {

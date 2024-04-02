@@ -36,7 +36,7 @@ const Home = () => {
       <AudioLive/>
       {nfts.length == 0 ? <Loader/> : <FollowerTab TopCreators = {creator}/>}
       <Slider/>
-      <Title heading="Filter By Collection" paragraph="Discover the most outstanding NFTS in all topics of life"/>
+      <Title heading="TOP LIST 24H" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Collection/>
       <Title heading="Featured NFTs" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Filter/>

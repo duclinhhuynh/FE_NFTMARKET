@@ -1,12 +1,9 @@
 .profile {
     position: absolute;
-    padding: 2rem .5rem;
     box-shadow: var(--box-shadow);
     font-size: 1rem;
-    width: 20rem;
     border-radius: 1rem;
-    left: -17rem;
-
+    left: -15rem;
     top: 4.5rem;
     z-index: 2222222222;
     background-color: var(--main-bg-color);

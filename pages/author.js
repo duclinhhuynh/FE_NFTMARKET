@@ -3,9 +3,9 @@ import React, {useState, useEffect, useContext} from 'react'
 // INTERNAL IMPORT
 import Style from '../styles/author.module.css'
 import {Banner, NFTCardTwo} from '../collectionPage/collectionIndex'
-import {Brand, Title} from "../components/componentsindex"
+// import {Brand, Title} from "../components/componentsindex"
 import {AuthorProfileCard, AuthorTaps, TabCard, AuthorNFTCardBox} from '../authorPage/componentIndex'
-import FollowerTabCard from '../components/FollowerTab/FollowerTabCard/FollowerTabCard'
+// import FollowerTabCard from '../components/FollowerTab/FollowerTabCard/FollowerTabCard'
 import images from '../img'
 import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
 const author = () => {
@@ -32,14 +32,14 @@ const author = () => {
       fetchMyNFTsOrListedNFTs()
         .then((items) => {
         setMyNFTs(items);
-        console.log("item myNFT:",items)
+        // console.log("item myNFT:",items)
       });
     },[]);
     useEffect(() => {
       fetchMyNFTsOrListedNFTs("fetchItemsListed") 
       .then((items) => {
         setNfts(items);
-        console.log("item listed:",items)
+        // console.log("item listed:",items)
       });
     }, []);
 

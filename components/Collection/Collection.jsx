@@ -178,7 +178,6 @@ const Collection = () => {
   return (
     <div className={Style.collection}>
         <div className={Style.collection_title}>
-            <h2>Top List Creators</h2>
             <div className={Style.collection_collections}>
                 <div className={Style.collection_collections_btn}>
                     <button onClick={() => openPopular()} className={`${activeBtn === 1 ? Style.active : ""}`}>
