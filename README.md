@@ -11,3 +11,6 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
 ```
+
+This is a fullstack DApp NFT Marketplace built as a study project to learn more about blockchain and smart contract development.
+Made with NodeJS, Hardhat, Solidity, ReactJS, NextJS
