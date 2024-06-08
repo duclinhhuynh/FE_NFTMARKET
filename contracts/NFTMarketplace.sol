@@ -33,7 +33,7 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 price,
         bool sold
     );
-
+    // Hàm khởi tạo 
     constructor() ERC721("Metaverse Tokens", "METT") {
         owner = payable(msg.sender);
     }
@@ -44,7 +44,9 @@ contract NFTMarketplace is ERC721URIStorage {
             owner == msg.sender,
             "Only marketplace owner can update listing price."
         );
+        //  Kiểm tra nếu người gọi hàm là chủ sở hữu thị trường.
         listingPrice = _listingPrice;
+        // Cập nhật giá niêm yết.
     }
 
     /* Returns the listing price of the contract */
@@ -59,10 +61,13 @@ contract NFTMarketplace is ERC721URIStorage {
         returns (uint256)
     {
         _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
+        uint256 newTokenId = _tokenIds.current(); 
+        // Lấy ID token mới.
         _mint(msg.sender, newTokenId);
+        // Tạo mới một token và gán cho người gọi hàm.
         _setTokenURI(newTokenId, tokenURI);
         createMarketItem(newTokenId, price);
+        // Gọi hàm createMarketItem để niêm yết token.
         return newTokenId;
     }
 
@@ -72,7 +77,7 @@ contract NFTMarketplace is ERC721URIStorage {
             msg.value == listingPrice,
             "Price must be equal to listing price"
         );
-
+        // Kiểm tra nếu người gọi hàm trả đúng phí niêm yết.
         idToMarketItem[tokenId] = MarketItem(
             tokenId,
             payable(msg.sender),
@@ -82,6 +87,7 @@ contract NFTMarketplace is ERC721URIStorage {
         );
 
         _transfer(msg.sender, address(this), tokenId);
+        // Chuyển token từ người gọi hàm đến hợp đồng.
         emit MarketItemCreated(
             tokenId,
             msg.sender,
@@ -97,14 +103,20 @@ contract NFTMarketplace is ERC721URIStorage {
             idToMarketItem[tokenId].owner == msg.sender,
             "Only item owner can perform this operation"
         );
+        //  Kiểm tra nếu người gọi hàm là chủ sở hữu của token.
         require(
             msg.value == listingPrice,
             "Price must be equal to listing price"
         );
+        // Kiểm tra nếu người gọi hàm trả đúng phí niêm yết.
         idToMarketItem[tokenId].sold = false;
+        //  Đặt trạng thái bán của token là false.
         idToMarketItem[tokenId].price = price;
+        // Cập nhật người bán là người gọi hàm.
         idToMarketItem[tokenId].seller = payable(msg.sender);
+        // : Cập nhật chủ sở hữu là hợp đồng.
         idToMarketItem[tokenId].owner = payable(address(this));
+        // : Giảm bộ đếm số mục đã bán.
         _itemsSold.decrement();
 
         _transfer(msg.sender, address(this), tokenId);

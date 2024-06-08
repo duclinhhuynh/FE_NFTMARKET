@@ -3,7 +3,7 @@ import Style from '../styles/index.module.css';
 import { HeroSection , Service, BigNFTSlider, Subscribe, Title, Category, Filter, NFTCard, Collection,FollowerTab, AudioLive, LikeProfile, Slider, Brand, Video, Loader} from '../components/componentsindex';
 // IMPORT CONTRACT DATA
 import {NFTMarketplaceContext} from '../Context/NFTMarketplaceContext';
-import { getTopCreators } from '../TopCreators/TopCreators';
+import { getTopCreators } from '../components/TopCreators/TopCreators';
 
 const Home = () => {
   const {fetchNFTS} = useContext(NFTMarketplaceContext);

@@ -62,9 +62,6 @@ export const NFTMarketplaceProvider = ({children}) => {
             const accounts = await window.ethereum.request({method: "eth_accounts"});
             if(accounts.length){
                 setCurrentAccount(accounts[0]);
-            }else{
-                setError("No account Found");
-                setOpenError(true);
             }
             console.log(currentAccount);
         } catch (error) {
@@ -87,7 +84,7 @@ export const NFTMarketplaceProvider = ({children}) => {
             setCurrentAccount(accounts[0]);
             window.location.reload();
         } catch (error) {
-            setError("Error while connecting to wallet");
+            setError("Error while connecting to wallet liuliu");
             setOpenError(true);
         }
     }
@@ -216,8 +213,8 @@ export const NFTMarketplaceProvider = ({children}) => {
                 );
                 return items;
             } catch (error) {
-                setError("Error fetching data");
-                setOpenError(true);
+                // setError("Error fetching data");
+                // setOpenError(true);
             }
         };
         

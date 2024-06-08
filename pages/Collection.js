@@ -2,7 +2,7 @@ import React from 'react'
 // INTERNAL IMPORT 
 import images from '../img'
 import Style from "../styles/collection.module.css"
-import {Banner, CollectionProfile, NFTCardTwo} from "../collectionPage/collectionIndex"
+import {Banner, CollectionProfile, NFTCardTwo} from "../components/collectionPage/collectionIndex"
 import {Slider, Brand} from "../components/componentsindex"
 import Filter from '../components/Filter/Filter'
 const collection = () => {

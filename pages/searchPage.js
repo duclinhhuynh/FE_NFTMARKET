@@ -3,9 +3,9 @@ import React, { useEffect, useState, useContext} from 'react'
 // INTERNAL IMPORT 
 import Style from '../styles/serachPage.module.css'
 import {Slider, Brand, Loader} from '../components/componentsindex'
-import { SearchBar } from '../searchPage/searchPageIndex'
+import { SearchBar } from '../components/searchPage/searchPageIndex'
 import {Filter} from '../components/componentsindex'
-import {NFTCardTwo, Banner} from "../collectionPage/collectionIndex"
+import {NFTCardTwo, Banner} from "../components/collectionPage/collectionIndex"
 import images from '../img';
 //IMPORT SMART CONTRACT
 import {NFTMarketplaceContext} from "../Context/NFTMarketplaceContext"

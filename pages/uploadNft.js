@@ -2,7 +2,7 @@
 import React ,{useEffect, useState, useContext} from 'react'
 
 import Style from '../styles/uploadNFT.module.css'
-import {UploadNFT} from '../uploadNFT/UploadNFTIndex'
+import {UploadNFT} from '../components/uploadNFT/UploadNFTIndex'
 
 import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
 const uploadNft = () => {

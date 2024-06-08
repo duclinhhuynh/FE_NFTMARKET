@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react'
 import { useRouter } from 'next/router'
 // INTERNAL IMPORT 
 import {Buton, Category, Brand} from "../components/componentsindex" 
-import NFTDetailsPage from "../NFTDetailsPage/NFTDetailsPage"
+import NFTDetailsPage from "../components/NFTDetailsPage/NFTDetailsPage"
 
 //import smart cotract data
 import {NFTMartketplaceContext} from "../Context/NFTMarketplaceContext";

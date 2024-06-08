@@ -2,9 +2,9 @@ import React, {useState, useEffect, useContext} from 'react'
 
 // INTERNAL IMPORT
 import Style from '../styles/author.module.css'
-import {Banner, NFTCardTwo} from '../collectionPage/collectionIndex'
+import {Banner, NFTCardTwo} from '../components/collectionPage/collectionIndex'
 // import {Brand, Title} from "../components/componentsindex"
-import {AuthorProfileCard, AuthorTaps, TabCard, AuthorNFTCardBox} from '../authorPage/componentIndex'
+import {AuthorProfileCard, AuthorTaps, TabCard, AuthorNFTCardBox} from '../components/authorPage/componentIndex'
 // import FollowerTabCard from '../components/FollowerTab/FollowerTabCard/FollowerTabCard'
 import images from '../img'
 import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'

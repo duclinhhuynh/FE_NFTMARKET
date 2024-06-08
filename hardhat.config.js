@@ -1,24 +1,25 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('hardhat-gas-reporter');
+require('dotenv').config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.24",
   defaultNetwork: 'hardhat',
-  networks: {
-    hardhat: {
-      chainId: 1337,
-    },
-  },
-
   // networks: {
-  //   hardhat: {},
-  //   polygon_mumbai: {
-  //     url : "https://polygon-mumbai.g.alchemy.com/v2/YYj0tXDiIdsWJ2gI_0lZMtJz3h9_7FjH",
-  //     accounts: [
-  //       `0x${"ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"}`
-  //     ],
-  //   }
+  //   hardhat: {
+  //     chainId: 1337,
+  //   },
   // },
+
+  networks: {
+    bsctest: {
+      url : "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      accounts: [process.env.PRIV_KEY]
+    }
+  },
+  etherscan: {
+    apiKey: process.env.API_KEY
+  },
   // networks: {
   //   hardhat: {},
   //   eth_mumbai: {
