@@ -11,18 +11,16 @@
 
 .account_info h1 {
     font-size: 4rem;
-    line-height: .5;
 }
 
 .account_info p {
     font-size: 1.3rem;
     width: 80%;
-    line-height: 1.2;
     padding-bottom: .5rem;
 }
 
 .account_box {
-    width: 50%;
+    width: 80%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 5fr;
@@ -45,7 +43,6 @@
 .account_box_img_para {
     font-weight: 700;
     font-size: 1rem;
-    line-height: 0;
 }
 
 @media screen and (max-width: 35em) {

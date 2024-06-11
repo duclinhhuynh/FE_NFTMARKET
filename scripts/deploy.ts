@@ -8,6 +8,14 @@ async function main() {
         // Check if deploymentTransaction is a contract instance
         await deploymentTransaction.deployed();
         console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.address}`);
+        // transfer funds
+        const MarketplaceTransferFunds = await ethers.getContractFactory("TransferFunds");
+        const marketplaceTransferFunds = await MarketplaceTransferFunds.deploy();
+
+        // Check if deploymentTransaction is a contract instance
+        await marketplaceTransferFunds.deployed();
+        console.log(`marketplaceTransferFunds contract deployed to address: ${marketplaceTransferFunds.address}`);
+
     } catch (error) {
         console.error("Deployment failed:", error);
         process.exit(1);

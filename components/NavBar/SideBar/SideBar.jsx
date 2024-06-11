@@ -16,6 +16,10 @@ const SideBar = ({setOpenSideMenu, currentAccount, connectWallet}) => {
   // DICOVER NAVIGATION
   const discover = [
     {
+      name: "TransferFunds",
+      link: "transferFunds"
+    },
+    {
       name: "Collection",
       link: "collection"
     },
@@ -26,10 +30,6 @@ const SideBar = ({setOpenSideMenu, currentAccount, connectWallet}) => {
     {
       name: "Author Profile",
       link: "author-profile"
-    },
-    {
-      name: "NFT Details",
-      link: "NFT-details"
     },
     {
       name: "Account Setting",

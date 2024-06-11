@@ -5,9 +5,9 @@
 }
 
 .heroSection_box {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
-    display: flex;
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
 }
@@ -54,7 +54,7 @@
 @media screen and (max-width: 50em) {
     .heroSection_box {
         width: 100%;
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
     .heroSection_box_left h1 {
         line-height: 1;

@@ -2,20 +2,21 @@ import React , {useEffect, useState, useContext} from "react";
 
 import Web3Modal from 'web3modal';
 import {ethers} from 'ethers'
+
 import { useRouter } from "next/router";
 import axios from "axios";
+require('dotenv').config();
 
 // const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 // const projectSecretKey  = process.env.NEXT_PUBLIC_SECRET_KEY;
 // const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString("base64")}`;
-const api_key  = '1bb65d408f739aeeff34';
+const api_key  = process.env.API_KEY_PINATA;
 
-const api_serect = '655ca77cc1c0b94f5aa1b30bb2ce78ed40dd0144b143e834e523afaf2a02ec38';
+const api_serect = process.env.API_SECRECT_PINATA;
 
-const pinata_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIxYmI2NWQ0MDhmNzM5YWVlZmYzNCIsInNjb3BlZEtleVNlY3JldCI6IjY1NWNhNzdjYzFjMGI5NGY1YWExYjMwYmIyY2U3OGVkNDBkZDAxNDRiMTQzZTgzNGU1MjNhZmFmMmEwMmVjMzgiLCJpYXQiOjE3MTIwNTU1Mjh9.egg-vIkPfHAyNeztpNCpJrXUyLPWZQ95rc627G_l3bc';
+const pinata_JWT = process.env.PINATA_JWT;
 //INTERNAL IMPORT
-import { NFTMarketplaceAddress, NFTMarketplaceABI } from "./Constants";
-import path from "path";
+import { NFTMarketplaceAddress, NFTMarketplaceABI,TransferFundsAddress,TransferFundsABI } from "./Constants";
 
 //Fetching smart contract
 const fetchContract = (signerOrProvider) => 
@@ -24,7 +25,6 @@ const fetchContract = (signerOrProvider) =>
         NFTMarketplaceABI,
         signerOrProvider
     )
-
 
     // ---Connecting width smart contract
 
@@ -40,6 +40,25 @@ const fetchContract = (signerOrProvider) =>
             console.log("Something went wrong while connecting with smart contract:", error);
         }
     };
+    const fetchTransferFundsContract = (signerOrProvider) => 
+        new ethers.Contract(
+            TransferFundsAddress,
+            TransferFundsABI,
+            signerOrProvider
+        )
+            // transferfunds
+    const connectToTransferFunds = async () => {
+        try {
+            const web3ModalInstance = new Web3Modal();
+            const connection = await web3ModalInstance.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchTransferFundsContract(signer); // Assuming fetchContract is defined elsewhere
+            return contract;
+        } catch (error) {
+            console.log("Something went wrong while connecting with smart contract:", error);
+        }
+    };          
 export const NFTMarketplaceContext = React.createContext();
 export const NFTMarketplaceProvider = ({children}) => {
     const titleData = "Discover, collect, and sell NFTS "
@@ -293,6 +312,31 @@ export const NFTMarketplaceProvider = ({children}) => {
                 setOpenError(true);
             }
         }
+        // TRANSFER FUNDs
+    const [transactionCount, setTransactionCount] = useState("");
+    const [transaction, setTransaction] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const transferEther = async (address , ether, message) => {
+        try {
+            if(currentAccount){
+                const contract = await connectToTransferFunds();
+                const unfomattedPrice = ethers.utils.parseEthers(ether);
+                await ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [
+                        {   from: currentAccount,
+                            to: address,
+                            gas: "",
+                            value: unfomattedPrice._hex
+                        },
+                    ]
+                })
+            }
+        } catch (error) {
+            
+        }
+    }
     return(
         <NFTMarketplaceContext.Provider value={
             {titleData,
@@ -310,6 +354,7 @@ export const NFTMarketplaceProvider = ({children}) => {
                 error,
                 openError,
                 setOpenError,
+                transferEther
             }}>
             {children}
         </NFTMarketplaceContext.Provider>

@@ -1,15 +1,15 @@
 import React , {useState, useEffect, useContext}from 'react'
 import Image from 'next/image'
 // import icon
-import {MdNotifications} from 'react-icons/md';
 import {BsSearch} from 'react-icons/bs';
-import {CgMenuLeft, CgMenuRight} from 'react-icons/cg';
-import Link from 'next/link';
+import { CgMenuRight} from 'react-icons/cg';
 //INTERNAL IMPORT
 import Style from './Navbar.module.css';
+import ThemeSwitch from '../theme/ThemeSwitcher';
 // Example in NavBar.js
 import { Discover, HelpCenter, Notification, Profile, Sidebar } from './index';
-import {Button, Error} from "../componentsindex"
+import {Error} from "../componentsindex"
+import { Button } from '@nextui-org/button'
 import images from "../../img";
 import { IoIosNotifications } from "react-icons/io";
 import { useRouter } from 'next/router';
@@ -145,11 +145,17 @@ const NavBar = () => {
                  notification && <Notification/>
                 }
             </div>
+            <ThemeSwitch/>
+
             {/* CREATE BUTTON SECTION */}
             <div className={Style.navbar_container_right_button}>
-              {currentAccount === "" ? (<Button btnName="Connect" handleClick={() => connectWallet()}/> )
+              {currentAccount === "" ? (<Button color='primary' variant="bordered" onClick={() => connectWallet()}>
+                      Connect
+                  </Button>) 
               : (
-                <Button btnName="Create" handleClick={() => router.push('/uploadNft')}/>
+                <Button color='primary' variant="bordered" onClick={() => router.push('/uploadNft')}>
+                  Create
+                </Button>
                 )
               }
             </div>

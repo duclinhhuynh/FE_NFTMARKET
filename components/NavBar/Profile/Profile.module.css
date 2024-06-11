@@ -5,9 +5,9 @@
     border-radius: 1rem;
     left: -15rem;
     width: 17rem;
-    top: 4.5rem;
+    top: 3.5rem;
     z-index: 2222222222;
-    background-color: var(--main-bg-color);
+    background-color: var(--background-btn);
 
 }
 
@@ -41,6 +41,9 @@
 .profile_menu_one_item a {
     text-decoration: none;
     color: black;
+}
+.profile_menu_one_item:hover a{
+    color: white;
 }
 
 .profile_menu_one_item:hover {

@@ -1,15 +1,24 @@
 import React from 'react';
-import { NavBar,Footer} from '../components/componentsindex';  // Check the path to NavBar component
+import { NavBar, Footer } from '../components/componentsindex'; 
 import '../styles/globals.css';
+import { NextUIProvider } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { NFTMarketplaceProvider } from '../Context/NFTMarketplaceContext';
+
 const MyApp = ({ Component, pageProps }) => (
-  <div>
-    <NFTMarketplaceProvider>
-    <NavBar />  {/* Ensure NavBar is correctly imported and used */}
-    <Component {...pageProps} />
-    <Footer/>
-    </NFTMarketplaceProvider>
-  </div>
+  <NextUIProvider>
+    <NextThemesProvider
+      attribute='class'
+      defaultTheme='light'
+      themes={['light', 'dark', 'modern']}
+    >
+      <NFTMarketplaceProvider>
+          <NavBar />  
+          <Component {...pageProps} />
+          <Footer />
+      </NFTMarketplaceProvider>
+    </NextThemesProvider>
+  </NextUIProvider>
 );
 
 export default MyApp;

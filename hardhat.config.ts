@@ -5,21 +5,24 @@ require('dotenv').config();
 module.exports = {
   solidity: "0.8.24",
   defaultNetwork: 'hardhat',
-  // networks: {
-  //   hardhat: {
-  //     chainId: 1337,
-  //   },
-  // },
-
   networks: {
-    bsctest: {
-      url : "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: [process.env.PRIV_KEY]
-    }
+    localhost: {
+            url: "http://127.0.0.1:8545"
+    },
+    hardhat: {
+      chainId: 1337,
+    },
   },
-  etherscan: {
-    apiKey: process.env.API_KEY
-  },
+
+  // networks: {
+  //   bsctest: {
+  //     url : "https://data-seed-prebsc-1-s1.binance.org:8545/",
+  //     accounts: [process.env.PRIV_KEY]
+  //   }
+  // },
+  // etherscan: {
+  //   apiKey: process.env.API_KEY
+  // },
   // networks: {
   //   hardhat: {},
   //   eth_mumbai: {

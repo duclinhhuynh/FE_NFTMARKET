@@ -8,7 +8,11 @@
     grid-template-columns: repeat(4, 1fr);
     display: grid;
     gap: 3rem;
-    text-align: center;
+}
+.service_box_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .service_box_item_step {

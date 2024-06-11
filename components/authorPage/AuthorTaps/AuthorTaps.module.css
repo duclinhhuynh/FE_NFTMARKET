@@ -58,7 +58,6 @@
 
 .AuthorTaps_box_right_para p {
     font-size: 1.2rem;
-    line-height: .5;
 }
 
 .AuthorTaps_box_right_list {
@@ -77,14 +76,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    line-height: 0;
     padding-right: 1rem;
 }
 
 .AuthorTaps_box_right_list_item p {
     transition: all .3s ease-in;
     padding:  0 1rem;
-    line-height: 1;
     cursor: pointer;
 }
 

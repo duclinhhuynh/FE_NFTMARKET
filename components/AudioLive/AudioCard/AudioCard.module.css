@@ -112,12 +112,10 @@
     width: 90%;
     border-top-right-radius: 2rem;
     padding:0 2rem;
-    line-height: .1;
 }
 
 .audioCard_box_details_info h4 {
     font-size: 1.1rem;
-    line-height: 0;
 }
 
 .audioCard_box_details_info_price {
@@ -136,7 +134,6 @@
 }
 
 .audioCard_box_details_info_price p {
-    line-height: 1.2;
     font-weight: 700;
 }
 

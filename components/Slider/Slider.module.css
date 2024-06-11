@@ -3,14 +3,13 @@
 }
 
 .slider_box {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     padding: 0 -1rem 8rem 0;
 }
 
 .slider_box h2 {
     font-size: 3rem;
-    line-height: 0;
 }
 
 .slider_box_button {

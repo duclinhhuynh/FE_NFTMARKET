@@ -4,7 +4,7 @@
     grid-template-columns: 2fr 5fr 1fr;
     align-items: center;
     gap: 1.3rem;
-    line-height: 0;
+    /* line-height: 0; */
     background-color: var(--bg-shadow-dark-color);
     padding: .5rem 1rem;
     border-radius: 1rem;

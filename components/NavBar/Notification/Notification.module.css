@@ -6,9 +6,9 @@
     width: 20rem;
     border-radius: 1rem;
     left: -17rem;
-    top: 4.5rem;
+    top: 2.5rem;
     z-index: 2222222222;
-    background-color: var(--main-bg-color);
+    background-color: var(--background-btn);
 }
 
 .notification > p {
@@ -37,8 +37,6 @@
 
 .notification_box_info {
     padding-left: 10px;
-    line-height: 0;
-    margin-top: -.8rem;
 }
 
 .notification_box_info p{

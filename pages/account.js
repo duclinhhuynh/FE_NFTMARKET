@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone'
 // INTERNAL IMPORT
 import Style from "../styles/account.module.css"
 import images from "../img"
-import From from "../accountPage/Form/Form"
+import From from "../components/accountPage/Form/Form"
 const account = () => {
     const [fileUrl, setFileUrl] = useState(null);
     const onDrop = useCallback(async (acceptedFile) => {

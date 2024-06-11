@@ -14,6 +14,7 @@
 
 .sliderCard_box_img_img{
     border-radius: 2rem;
+    height: 250px;
     width: 100%;
 }
 
@@ -41,7 +42,6 @@
     display: flex;
     justify-content: space-between;
     padding-inline: 2rem;
-    line-height: 0;
     margin-top: -.3rem;
     text-align: end;
 }
@@ -63,7 +63,6 @@
     /* font-size: 1.3rem; */
     font-weight: 700;
     margin-top: 1rem;
-    line-height: 0;
 }
 
 .sliderCard_box_price_time {

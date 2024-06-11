@@ -15,14 +15,19 @@
     margin-bottom: 3rem;
 }
 
-.DropZone_box_input p {
-    line-height: 0;
+.DropZone_box_input_img {
+    display: flex;
+justify-content: center;
 }
 
 .DropZone_box_input_img_img {
     border-radius: 1rem;
     width: 100%;
     /* filter: invert(); */
+}
+.DropZone_box_input_img_img_one {
+    display: flex;
+    justify-content: center;
 }
 
 .DropZone_box_aside {
