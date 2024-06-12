@@ -3,10 +3,10 @@ import Image from 'next/image';
 import {AiFillFire, AiFillHeart, AiOutlineeH} from 'react-icons/ai';
 import {MdTimer, MdVerified} from 'react-icons/md'
 import {TbArrowBigLeftLines, TbArrowBigRight, TbArrowBigRightLine} from 'react-icons/tb'
-
+import { FaCamera } from "react-icons/fa";
 import Style from "./BigNFTSlider.module.css"
 import images from '../../img'
-import Button from "../Button/Button"
+import { Button } from '@nextui-org/button'
 // axios
 import axios from 'axios';
 import { fetchPrice } from '../../api/api';
@@ -167,8 +167,8 @@ const BigNFTSlider = () => {
                     </div>  
                 </div>
                 <div className={Style.bigNFTSlider_box_left_button}>
-                    <Button btnName="Place" handleClick={() => {}}/>
-                    <Button btnName="View" handleClick={() => {}} />
+                    <Button color="primary" variant="bordered" onClick={() => {}}>Place</Button>
+                    <Button color="primary" variant="bordered" endContent={<FaCamera/>} onClick={() => {}}>View</Button>
                 </div>
                 <div className={Style.bigNFTSlider_box_left_sliderBtn}>
                 <TbArrowBigLeftLines

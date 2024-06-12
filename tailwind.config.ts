@@ -29,7 +29,7 @@ const config: Config = {
     themes: {
       light: {
         colors: {
-          primary: "#006fee",
+          primary: "#4c5773",
         }
       },
       dark: {
@@ -39,7 +39,7 @@ const config: Config = {
       },
       modern: {
         colors: {
-          primary: "#006fee",
+          primary: "#4c5773",
           secondary: "#EE457E",
           background:"#F4E8D1"
         }

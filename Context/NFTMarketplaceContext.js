@@ -66,6 +66,8 @@ export const NFTMarketplaceProvider = ({children}) => {
     const [error, setError] = useState("");
     const [openError, setOpenError] = useState(false);
     const [currentAccount, setCurrentAccount] = useState("");
+    const [accountBalance, setAccountBalance] = useState('');
+    
     const router = useRouter ();
     // const checkContract = async() => {
     //     const contract = await connectingWithSmartContract();
@@ -83,6 +85,10 @@ export const NFTMarketplaceProvider = ({children}) => {
                 setCurrentAccount(accounts[0]);
             }
             console.log(currentAccount);
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const getBalance = await provider.getBalance(accounts[0]);
+            const bal = ethers.utils.formatEther(getBalance);
+            setAccountBalance(bal)
         } catch (error) {
             setError("something wring while connecting with smart contract")
             setOpenError(true);
@@ -316,12 +322,12 @@ export const NFTMarketplaceProvider = ({children}) => {
     const [transactionCount, setTransactionCount] = useState("");
     const [transaction, setTransaction] = useState([]);
     const [loading, setLoading] = useState(false);
-
     const transferEther = async (address , ether, message) => {
+        console.log("adress", address, ether, message);
         try {
             if(currentAccount){
                 const contract = await connectToTransferFunds();
-                const unfomattedPrice = ethers.utils.parseEthers(ether);
+                const unfomattedPrice = ethers.utils.parseEther(ether);
                 await ethereum.request({
                     method: 'eth_sendTransaction',
                     params: [
@@ -334,7 +340,7 @@ export const NFTMarketplaceProvider = ({children}) => {
                 })
             }
         } catch (error) {
-            
+            console.log("have a eroor transfer", error);
         }
     }
     return(
@@ -354,7 +360,8 @@ export const NFTMarketplaceProvider = ({children}) => {
                 error,
                 openError,
                 setOpenError,
-                transferEther
+                transferEther,
+                accountBalance
             }}>
             {children}
         </NFTMarketplaceContext.Provider>
