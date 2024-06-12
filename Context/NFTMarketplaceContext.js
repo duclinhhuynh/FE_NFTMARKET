@@ -84,7 +84,6 @@ export const NFTMarketplaceProvider = ({children}) => {
             if(accounts.length){
                 setCurrentAccount(accounts[0]);
             }
-            console.log(currentAccount);
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const getBalance = await provider.getBalance(accounts[0]);
             const bal = ethers.utils.formatEther(getBalance);
@@ -249,7 +248,6 @@ export const NFTMarketplaceProvider = ({children}) => {
         
         // FETCHING MY NFT OR LISTED NFTS
         const fetchMyNFTsOrListedNFTs = async(type) => {
-            console.log("type fetch", type);
             try {
                 const contract = await connectingWithSmartContract();
                 let data;
@@ -338,9 +336,40 @@ export const NFTMarketplaceProvider = ({children}) => {
                         },
                     ]
                 })
+                const transaction = await contract.addDataToBlockChain(address, unfomattedPrice, message)
+                setLoading(true);
+                transaction.wait();
+                setLoading(false);
+                // number of transaction happened
+                const transactionCount = await contract.getTransactionCount();
+                setTransactionCount(transactionCount.toNumber());
+                window.location.reload();
+            }else {
+                console.log("On etherum");
             }
         } catch (error) {
             console.log("have a eroor transfer", error);
+        }
+    }
+    // fetch all transaction 
+    const getAllTransactions = async() => {
+        try {
+            if(ethereum){
+                const contract = await connectToTransferFunds();
+                const availableTransaction = await contract.getAllTransaction();
+                console.log("avaible",availableTransaction);
+                const readTransaction = availableTransaction.map((transaction) => ({
+                    addressTo: transaction.receiver,
+                    addressFrom: transaction.sender,
+                    timestamp: new Date(transaction.timestamps.toNumber() * 1000).toLocaleDateString(),
+                    message: transaction.message,
+                    amount: parseInt(transaction.amount._hex) / 10 ** 18,
+                }));
+                console.log("read Transaction",readTransaction);
+                setTransaction(readTransaction) 
+            }
+        } catch (error) {
+            console.log("getAlltransaction", error);
         }
     }
     return(
@@ -361,7 +390,11 @@ export const NFTMarketplaceProvider = ({children}) => {
                 openError,
                 setOpenError,
                 transferEther,
-                accountBalance
+                accountBalance,
+                transactionCount,
+                transaction,
+                loading,
+                getAllTransactions,
             }}>
             {children}
         </NFTMarketplaceContext.Provider>
