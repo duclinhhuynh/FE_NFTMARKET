@@ -34,17 +34,15 @@ const Discover = () => {
       link: "connectWallet"
     },
     {
-      name: "Blog",
-      link: "blog"
+      // name: "Blog",
+      // link: "blog"
     }
   ]
   return (
     <div>
       {discover.map((el, i)=> (
-        <div key = {i + 1} className={Style.discover}>
-          <Link href={{pathname: `${el.link}`}}>{el.name}
+          <Link href={{pathname: `${el.link}`}} className={Style.discover} key = {i + 1}>{el.name}  
           </Link>
-        </div>
       ))}
     </div>
   );

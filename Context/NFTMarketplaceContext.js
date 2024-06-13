@@ -78,8 +78,6 @@ export const NFTMarketplaceProvider = ({children}) => {
     // ==USESTATE
     const checkIfWalletConnected = async() => {
         try {
-            if(!window.ethereum) 
-            return setOpenError(true),setError("Install MetaMark");
             const accounts = await window.ethereum.request({method: "eth_accounts"});
             if(accounts.length){
                 setCurrentAccount(accounts[0]);
@@ -89,8 +87,7 @@ export const NFTMarketplaceProvider = ({children}) => {
             const bal = ethers.utils.formatEther(getBalance);
             setAccountBalance(bal)
         } catch (error) {
-            setError("something wring while connecting with smart contract")
-            setOpenError(true);
+            console.log("check if wallet connect error", error);
         }
     }
 
@@ -100,16 +97,11 @@ export const NFTMarketplaceProvider = ({children}) => {
     // connect wallet function
     const connectWallet = async()=> {
         try {
-            if(!window.ethereum)
-            return (setOpenError(true),
-            setError("Install Metamask")
-            )
             const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
             setCurrentAccount(accounts[0]);
             window.location.reload();
         } catch (error) {
-            setError("Error while connecting to wallet liuliu");
-            setOpenError(true);
+           console.log("connectWallet error", error);
         }
     }
 

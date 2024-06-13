@@ -63,10 +63,10 @@ setTimeout(() => {
 }, 700);
 };
   return (
-    <div className='mt-10 mb-52'>
+    <div className='mt-10 mb-52 '>
       <div className='my-auto'>
-        <div className='flex justify-around '>
-          <div className='w-1/3 shadow-md p-2 border rounded-xl'>
+        <div className='flex justify-around sm:flex-col md:flex-row max-sm:flex-col max-sm:gap-5'>
+          <div className='w-1/3 md:w-[40%] sm:w-[90%] max-sm:w-[90%] mx-auto h-max shadow-md p-2 border rounded-xl'>
             <h2 className='text-2xl font-semibold mb-2'>Transfer your ether</h2>
             <div className='flex border border-solid border-yellow-500 rounded-xl' >
               <div className='flex flex-col justify-between'>
@@ -75,7 +75,7 @@ setTimeout(() => {
                         id='myInput'
                         hidden
                     />
-                <div className='flex '>
+                <div className='flex xl:flex-row max-sm:flex-col md:flex-col '>
                   <p className='flex item-center text-1xl font-semibold p-5 cursor-pointer'
                    onClick={() => copyAddressAccount()}
                    onMouseDown={handleMouseDown}
@@ -139,9 +139,9 @@ setTimeout(() => {
                           id="currency"
                           name="currency"
                         >
-                          <option>ETH</option>
-                          <option>USD</option>
-                          <option>BTC</option>
+                            <option>ETH</option>
+                            <option>USD</option>
+                            <option className=''>BTC</option>
                         </select>
                       </div>
                     }
@@ -166,8 +166,8 @@ setTimeout(() => {
                   </div>
             </form>
           </div>
-          <div className='w-[60%] flex flex-col gap-5'>
-              <div className='flex flex-grown justify-between gap-5 border rounded-xl p-5 shadow-md'>
+          <div className='w-[60%] md:w-[50%] sm:w-[90%] max-sm:w-[90%] flex flex-col gap-5 mx-auto'>
+              <div className='flex xl:flex-row md:flex-col max-sm:flex-col justify-between gap-5 border rounded-xl p-5 shadow-md'>
                 <div className='min-w-[300px] flex flex-col gap-5'>
                 <h3 className='text-gray-700 font-medium font-semibold'>overview</h3>
                 <div>
@@ -207,7 +207,7 @@ setTimeout(() => {
                   <div></div>
                 </div>
                 </div>
-                <div className='min-w-[300px]  flex flex-col gap-6'>
+                <div className='min-w-[300px] flex flex-col gap-6'>
                 <h3 className='text-gray-700 font-medium font-semibold'>More Info</h3>
                 <div>
                   <p className='text-gray-400 font-thin text-sm'>PRIVATE NAME TAGS</p>
@@ -229,8 +229,8 @@ setTimeout(() => {
                 </div>
                 </div>
               </div>
-              <div className='flex flex-grown justify-between gap-5 border rounded-xl p-5 shadow-md'>
-                <div className='flex'>
+              <div className='flex justify-between gap-5 border rounded-xl p-5 shadow-md'>
+                <div className='flex xl:flex-row md:flex-col max-sm:flex-col '>
                   <div className='min-w-[300px] flex flex-col gap-5'>
                     <h3 className='text-gray-700 font-medium font-semibold'>Mutichain Info</h3>
                   <div>

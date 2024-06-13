@@ -120,9 +120,9 @@ const NavBar = () => {
         </div>
         {/* END OF LEFT SECTION*/}
         <div className={Style.navbar_container_right}>
-          <div className={Style.navbar_container_right_discover}>
+          <div className={Style.navbar_container_right_discover} onClick={(e)=> openMenu(e)}>
             {/* DISCOVER MENU */}
-            <p onClick={(e)=> openMenu(e)}>Discover</p>
+            <p>Discover</p>
             {discover && (
              <div className={Style.navbar_container_right_discover_box}>
                 <Discover/>
@@ -130,8 +130,9 @@ const NavBar = () => {
             )}
           </div>
             {/* HELP CENTER MENU */}
-            <div className={Style.navbar_container_right_help}>
-              <p onClick={(e) => openMenu(e)}>Help Center</p>
+            {/* onClick={(e) => openMenu(e)} */}
+            <div className={Style.navbar_container_right_help} >
+              <p >Help Center</p>
               {help && (
                 <div className={Style.navbar_container_right_help_box}>
                   <HelpCenter/>
