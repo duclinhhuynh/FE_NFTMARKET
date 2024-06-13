@@ -1,24 +1,16 @@
 import React from 'react';
 import { NavBar, Footer } from '../components/componentsindex'; 
 import '../styles/globals.css';
-import { NextUIProvider } from '@nextui-org/react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { NFTMarketplaceProvider } from '../Context/NFTMarketplaceContext';
-
+import Providers from './(Provider)/providers'
 const MyApp = ({ Component, pageProps }) => (
-  <NextUIProvider>
-    <NextThemesProvider
-      attribute='class'
-      defaultTheme='light'
-      themes={['light', 'dark', 'modern']}
-    >
+  <Providers>
       <NFTMarketplaceProvider>
           <NavBar />  
           <Component {...pageProps} />
           <Footer />
       </NFTMarketplaceProvider>
-    </NextThemesProvider>
-  </NextUIProvider>
+  </Providers>
 );
 
 export default MyApp;

@@ -168,7 +168,7 @@ setTimeout(() => {
           </div>
           <div className='w-[60%] md:w-[50%] sm:w-[90%] max-sm:w-[90%] flex flex-col gap-5 mx-auto'>
               <div className='flex xl:flex-row md:flex-col max-sm:flex-col justify-between gap-5 border rounded-xl p-5 shadow-md'>
-                <div className='min-w-[300px] flex flex-col gap-5'>
+                <div className='min-w-[300px] flex flex-col gap-3'>
                 <h3 className='text-gray-700 font-medium font-semibold'>overview</h3>
                 <div>
                   <p className='text-gray-400 font-thin text-sm'>ETH BLANCE</p>
@@ -207,21 +207,21 @@ setTimeout(() => {
                   <div></div>
                 </div>
                 </div>
-                <div className='min-w-[300px] flex flex-col gap-6'>
+                <div className='min-w-[300px] flex flex-col gap-3'>
                 <h3 className='text-gray-700 font-medium font-semibold'>More Info</h3>
                 <div>
-                  <p className='text-gray-400 font-thin text-sm'>PRIVATE NAME TAGS</p>
+                  <p className='text-gray-400 font-thin text-sm pb-2'>PRIVATE NAME TAGS</p>
                   <Button color="primary" variant="light" size='sm' className='border rounded-2xl'>
                     <FaPlus/> Add
                   </Button> 
                 </div>
                 <div>
-                  <p className='text-gray-400 font-thin text-sm'>LAST TXN SENT</p>
+                  <p className='text-gray-400 font-thin text-sm p-1'>LAST TXN SENT</p>
                   <p className='flex item-center'><span className='text-blue-600 '>{currentAccount.slice(0,15)}...</span> from 4hr ago</p> 
                 </div>
                 <div>
                   <div>
-                  <p className='text-gray-400 font-thin text-sm'>FIRST TXN SENT</p>
+                  <p className='text-gray-400 font-thin text-sm p-1'>FIRST TXN SENT</p>
                   <p className='flex item-center'><span className='text-blue-600 '>{currentAccount.slice(0,15)}...</span> from 4hr ago</p>
                   </div>
                   
