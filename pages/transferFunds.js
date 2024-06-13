@@ -166,7 +166,7 @@ setTimeout(() => {
                   </div>
             </form>
           </div>
-          <div className='w-[60%] md:w-[50%] sm:w-[90%] max-sm:w-[90%] flex flex-col gap-5 mx-auto'>
+          <div className='w-[60%] md:w-[50%] sm:w-[90%] max-sm:w-[90%] flex flex-col gap-4 mx-auto'>
               <div className='flex xl:flex-row md:flex-col max-sm:flex-col justify-between gap-5 border rounded-xl p-5 shadow-md'>
                 <div className='min-w-[300px] flex flex-col gap-3'>
                 <h3 className='text-gray-700 font-medium font-semibold'>overview</h3>
