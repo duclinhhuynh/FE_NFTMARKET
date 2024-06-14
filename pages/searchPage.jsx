@@ -19,7 +19,6 @@ const searchPage = () => {
       .then((item) => {
         setNfts(item.reverse());
         setNFTCoppy(item);
-        console.log(nfts);
       })
       .catch((error) => {
         console.error('Error fetching NFTs:', error);
@@ -33,7 +32,7 @@ const searchPage = () => {
   const onHandleSearch = (value) => {
     const filteredNFTS = nfts.filter(({name}) => 
     name.toLowerCase().includes(value.toLowerCase()));
-
+    console.log(nfts);
     if(filteredNFTS.length === 0) {
       setNfts(nftCopy);
     }else{
@@ -48,8 +47,6 @@ const searchPage = () => {
     );
     setNfts(filteredNFTS);
   };
-
-
 
   const onClearSearch = () => {
     if (nfts.length && nftCopy.length) {

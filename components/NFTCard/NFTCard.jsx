@@ -1,12 +1,11 @@
 import React, { useState, useEffect} from 'react'
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
-import {BsImages} from 'react-icons/bs'
 import Image from 'next/image'
 // IMPORT 
 import images from '../../img'
-import Style from "./NFTCard.module.css"
 import { fetchPrice } from '../../api/api'
 import Link from 'next/link'
+import Style from './NFTCard.module.css'
 
 const NFTCard = ({NFTData}) => {
     const featureArray = [{
@@ -60,55 +59,37 @@ const NFTCard = ({NFTData}) => {
         fetchData();
     }, []);
     return (
-        <div className={Style.NFTCard}>
+        <div className='w-[90%] flex flex-wrap gap-10 m-auto '>
             {NFTData.map((el, i) => (
                 <Link href={{pathname: "/NFTDetails", query : el}}>
-                    <div className={Style.NFTCard_box} key={i + 1}>
-                        <div className={Style.NFTCard_box_img}>
+                    <div key={i + 1} className='bg-itembackground rounded-xl shadow-xl'>
+                        <div>
                             <Image src={el.imageurl} alt='NFT images' 
-                            width={500}
-                            height={400}
+                            width={250}
+                            height={200}
                             objectFit="contain"
-                            className={Style.NFTCard_box_img_img}
+                            className={`rounded-t-xl ${Style.NFTCard_img}`}
                             />
                         </div>
-                        <div className={Style.NFTCard_box_update}>
-                            <div className={Style.NFTCard_box_update_left}>
-                                <div className={Style.NFTCard_box_update_left_like}
-                                    onClick={() => likeNft()}>
-                                    {like ? (
-                                        <AiOutlineHeart/>
-                                    ): (<AiFillHeart className={Style.NFTCard_box_update_left_like_icon}
-                                    />
-                                    )} {""} 22
-                                </div>
+                        <div className='p-3'>
+                            <div className='flex item-center justify-between'>
+                                <h4 className='text-lg text-textprimary font-semibold'>{el.name}# {el.tokenId}</h4>
+                                <h4 className=''>Time</h4>
                             </div>
-                            <div className={Style.NFTCard_box_update_right}>
-                                <div className={Style.NFTCard_box_update_right_info}>
-                                    <small>Remaining time</small>
-                                    <p>3h : 15m : 20s</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={Style.NFTCard_box_update_details}>
-                            <div className={Style.NFTCard_box_update_details_price}>
-                                <div className={Style.NFTCard_box_update_details_price_box}>
-                                    <h4>{el.name}# {el.tokenId}</h4>
-                                    <div className={Style.NFTCard_box_update_details_price_box_box}>
-                                        <div className={Style.NFTCard_box_update_details_price_box_bid}>
-                                            <small>Current Bid</small>
-                                            <p>{el.price}<span>&nbsp;&nbsp;$
-                                                    {ethPrices &&
-                                                        (ethPrices * el.price).toFixed(0)}</span></p>
-                                        </div>
-                                        <div className={Style.NFTCard_box_update_details_price_box_stock}>
-                                            <small>61 in stock </small>
-                                        </div>
+                            <div >
+                                <div >
+                                    <div className='flex justify-between'>
+                                        <small>Current Bid</small>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <p className='text-lg font-bold text-textprimary font-semibold '>{el.price}<span>&nbsp;<i>~</i>&nbsp;$
+                                                {ethPrices &&
+                                                    (ethPrices * el.price).toFixed(0)}</span></p>
+                                        <p className='text-lg text-textprimary'>
+                                             3h:4m:2s
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
-                            <div className={Style.NFTCard_box_update_details_category}>
-                                <BsImages/>
                             </div>
                         </div>
                     </div>

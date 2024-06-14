@@ -102,7 +102,7 @@ const Filter = () => {
   return (
     <div className={Style.filter}>
         <div className={Style.filter_box}>
-            <div className={`flex flex-col gap-2`}>
+            <div className={`flex flex-wrap flex-col gap-2`}>
             <CheckboxGroup
                 label="Select NFT"
                 orientation="horizontal"
@@ -111,7 +111,7 @@ const Filter = () => {
                 value={groupSelected}
                 onChange={setGroupSelected}
                 >
-               <div className='flex gap-5'>
+               <div className='flex flex-wrap gap-5'>
                     <Checkbox className='text-white' value="All">All</Checkbox>
                     <Checkbox className='text-white' value="Image">Image</Checkbox>
                     <Checkbox className='text-white' value="Photography">Photography</Checkbox>
