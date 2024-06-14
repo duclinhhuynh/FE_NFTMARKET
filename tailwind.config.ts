@@ -30,17 +30,19 @@ const config: Config = {
       light: {
         colors: {
           primary: "#4c5773",
+          secondary: "#0072f5",
         }
       },
       dark: {
         colors: {
           primary: "#FFD34E",
+          secondary: "#0072f5",
         }
       },
       modern: {
         colors: {
           primary: "#4c5773",
-          secondary: "#EE457E",
+          secondary: "#0072f5",
           background:"#F4E8D1"
         }
       }
