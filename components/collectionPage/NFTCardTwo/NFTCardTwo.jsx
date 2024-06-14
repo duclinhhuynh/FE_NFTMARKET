@@ -42,7 +42,7 @@ const NFTCardTwo = ({ NFTData }) => {
             <div className={Style.NFTCardTwo_box_img}>
               <Image src={el.imageurl} 
               alt="NFT" 
-              width={500} height={300} 
+              width={200} height={200} 
               objectFit="cover" 
               className={Style.NFTCardTwo_box_img_img}
               />
@@ -54,15 +54,15 @@ const NFTCardTwo = ({ NFTData }) => {
               </div>
               <small>4{i + 2}</small>
             </div>
-            <div className={Style.NFTCardTwo_box_price}>
-              <div className={Style.NFTCardTwo_box_price_box}>
-                <small>Current Bid</small>
-                <p>{el.price} ETH</p>
+            <div className='flex justify-between'>
+              <div >
+                <small className='p-2 ml-2'>Current Bid</small>
+                <p className='border rounded-md p-2 ml-2 mb-2'>{el.price} ETH</p>
               </div>
-              <p className={Style.NFTCardTwo_box_price_stock}>
+              <div className={Style.NFTCardTwo_box_price_stock}>
                 <MdTimer />
                 <span>{i + 1} hours left</span>
-              </p>
+              </div>
             </div>
           </div>
         </Link>

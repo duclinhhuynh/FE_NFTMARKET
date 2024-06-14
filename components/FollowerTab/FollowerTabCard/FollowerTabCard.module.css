@@ -17,7 +17,6 @@
     z-index: 11111;
     background-color: var(--icons-color);
     color: var(--main-bg-color);
-    line-height: 0;
     margin: 1rem;
     padding: .1rem .5rem;
     border-radius: 2rem;
@@ -70,7 +69,6 @@
     grid-column: 1/-1;
     display: flex;
     align-items: center;
-    line-height: 0;
     justify-content: space-between;
     margin-top: -1rem;
     padding-inline: 1rem;
@@ -79,7 +77,6 @@
 
 .FollowerTabCard_box_info h4 {
     font-size: 1rem;
-    line-height: 0;
 }
 
 .FollowerTabCard_box_info_following_before{

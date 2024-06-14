@@ -5,16 +5,17 @@ import {ethers} from 'ethers'
 
 import { useRouter } from "next/router";
 import axios from "axios";
-require('dotenv').config();
+const dotenv = require("dotenv");
+dotenv.config({path: "../.env"})
 
 // const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 // const projectSecretKey  = process.env.NEXT_PUBLIC_SECRET_KEY;
 // const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString("base64")}`;
-const api_key  = process.env.API_KEY_PINATA;
+const api_key  = "1bb65d408f739aeeff34";
 
-const api_serect = process.env.API_SECRECT_PINATA;
+const api_serect = '655ca77cc1c0b94f5aa1b30bb2ce78ed40dd0144b143e834e523afaf2a02ec38';
 
-const pinata_JWT = process.env.PINATA_JWT;
+const pinata_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIxYmI2NWQ0MDhmNzM5YWVlZmYzNCIsInNjb3BlZEtleVNlY3JldCI6IjY1NWNhNzdjYzFjMGI5NGY1YWExYjMwYmIyY2U3OGVkNDBkZDAxNDRiMTQzZTgzNGU1MjNhZmFmMmEwMmVjMzgiLCJpYXQiOjE3MTIwNTU1Mjh9.egg-vIkPfHAyNeztpNCpJrXUyLPWZQ95rc627G_l3bc";
 //INTERNAL IMPORT
 import { NFTMarketplaceAddress, NFTMarketplaceABI,TransferFundsAddress,TransferFundsABI } from "./Constants";
 
@@ -85,6 +86,7 @@ export const NFTMarketplaceProvider = ({children}) => {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const getBalance = await provider.getBalance(accounts[0]);
             const bal = ethers.utils.formatEther(getBalance);
+            // console.log("api key", api_key ,api_serect, pinata_JWT);
             setAccountBalance(bal)
         } catch (error) {
             console.log("check if wallet connect error", error);

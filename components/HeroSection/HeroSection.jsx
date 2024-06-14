@@ -21,7 +21,7 @@ const HeroSection = () => {
         <div className={Style.heroSection_box}>
             <div className={Style.heroSection_box_left}>
                 <h1>{titleData}🖼</h1>
-                <p color="primary">A place with endless fun and the most engaging community</p>
+                <p className="p-3" color="primary">A place with endless fun and the most engaging community</p>
                 <Button onClick={() => router.push('/searchPage')} color="primary" variant="bordered" 
                 >Start your search</Button>
                 <div className="flex item-center justify-between gap-10">

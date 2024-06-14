@@ -2,7 +2,7 @@ import React from 'react'
 // INTERNAL IMPORT 
 import images from '../img'
 import Style from "../styles/collection.module.css"
-import {Banner, CollectionProfile, NFTCardTwo} from "../components/collectionPage/collectionIndex"
+import {CollectionProfile, NFTCardTwo} from "../components/collectionPage/collectionIndex"
 import {Slider, Brand} from "../components/componentsindex"
 import Filter from '../components/Filter/Filter'
 const collection = () => {
@@ -19,10 +19,9 @@ const collection = () => {
     ]
   return (
     <div className={Style.collection}>
-        <Banner bannerImage = {images.bg1}/>
-        <CollectionProfile />
+        <CollectionProfile collectionArray={collectionArray} />
         <Filter/>
-        <NFTCardTwo NFTData = {collectionArray}/>
+        <NFTCardTwo/>
         <Slider/>
         <Brand/>
     </div>

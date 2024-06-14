@@ -42,8 +42,6 @@
     align-items: center;
     gap: 1rem;
     font-size: 1.2rem;
-    background-color: var(--icons-color);
-    color: var(--main-bg-color);
     border-radius: 2rem;
     padding: 0 .5rem;
 }
@@ -55,19 +53,12 @@
 
 .NFTCardTwo_box_img_img {
     border-radius: 1rem;
-    width: 100%;
-    height: 100%;
 }
 
 .NFTCardTwo_box_info {
     display: flex;
     justify-content: space-between;
     padding: 1rem
-}
-
-.NFTCardTwo_box_info_left {
-    line-height: 0;
-
 }
 
 .NFTCardTwo_box_info small {
@@ -85,7 +76,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    line-height: 0;
     padding: 1rem;
 }
 
@@ -95,12 +85,9 @@
     font-size: 1.2rem;
     margin-top: .5rem;
     border-radius: .3rem;
-    color: var(--icons-color);
 }
 
 .NFTCardTwo_box_price_box small {
-    background-color: var(--icons-color);
-    color: var(--main-bg-color);
     padding: .3rem;
     border-radius: .3rem;
     margin-left: .5rem;

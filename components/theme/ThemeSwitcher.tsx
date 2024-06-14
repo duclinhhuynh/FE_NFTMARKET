@@ -20,18 +20,15 @@ export default function ThemeSwitcher() {
     <div className='flex border-none'>
     {theme && 
     <div>
-        { theme === 'modern' ? 
-        <Chip className='text-2xl text-white focus:outline-none' variant="light" onClick={() => setTheme('light')}>
-            <GoSun/>
-        </Chip>
-        : theme === "light"
+        { 
+       theme === "light"
         ?
         <Chip className='text-2xl text-black focus:outline-none'variant="light" onClick={() => setTheme('dark')}>
             <IoMdMoon/>
         </Chip>
         :
-        <Chip className='text-2xl text-white focus:outline-none' color='primary' variant="light" onClick={() => setTheme('modern')}>
-            <WiDaySnowWind/>
+        <Chip className='text-2xl text-white focus:outline-none' color='primary' variant="light" onClick={() => setTheme('light')}>
+            <GoSun/>
         </Chip>
         }
     </div>

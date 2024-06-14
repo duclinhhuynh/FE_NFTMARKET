@@ -9,7 +9,6 @@ import {NFTCardTwo, Banner} from "../components/collectionPage/collectionIndex"
 import images from '../img';
 //IMPORT SMART CONTRACT
 import {NFTMarketplaceContext} from "../Context/NFTMarketplaceContext"
-
 const searchPage = () => {
   const {fetchNFTS} = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
@@ -20,6 +19,7 @@ const searchPage = () => {
       .then((item) => {
         setNfts(item.reverse());
         setNFTCoppy(item);
+        console.log(nfts);
       })
       .catch((error) => {
         console.error('Error fetching NFTs:', error);
@@ -28,7 +28,6 @@ const searchPage = () => {
 
   // Log the updated nfts state
   useEffect(() => {
-    console.log('Updated nfts:', nfts);
   }, [nfts]);
 
   const onHandleSearch = (value) => {
@@ -41,6 +40,22 @@ const searchPage = () => {
       setNfts(filteredNFTS);
     }
   }
+
+  const onHandleSearchPrice = (value) => {
+    const [minPrice, maxPrice] = value;
+    const filteredNFTS = nftCopy.filter(({ price }) => 
+      price >= minPrice && price <= maxPrice
+    );
+    setNfts(filteredNFTS);
+  };
+
+
+
+  const onClearSearch = () => {
+    if (nfts.length && nftCopy.length) {
+      setNfts(nftCopy);
+    }
+  };
     const collectionArray = [
         images.cartoon1,
         images.cartoon2,
@@ -48,21 +63,17 @@ const searchPage = () => {
         images.cartoon4,
         images.cartoon5,
         images.cartoon6,
-    ]
-  const onClearSearch = () => {
-    if(nfts.length && nftCopy.length){
-      setNfts(nftCopy)
-    }
-  }
+    ];
   return (
     <div className={Style.searchPage}>
         <SearchBar 
           onHandleSearch={onHandleSearch}
           onClearSearch= {onClearSearch}
+          onHandleSearchPrice = {onHandleSearchPrice}
         />
         <Filter/>
         {nfts.length == 0 ? <Loader/> : <NFTCardTwo NFTData={nfts}/> }  
-        <Slider/>
+        {/* <Slider/> */}
         <Brand/>
     </div>
   )

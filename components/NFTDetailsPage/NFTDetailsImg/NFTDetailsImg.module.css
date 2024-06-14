@@ -48,7 +48,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    line-height: 0;
     background-color: var(--icon-bg-color);
     border-radius: .5rem;
     padding-inline: 1rem;
@@ -63,6 +62,5 @@
 }
 
 .NFTDetailsImg_box_details_box p {
-    line-height: 1;
     font-size: 1rem;
 }
