@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Link  from 'next/link'
 
 import  Style  from './Discover.module.css';
-const Discover = () => {
+import {Listbox, ListboxItem} from "@nextui-org/react";
+import { useTheme } from 'next-themes'
+const Discover = ({ setDiscover }) => {
+  const { theme, setTheme } = useTheme()
   // -- DISCOVER NAVIGATION MENU
+  const handleItemClick = () => {
+    setDiscover(false); // Gọi hàm setDiscover để đóng Discover component khi click vào một mục
+  };
   const discover = [
     {
       name: "Transfer",
@@ -33,17 +39,29 @@ const Discover = () => {
       name: "Connect Wallet",
       link: "connectWallet"
     },
-    {
-      // name: "Blog",
-      // link: "blog"
-    }
+    // {
+    //   // name: "Blog",
+    //   // link: "blog"
+    // }
   ]
   return (
     <div>
-      {discover.map((el, i)=> (
-          <Link href={{pathname: `${el.link}`}} className={Style.discover} key = {i + 1}>{el.name}  
-          </Link>
-      ))}
+        <Listbox 
+          aria-label="Multiple selection example"
+          variant="flat"
+          disallowEmptySelection
+          className={`rounded-xl shadow-md border ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`}
+          // selectionMode="multiple"
+          // selectedKeys={selectedKeys}
+          // onSelectionChange={setSelectedKeys}
+        >
+          {discover.map((el, i)=> (
+            <ListboxItem key={i} onClick={handleItemClick} >
+              <Link href={{pathname: `${el.link}`}} className="block w-full" key = {i + 1}>{el.name}  
+              </Link>
+              </ListboxItem>
+            ))}  
+        </Listbox>
     </div>
   );
 };

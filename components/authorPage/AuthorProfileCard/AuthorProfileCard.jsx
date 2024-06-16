@@ -6,10 +6,11 @@ import { MdVerified, MdCloudUpload, MdOutlineReportProblem, MdOutbond} from 'rea
 import {FiCopy} from 'react-icons/fi';
 import { TiSocialFacebook, TiSocialLinkedin, TiSocialYoutube, TiSocialInstagram } from 'react-icons/ti';
 import {BsThreeDots} from 'react-icons/bs';
+import { FiHeart } from "react-icons/fi";
 //INTERNAL IMPORT
 import Style from './AuthorProfileCard.module.css'
 import images from '../../../img'
-import {Button} from '../../componentsindex'
+import {Button, Chip} from "@nextui-org/react";
 
 const AuthorProfileCard = ({currentAccount}) => {
     const [share, setShare] = useState(false);
@@ -38,19 +39,19 @@ const AuthorProfileCard = ({currentAccount}) => {
     }; 
 
   return (
-    <div className={Style.AuthorProfileCard}>
+    <div >
         <div className={Style.AuthorProfileCard_box}>
             <div className={Style.AuthorProfileCard_box_img}>
                 <Image src={images.nft1} 
                 className={Style.AuthorProfileCard_box_img_img}
-                width={220}
-                height={220}
+                width={200}
+                height={200}
                 objectFit='cover'
                 />
             </div>
             <div className={Style.AuthorProfileCard_box_info}>
-                <h2> Lucas NFT {""}<span><MdVerified/></span>{""}</h2>
                 <div className={Style.AuthorProfileCard_box_info_address}>
+                <h2> Lucas NFT {""}<span><MdVerified/></span>{""}</h2>
                     <input type="text" 
                     value={currentAccount}
                     id='myInput'
@@ -61,26 +62,21 @@ const AuthorProfileCard = ({currentAccount}) => {
                 <p>
                     Punk#3289/ Crypto collector, hoarder of NFTs.
                 </p>
-                <div className={Style.AuthorProfileCard_box_info_social}>
-                    <a href="#">
-                        <TiSocialFacebook/>
-                    </a>
-                    <a href="#">
-                        <TiSocialInstagram/>
-                    </a>
-                    <a href="#">
-                        <TiSocialLinkedin/>
-                    </a>
-                    <a href="#">
-                        <TiSocialYoutube/>
-                    </a>
+                <div className='flex flex-wrap gap-2'>
+                    <Chip color="primary" variant="dot"><TiSocialFacebook/></Chip>
+                    <Chip color="primary" variant="dot"><TiSocialInstagram/></Chip>
+                    <Chip color="primary" variant="dot"><TiSocialLinkedin/></Chip>
+                    <Chip color="primary" variant="dot"><TiSocialYoutube/></Chip>
                 </div>
             </div>
             <div className={Style.AuthorProfileCard_box_share}>
-                <Button btnName="Follow" handleClick={() => {}}/>
-                <MdCloudUpload onClick={() => openShare()} className={Style.AuthorProfileCard_box_share_icon}/>
-                {
-                    share && (
+            <Button size="sm" color="danger" aria-label="Like" variant="bordered" endContent={<FiHeart/>}>
+                Follow 
+            </Button>
+            <Button color="danger"  size="sm" endContent={<MdCloudUpload/>}  onClick={() => openShare()}>
+                
+            </Button>
+            {  share && (
                     <div className={Style.AuthorProfileCard_box_share_upload}>
                         <p>
                             <span>
@@ -107,7 +103,7 @@ const AuthorProfileCard = ({currentAccount}) => {
                             Youtube
                         </p>
                     </div>
-                )}
+            )}
                 <BsThreeDots onClick={() => openReport()} className={Style.AuthorProfileCard_box_share_icon}/>
                 {
                     report &&(

@@ -48,7 +48,6 @@ const author = () => {
 
   return (
     <div className={Style.banner}>
-        <Banner bannerImage={images.bg1}/>
         <AuthorProfileCard currentAccount={currentAccount}/>
         <AuthorTaps 
           setColleciables = {setColleciables} 

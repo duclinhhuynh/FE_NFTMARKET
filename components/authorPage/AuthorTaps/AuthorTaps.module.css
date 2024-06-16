@@ -1,6 +1,6 @@
 .AuthorTaps {
     width: 100%;
-    margin: 8rem 0 3rem 0;
+    padding: 1rem;
 }
 
 .AuthorTaps_box {
@@ -28,10 +28,8 @@
     color: var(--icons-color);
 }
 
-.AuthorTaps_box_left_btn .active {
-    border: 1px solid var(--icons-color);
-    background-color: var(--icons-color);
-    color: var(--main-bg-color);
+.AuthorTaps_box_left .active {
+    border: 2px solid;
 }
 
 .AuthorTaps_box_left_btn button {

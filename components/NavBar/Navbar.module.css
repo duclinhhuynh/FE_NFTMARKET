@@ -61,7 +61,13 @@
     cursor: pointer;
  }
 
- .navbar_container_right_discover_box,
+ .navbar_container_right_discover_box{
+    position: absolute;
+    font-size: 1rem;
+    width: 15rem;
+    border-radius: 1rem;
+    top: 2.5rem;
+ }
  .navbar_container_right_help_box {
     position: absolute;
     box-shadow: var(--box-shadow);
