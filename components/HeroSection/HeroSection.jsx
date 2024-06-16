@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, use} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import {Image} from "@nextui-org/react";
 import NextImage from "next/image";
 //INTERNAL IMPORT
@@ -10,18 +10,20 @@ import { Button } from '@nextui-org/button'
 import {Time} from "@internationalized/date";
 import {TimeInput} from "@nextui-org/react";
 import {Card, CardHeader, CardBody, CardFooter, Avatar, Link} from "@nextui-org/react";
+import { useTheme } from 'next-themes'
 //Smart contract 
 import {NFTMarketplaceContext} from '../../Context/NFTMarketplaceContext'
 const HeroSection = () => {
     const [isFollowed, setIsFollowed] = React.useState(false);
-    const router = useRouter()
-    const {titleData} = useContext(NFTMarketplaceContext)
+    const router = useRouter();
+    const {titleData} = useContext(NFTMarketplaceContext);
+    const { theme, setTheme } = useTheme();
     return (
     <div className={Style.heroSection}>
         <div className={Style.heroSection_box}>
             <div className={Style.heroSection_box_left}>
-                <h1>{titleData}🖼</h1>
-                <p className="p-3" color="primary">A place with endless fun and the most engaging community</p>
+                <h1 className={`p-3 ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`}>Discover, collect, and sell NFTS 🖼</h1>
+                <p className={`p-3 ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`}>A place with endless fun and the most engaging community</p>
                 <Button onClick={() => router.push('/searchPage')} color="primary" variant="bordered" 
                 >Start your search</Button>
                 <div className="flex item-center justify-between gap-10">

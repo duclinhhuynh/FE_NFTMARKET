@@ -56,7 +56,6 @@ const author = () => {
           setFollower = {setFollower}
           setFollowing = {setFollowing}
           />
-          {/* <Title heading="Popular Creator" paragraph="Click on music icon and enjoy NFT music or audio"/> */}
           <AuthorNFTCardBox
             colleciables = {colleciables} 
             created={created} 
@@ -66,9 +65,6 @@ const author = () => {
             nfts = {nfts}
             myNFTs = {myNFTs}
           />
-          {/* {popularArray.map((el,i)=>(
-            <FollowerTabCard key={i + 1} i = {i} el = {el}/>
-          ))} */}
     </div>
   )
 }
