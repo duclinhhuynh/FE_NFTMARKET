@@ -2,8 +2,10 @@ import React from 'react'
 import Style from './Brand.module.css'
 import Image from 'next/image'
 import images from '../../img'
-import {Button} from '../../components/componentsindex'
+import {Button} from "@nextui-org/react";
+import { useTheme } from 'next-themes'
 const Brand = () => {
+const { theme, setTheme } = useTheme()
   return (
     <div className={Style.Brand}>
         <div className={Style.Brand_box}>
@@ -14,11 +16,11 @@ const Brand = () => {
                     objectFit='cover'
                     className={Style.Brand_box_left_img}
                 />
-                <h1>Earn free crypto with carv</h1>
-                <p>A creative agency that lead and inspire</p>
+                <h1 className={`${theme === 'light' ? 'text-dark' : 'text-white'}`}>Earn free crypto with carv</h1>
+                <p className={`${theme === 'light' ? 'text-dark' : 'text-white'}`}>A creative agency that lead and inspire</p>
                 <div className={Style.Brand_box_left_btn}>
-                    <Button btnName="Create" handleClick={() => {}}></Button>
-                    <Button btnName="Discover" handleClick={() => {}}></Button>
+                    <Button color="primary" variant="solid" handleClick={() => {}} className={`${theme === 'light' ? 'text-white' : 'text-white'}`}>Create</Button>
+                    <Button color="primary" variant="solid" handleClick={() => {}} className={`${theme === 'light' ? 'text-white' : 'text-white'}`}>Discover</Button>
                 </div>
             </div>
             <div className={Style.Brand_box_right}>

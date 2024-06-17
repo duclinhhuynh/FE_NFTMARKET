@@ -15,8 +15,6 @@
     border-radius: 1rem;
     overflow: hidden;
     cursor: pointer;
-    padding-bottom: 1rem;
-
 }
 .category_box:hover {
     box-shadow: var(--box-shadow);
@@ -36,7 +34,6 @@
 
 .category_box_title span {
     font-size: 3rem;
-    margin-top: 1rem;
 }
 
 

@@ -6,7 +6,7 @@ import Style from './DaysComponents.module.css'
 import images from '../../../img'
 const DaysComponents = ({el}) => {
   return (
-    <div className={Style.daysComponent}>
+    <div className={`border shadow-md ${Style.daysComponent}`}>
         <div className={Style.daysComponent_box}>
             <div className={Style.daysComponent_box_img}>
                 <Image src={el.background}
@@ -45,11 +45,11 @@ const DaysComponents = ({el}) => {
                             width={30}
                             height={30}
                             objectFit="covers"
-                            className={Style.daysComponent_box_title_info_profile_img}
+                            className={`${Style.daysComponent_box_title_info_profile_img}`}
                         />
-                        <p>Creator
-                            <span>Lucas <small><MdVerified/></small></span>
-                        </p>
+                        <div>
+                            <span className='flex items-center'>Creator&nbsp;Lucas <MdVerified/></span>
+                        </div>
                     </div>
                     <div className={Style.daysComponent_box_title_info_price}>
                         <small>1.2 ETH</small>

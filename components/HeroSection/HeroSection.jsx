@@ -22,8 +22,10 @@ const HeroSection = () => {
     <div className={Style.heroSection}>
         <div className={Style.heroSection_box}>
             <div className={Style.heroSection_box_left}>
-                <h1 className={`p-3 ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`}>Discover, collect, and sell NFTS 🖼</h1>
-                <p className={`p-3 ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`}>A place with endless fun and the most engaging community</p>
+                <div>
+                    <h1 className={`p-3 ${theme === 'light' ? 'text-black' : 'text-white'}`}>Discover, collect, and sell NFTS 🖼</h1>
+                    <p className={`p-3 ${theme === 'light' ? 'text-black' : 'text-white'}`}>A place with endless fun and the most engaging community</p>
+                </div>
                 <Button onClick={() => router.push('/searchPage')} color="primary" variant="bordered" 
                 >Start your search</Button>
                 <div className="flex item-center justify-between gap-10">

@@ -5,6 +5,7 @@ import {motion} from 'framer-motion'
 import Style from "./Slider.module.css"
 import SliderCard from './SliderCard/SliderCard'
 import images from "../../img"
+import { useTheme } from 'next-themes'
 
 const Slilder = () => {
   const sliderArray = [{
@@ -28,6 +29,7 @@ const Slilder = () => {
 ];
   const [width, setWidth] = useState(0);
   const dragSlider = useRef();
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     setWidth(dragSlider.current.scrollWidth - dragSlider.current.offsetWidth);
@@ -46,9 +48,9 @@ const Slilder = () => {
   return (
     <div className={Style.slider}>
       <div className={Style.slider_box}>
-        <h2>Explore NFTs video</h2>
+        <h2 className={`${theme === 'light' ? 'text-dark' : 'text-white'}`}>Explore NFTs video</h2>
         <div className={Style.slider_box_button}>
-          <p>Click on play icon & enjoy Nfts Video</p>
+          <p className={`${theme === 'light' ? 'text-dark' : 'text-white'}`}>Click on play icon & enjoy Nfts Video</p>
           <div className={Style.slider_box_button_btn}>
             <div className={Style.slider_box_button_btn_icon} onClick={() => handleScroll("left")}>
             <TiArrowLeftThick/>

@@ -141,7 +141,7 @@ const NavBar = () => {
             {/* DISCOVER MENU */}
             <p
               className={`${
-                theme === "light" ? "bg-white" : "bg-black text-white"
+                theme === "light" ? "text-black" : "text-white"
               }`}
             >
               Discover
@@ -157,7 +157,7 @@ const NavBar = () => {
           <div className={Style.navbar_container_right_help}>
             <p
               className={`${
-                theme === "light" ? "bg-white" : "bg-black text-white"
+                theme === "light" ? "text-black" : "text-white"
               }`}
             >
               Help Center
@@ -169,10 +169,10 @@ const NavBar = () => {
             )}
           </div>
           {/* NOTIFICATION */}
-          <div className={`${
-                theme === "light" ? "bg-white" : "bg-black text-white"
-              } ${Style.navbar_container_right_notif}`}>
-            <p onClick={(e) => openNotification(e)}>
+          <div className={` ${Style.navbar_container_right_notif}`}>
+            <p onClick={(e) => openNotification(e)} className={`${
+                theme === "light" ? "text-black" : "text-white"
+              }`}>
               <IoIosNotifications
                 className={Style.navbar_container_right_notif_img}
               />

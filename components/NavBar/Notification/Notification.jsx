@@ -1,7 +1,5 @@
 import React , {useMemo} from "react";
-import Image from "next/image";
 import { useTheme } from 'next-themes'
-import Style from "./Notification.module.css";
 import {
   Listbox,
   ListboxItem,
@@ -233,7 +231,7 @@ const Notification = () => {
   }, [arrayValues.length]);
     
   return (
-    <div className="absolute mt-2 shadow-md">
+    <div className="absolute mt-2 rounded-xl shadow-md">
      <Listbox
         topContent={topContent}
         classNames={{

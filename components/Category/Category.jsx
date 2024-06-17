@@ -27,7 +27,7 @@ const Category = () => {
     <div className={Style.box_category}>
         <div className={Style.category}>
         {CategoryArray.map((el,i) => (
-            <div className={Style.category_box} key={1 + 1} >
+            <div className={`border shadow-md ${Style.category_box}`} key={1 + 1} >
                 <Image src={el.backgound} 
                 className={Style.category_box_img}
                 alt='Background image'

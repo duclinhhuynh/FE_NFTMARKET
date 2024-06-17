@@ -33,7 +33,6 @@
 }
 
 .collectionProfile_box_left_social a{
-    background-color: var(--icons-color);
     border: 1px solid var(--icons-color);
     border-radius: 50%;
     color: var(--main-bg-color);
@@ -54,7 +53,7 @@
 }
 
 .collectionProfile_box_middle h1 {
-    font-size: 3rem;
+    font-size: 2rem;
 }
 
 .collectionProfile_box_middle p {
@@ -72,7 +71,7 @@
 .collectionProfile_box_middle_box_item {
     background-color: var(--main-bg-color);
     box-shadow: var(--box-shadow);
-    padding: 3rem 2rem;
+    padding: 2rem 1rem;
     border-radius: 2rem;
     text-align: center;
 }

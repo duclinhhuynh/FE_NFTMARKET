@@ -7,7 +7,7 @@ import images from "../../../img"
 import LikeProfile from "../../LikeProfile/LikeProfile"
 const SliderCard = ({el}) => {
   return (
-    <motion.div className={Style.sliderCard}>
+    <motion.div className={`rounded-xl shadow-md border ${Style.sliderCard}`}>
         <div className={Style.sliderCard_box}>
             <motion.div className={Style.sliderCard_box_img}>
                 <Image src={el.music} 
