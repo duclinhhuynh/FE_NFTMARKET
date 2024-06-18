@@ -37,7 +37,7 @@ const NFTCardTwo = ({ NFTData }) => {
     fetchData();
   }, []);
   return (
-    <div className="w-[90%] flex flex-wrap  gap-10 m-auto ">
+    <div className="flex flex-wrap gap-5 m-auto mt-10">
       {NFTData?.map((el, i) => (
         <Link href={{ pathname: "/NFTDetails", query: el }} key={i + 1}>
           <div key={i + 1} className="bg-itembackground rounded-xl shadow-xl">

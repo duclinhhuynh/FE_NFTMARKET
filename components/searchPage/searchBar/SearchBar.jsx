@@ -35,7 +35,7 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
   }, [priceRange]);
   return (
     <div className={Style.searchBar}>
-      <div className="w-[90%] flex m-auto xl:flex-row max:md:flex-col sm:flex-col max-sm:flex-col rounded-xl gap-2 justify-around mt-[3rem] py-5 border p-5">
+      <div className="flex flex-col flex-wrap rounded-xl gap-5 justify-around mt-[3rem] py-5 border p-5">
         <div className="">
           <Input
             label="Search"
@@ -47,7 +47,7 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
               ],
               innerWrapper: "bg-transparent",
               inputWrapper: [
-                "min-w-[250px]",
+                // "min-w-[250px]",
               ],
             }}
             onChange={(e) => setSearchItem(e.target.value)}
@@ -66,7 +66,7 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
               start: parseDate("2024-04-01"),
               end: parseDate("2024-04-08"),
             }}
-            className="max-w-xs min-w-[250px]"
+            className="max-w-xs"
           />
         </div>
         <div>
@@ -79,7 +79,7 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
             onChange={setPriceRange}
             defaultValue={[0.01, 10]}
             formatOptions={{ style: "currency", currency: "USD" }}
-            className="max-w-md min-w-[300px]"
+            className="max-w-md"
           />
         </div>
       </div>

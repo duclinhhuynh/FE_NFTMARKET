@@ -2,10 +2,10 @@ import React, {useEffect, useState, useContext} from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import Style from "../styles/reSellToken.module.css"
-import fromStyle from '../accountPage/Form/Form.module.css'
+import fromStyle from '../components/accountPage/Form/Form.module.css'
 import {Button, Input, Loader} from '../components/componentsindex'
 import Image from 'next/image'
-import formStyle from '../accountPage/Form/Form.module.css'
+import formStyle from '../components/accountPage/Form/Form.module.css'
 import { MdPriceChange } from "react-icons/md";
 //IMPORT SMART CONTRACT
 import { NFTMarketplaceContext,fetchNFTS } from '../Context/NFTMarketplaceContext'
@@ -76,7 +76,7 @@ const reSellToken = () => {
                             readOnly
                             ></textarea>
                         </div>
-                <div className={fromStyle.Form_box_input}>
+                <div className={formStyle.Form_box_input}>
                     <label htmlFor="name"></label>
                     <div className={formStyle.Form_box_input_box}>
                       <div className={formStyle.Form_box_input_box_icon}>

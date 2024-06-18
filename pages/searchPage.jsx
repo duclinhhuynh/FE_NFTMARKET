@@ -7,13 +7,14 @@ import { SearchBar } from '../components/searchPage/searchPageIndex'
 import {Filter} from '../components/componentsindex'
 import {NFTCardTwo, Banner} from "../components/collectionPage/collectionIndex"
 import images from '../img';
+import { useTheme } from 'next-themes'
 //IMPORT SMART CONTRACT
 import {NFTMarketplaceContext} from "../Context/NFTMarketplaceContext"
 const searchPage = () => {
   const {fetchNFTS} = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
   const [nftCopy, setNFTCoppy] = useState([]);
-  
+  const { theme, setTheme } = useTheme()
   useEffect(() => {
     fetchNFTS()
       .then((item) => {
@@ -63,14 +64,19 @@ const searchPage = () => {
     ];
   return (
     <div className={Style.searchPage}>
-        <SearchBar 
-          onHandleSearch={onHandleSearch}
-          onClearSearch= {onClearSearch}
-          onHandleSearchPrice = {onHandleSearchPrice}
-        />
-        <Filter/>
-        {nfts.length == 0 ? <Loader/> : <NFTCardTwo NFTData={nfts}/> }  
-        {/* <Slider/> */}
+      <div className='flex w-[90%] m-auto max-sm:flex-col gap-5'>
+        <div className='w-1/3 max-md:w-1/2 max-sm:w-full'>
+          <SearchBar 
+            onHandleSearch={onHandleSearch}
+            onClearSearch= {onClearSearch}
+            onHandleSearchPrice = {onHandleSearchPrice}
+            />
+          <Filter/>
+        </div>
+        <div className='w-3/4 max-md:w-1/2 max-sm:w-full'>
+          {nfts.length == 0 ? <Loader/> : <NFTCardTwo NFTData={nfts}/> }  
+        </div>
+      </div>
         <Brand/>
     </div>
   )

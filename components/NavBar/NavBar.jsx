@@ -13,11 +13,10 @@ import { Button } from "@nextui-org/button";
 import images from "../../img";
 import { IoIosNotifications } from "react-icons/io";
 import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
 // IMPORT FROM SMART CONTRACT
 import { Input } from "@nextui-org/react";
 import { NFTMarketplaceContext } from "../../Context/NFTMarketplaceContext";
-
+import ThemeSwitcherText from "../theme/ThemeSwitcherText";
 const NavBar = () => {
   // useState
   const [discover, setDiscover] = useState(false);
@@ -26,7 +25,6 @@ const NavBar = () => {
   const [profile, setProfile] = useState(false);
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
  
   const openMenu = (e) => {
     const btnText = e.target.innerText;
@@ -106,6 +104,7 @@ const NavBar = () => {
 
   return (
     <div className={Style.NavBar}>
+      <ThemeSwitcherText>
       <div className={Style.navbar_container}>
         <div className={Style.navbar_container_left}>
           <div className={Style.logo}>
@@ -140,9 +139,6 @@ const NavBar = () => {
           >
             {/* DISCOVER MENU */}
             <p
-              className={`${
-                theme === "light" ? "text-black" : "text-white"
-              }`}
             >
               Discover
             </p>
@@ -156,9 +152,6 @@ const NavBar = () => {
           {/* onClick={(e) => openMenu(e)} */}
           <div className={Style.navbar_container_right_help}>
             <p
-              className={`${
-                theme === "light" ? "text-black" : "text-white"
-              }`}
             >
               Help Center
             </p>
@@ -170,9 +163,7 @@ const NavBar = () => {
           </div>
           {/* NOTIFICATION */}
           <div className={` ${Style.navbar_container_right_notif}`}>
-            <p onClick={(e) => openNotification(e)} className={`${
-                theme === "light" ? "text-black" : "text-white"
-              }`}>
+            <p onClick={(e) => openNotification(e)}>
               <IoIosNotifications
                 className={Style.navbar_container_right_notif_img}
               />
@@ -235,6 +226,7 @@ const NavBar = () => {
         </div>
       )}
       {openError && <Error />}
+      </ThemeSwitcherText>
     </div>
   );
 };
