@@ -37,7 +37,7 @@ const AuthorNFTCardBox = ({
     images.user4,
   ];
   return (
-    <div className={Style.AuthorNFTCardBox}>
+    <div className={`m-auto w-[90%] ${Style.AuthorNFTCardBox}`}>
         {colleciables && <NFTCardTwo NFTData={nfts}/>}
         {created && <NFTCardTwo NFTData={myNFTs}/>}
         {like && <NFTCardTwo NFTData={likeArray}/>}

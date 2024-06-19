@@ -38,14 +38,13 @@ const Home = () => {
       <Slider/>
       <Title heading="TOP LIST 24H" paragraph="Discover the most outstanding NFTS in all topics of life"/>
       <Collection/>
-      <Title heading="Featured NFTs" paragraph="Discover the most outstanding NFTS in all topics of life"/>
-      <Filter/>
-      {nfts.length == 0 ? <Loader/> : <NFTCard NFTData = {nfts}/>}
+      {/* <Title heading="Featured NFTs" paragraph="Discover the most outstanding NFTS in all topics of life"/> */}
+      {/* <Filter/>
+      {nfts.length == 0 ? <Loader/> : <NFTCard NFTData = {nfts}/>} */}
       <Title heading="Browse by category" paragraph="Explore the NFTs in the most featured categories. "/>
       <Category/>
       <Subscribe/>
       <Brand/>
-      <Video/>
     </div>
   )
 };

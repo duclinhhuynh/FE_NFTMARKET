@@ -3,9 +3,7 @@ import Link from "next/link";
 
 import Style from "./Discover.module.css";
 import { Listbox, ListboxItem } from "@nextui-org/react";
-import { useTheme } from "next-themes";
 const Discover = ({ setDiscover }) => {
-  const { theme, setTheme } = useTheme();
   // -- DISCOVER NAVIGATION MENU
   const handleItemClick = () => {
     setDiscover(false); // Gọi hàm setDiscover để đóng Discover component khi click vào một mục
@@ -15,10 +13,10 @@ const Discover = ({ setDiscover }) => {
       name: "Transfer",
       link: "transferFunds",
     },
-    {
-      name: "Collection",
-      link: "Collection",
-    },
+    // {
+    //   name: "Collection",
+    //   link: "Collection",
+    // },
     {
       name: "Search",
       link: "searchPage",
@@ -27,10 +25,10 @@ const Discover = ({ setDiscover }) => {
       name: "Author Profile",
       link: "author",
     },
-    {
-      name: "Account Setting",
-      link: "account",
-    },
+    // {
+    //   name: "Account Setting",
+    //   link: "account",
+    // },
     {
       name: "Upload NFT",
       link: "uploadNft",
@@ -50,9 +48,7 @@ const Discover = ({ setDiscover }) => {
         aria-label="Multiple selection example"
         variant="flat"
         disallowEmptySelection
-        className={`rounded-xl shadow-md border ${
-          theme === "light" ? "bg-white" : "bg-black text-white"
-        }`}
+       
         // selectionMode="multiple"
         // selectedKeys={selectedKeys}
         // onSelectionChange={setSelectedKeys}

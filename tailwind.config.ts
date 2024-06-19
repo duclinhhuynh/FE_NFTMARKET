@@ -32,7 +32,7 @@ const config: Config = {
           primary: "#4c5773",
           secondary: "#0072f5",
           textprimary: "#000000",
-          itembackground: "#ffffff"
+          itembackground: "#ffffff",
         }
       },
       dark: {
@@ -41,6 +41,7 @@ const config: Config = {
           secondary: "#0072f5",
           textprimary: "#ffffff",
           itembackground: "#202020",
+          bg: "#111",
         }
       },
       // modern: {

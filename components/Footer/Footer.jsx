@@ -44,9 +44,9 @@ const Footer = () => {
           </a>
           </div>
         </div>
-        <div className={Style.footer_box_discover}>
+        <div className={`border-0 ${Style.footer_box_discover}`}>
           <h3>Discover</h3>
-          <Discover/>
+          <Discover />
         </div>
         <div className={Style.footer_box_help}>
           <h3>Help Center</h3>
