@@ -4,14 +4,13 @@ import Image from 'next/image'
 import Style from './DropZone.module.css'
 import images from '../../../img'
 // import { accessSync } from 'fs'
-const DropZone = ({title, heading, subHeading, name, website, description,
+const DropZone = ({title, heading, subHeading, name,price, website, description,
   royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
   const [droppedFiles, setDroppedFiles] = useState([]);
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
-      console.log("Dropped files:", acceptedFiles);
       const url = await uploadToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
         setFileUrl(url);
         setImage(url);
@@ -28,8 +27,8 @@ const DropZone = ({title, heading, subHeading, name, website, description,
    
   return (
     
-    <div className={Style.DropZone}>
-      <div className={Style.DropZone_box}{...getRootProps()}>
+    <div className={`gap-2 items-center ${Style.DropZone}`}>
+      <div className={`${Style.DropZone_box}`}{...getRootProps()}>
         <input {...getInputProps()}/>
         <div className={Style.DropZone_box_input}>
           <p>{title}</p>
@@ -44,44 +43,35 @@ const DropZone = ({title, heading, subHeading, name, website, description,
         </div>
       </div>
       {fileUrl && (
-        <aside className={Style.DropZone_box_aside}>
+        <aside className={`${Style.DropZone_box_aside}`}>
           <div className={Style.DropZone_box_aside_box}>
             <img src={fileUrl} alt='nft'
             width={200}
             height={200}
-            objectFit='cover'
+            objectFit='contain'
             className={Style.DropZone_box_input_img_img}
             />
-            <div className={Style.DropZone_box_aside_box_preview}>
-              <div className={Style.DropZone_box_aside_box_preview_one}>
-                <p> <samp>NFT: </samp>
+            <div>
+              <div>
+                <p className='border-b border-gray-400'> <samp className='font-semibold'>Name NFT: </samp>
                 {name || ""}
                 </p>
-                <p><samp>Website: </samp>
+                <p className='border-b border-gray-400'> <samp className='font-semibold'>Supply: </samp>
+                {price || ""}
+                </p>
+                <p className='border-b border-gray-400 tex'><samp className='font-semibold'>External link: </samp>
                 {website || ""}
                 </p>
               </div>
-              <div className={Style.DropZone_box_aside_box_preview_two}>
-                <p>
-                  <span>Description: </span>
+              <div>
+                <p className='border-b border-gray-400'>
+                  <span className='font-semibold'>Descriptions: </span>
                   {description || ""}
                 </p>
               </div>
-              <div className={Style.DropZone_box_aside_box_preview_three}>
-                <p>
-                  <span>Royalties: </span>
-                  {royalties || ""}
-                </p>
-                <p>
-                  <span>FileSize: </span>
-                  {fileSize || ""}
-                </p>
-                <p>
-                  <span>Properties: </span>
-                  {properties || ""}
-                </p>
-                <p>
-                  <span>Category: </span>
+              <div >
+                <p className='border-b border-gray-400'>
+                  <span className='font-semibold'>Collections: </span>
                   {category || ""}
                 </p>
               </div>

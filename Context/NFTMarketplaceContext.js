@@ -151,12 +151,19 @@ export const NFTMarketplaceProvider = ({ children }) => {
   };
 
   // createNFT function
-  const createNFT = async (name, price, imageurl, description, router) => {
-    if (!name || !description || !price || !imageurl) {
+  const createNFT = async (
+    name,
+    price,
+    imageurl,
+    description,
+    category,
+    router
+  ) => {
+    if (!category || !name || !description || !price || !imageurl) {
       console.log("Data Is Missing");
       return setError("Data Is Missing"), setOpenError(true);
     }
-    const data = JSON.stringify({ name, description, imageurl });
+    const data = JSON.stringify({ name, description, imageurl, category });
     console.log("data", data);
     try {
       const resFile = await axios({
@@ -229,7 +236,9 @@ export const NFTMarketplaceProvider = ({ children }) => {
             const imageurl = jsonData.hasOwnProperty("imageurl")
               ? jsonData.imageurl
               : "Image URL not available";
-
+            const category = jsonData.hasOwnProperty("category")
+              ? jsonData.category
+              : "Name not available";
             const price = ethers.utils.formatUnits(
               unfomattedPrice.toString(),
               "ether"
@@ -241,6 +250,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
               owner,
               name,
               description,
+              category,
               imageurl,
               tokenURI,
             };
@@ -281,6 +291,9 @@ export const NFTMarketplaceProvider = ({ children }) => {
             const jsonDataString = Object.keys(data)[0];
             const jsonData = JSON.parse(jsonDataString);
             // Extract name, description, and imageurl from the parsed JSON object
+            const category = jsonData.hasOwnProperty("category")
+              ? jsonData.category
+              : "Category not available";
             const name = jsonData.hasOwnProperty("name")
               ? jsonData.name
               : "Name not available";
@@ -301,6 +314,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
               seller,
               owner,
               imageurl,
+              category,
               name,
               description,
               tokenURI,

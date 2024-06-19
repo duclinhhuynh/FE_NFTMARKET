@@ -1,111 +1,34 @@
 import React, { useState } from "react";
-// usualy error
-import {
-  FaFilter,
-  FaAngleDown,
-  FaAngleUp,
-  FaWallet,
-  FaMusic,
-  FaVideo,
-  FaImages,
-  FaUserAlt,
-} from "react-icons/fa";
-import { AiFillCloseCircle, AiFillLayout } from "react-icons/ai";
-import { MdVerified } from "react-icons/md";
-import { TiTick } from "react-icons/ti";
 import { CheckboxGroup, Checkbox } from "@nextui-org/react";
-
 // INTERNAL IMPORT
 import Style from "./Filter.module.css";
-import images from "../../img";
-const Filter = () => {
-  const [filter, setFilter] = useState(true);
-  const [image, setImage] = useState(true);
-  const [video, setVideo] = useState(true);
-  const [music, setMusic] = useState(true);
-  const [nfts, setNfts] = useState(true);
-  const [arts, setArts] = useState(false);
-  const [musics, setMusics] = useState(false);
-  const [sport, setSport] = useState(false);
-  const [photography, setPhotography] = useState(false);
-  const [activeBtn, setActiveBtn] = useState(1);
-  const [groupSelected, setGroupSelected] = React.useState([]);
-  const openFilter = () => {
-    if (!filter) {
-      setFilter(true);
+const Filter = ({ onHandleSelect }) => {
+  const [groupSelected, setGroupSelected] = useState(["All"]);
+
+// Handle checkbox selection
+  const handleCheckboxChange = (selectedValues) => {
+    if (selectedValues.includes("All")) {
+      // If "All" checkbox is selected, deselect "All" and select the rest
+      setGroupSelected(selectedValues.filter((value) => value !== "All"));
+      onHandleSelect(selectedValues.filter((value) => value !== "All"));
     } else {
-      setFilter(false);
+      // If other checkboxes are selected, deselect "All" and select the rest
+      setGroupSelected(selectedValues);
+      onHandleSelect(selectedValues);
     }
   };
-  const openImage = () => {
-    if (!image) {
-      setImage(true);
+
+  // Handle click on "All" checkbox
+  const handleAllCheckbox = (checked) => {
+    if (checked) {
+      // If "All" checkbox is checked, select all categories
+      const allValues = ["All"];
+      setGroupSelected(allValues);
+      onHandleSelect(allValues);
     } else {
-      setImage(false);
-    }
-  };
-  const openVideo = () => {
-    if (!video) {
-      setVideo(true);
-    } else {
-      setVideo(false);
-    }
-  };
-  const openMusic = () => {
-    if (!music) {
-      setMusic(true);
-    } else {
-      setMusic(false);
-    }
-  };
-  const openNfts = () => {
-    if (!nfts) {
-      setNfts(true);
-      setArts(false);
-      setMusics(false);
-      setSport(false);
-      setPhotography(false);
-      setActiveBtn(1);
-    }
-  };
-  const openArts = () => {
-    if (!arts) {
-      setNfts(false);
-      setArts(true);
-      setMusics(false);
-      setSport(false);
-      setPhotography(false);
-      setActiveBtn(2);
-    }
-  };
-  const openMusics = () => {
-    if (!musics) {
-      setNfts(false);
-      setArts(false);
-      setMusics(true);
-      setSport(false);
-      setPhotography(false);
-      setActiveBtn(3);
-    }
-  };
-  const openSports = () => {
-    if (!sport) {
-      setNfts(false);
-      setArts(false);
-      setMusics(false);
-      setSport(true);
-      setPhotography(false);
-      setActiveBtn(4);
-    }
-  };
-  const openPhotography = () => {
-    if (!photography) {
-      setNfts(false);
-      setArts(false);
-      setMusics(false);
-      setSport(false);
-      setPhotography(true);
-      setActiveBtn(5);
+      // If "All" checkbox is unchecked, deselect all categories
+      setGroupSelected([]);
+      onHandleSelect([]);
     }
   };
   return (
@@ -115,13 +38,24 @@ const Filter = () => {
           <CheckboxGroup
             label="Select NFT"
             orientation="horizontal"
-            defaultValue={["buenos-aires", "san-francisco"]}
+            defaultValue={[
+              "All",
+              "Image",
+              "Photography",
+              "Arts",
+              "Musics",
+              "Sport",
+            ]}
             color="secondary"
             value={groupSelected}
-            onChange={setGroupSelected}
+            onChange={handleCheckboxChange}
           >
             <div className="flex flex-wrap gap-5">
-              <Checkbox className="text-white" value="All">
+              <Checkbox
+                className="text-white"
+                value="All"
+                onChange={(e) => handleAllCheckbox(e.target.checked)}
+              >
                 All
               </Checkbox>
               <Checkbox className="text-white" value="Image">

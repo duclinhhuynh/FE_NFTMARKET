@@ -1,30 +1,24 @@
 
 .uploadNft {
     width: 100%;
-    margin-block: 8rem;
+    margin-top: 2rem;
 }
 
 .uploadNft_box {
-    width: 70%;
+    width: 90%;
     margin: 0 auto;
 }
 
-.uploadNft_box_heading {
-    border-bottom: 1px solid var(--shadow-dark-color);
-}
 .uploadNft_box_heading h1{
-    font-size: 3.5rem;
+    font-size: 2rem;
+    font-weight: 550;
 }
 
 .uploadNft_box_heading p {
-    font-size:  1.4rem;
+    font-size:  1rem;
     width: 70%;
 }
 
-.uploadNft_box_title {
-    border-bottom: 1px solid var(--shadow-dark-color);
-    margin-top: 4rem ;
-}
 
 .uploadNft_box_title h2 {
     font-size: 2.5rem;

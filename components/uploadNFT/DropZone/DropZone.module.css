@@ -6,13 +6,13 @@
 
 .DropZone_box { /* Set a maximum width */
     margin: 0 auto;
-    border: 5px  dotted var(--icons-color);
+    border: 5px dotted var(--icons-color);
     border-radius: 1rem;
     box-sizing: border-box;
     text-align: center;
     padding: 1rem;
     cursor: pointer;
-    margin-bottom: 3rem;
+    margin-bottom: .5rem;
 }
 
 .DropZone_box_input_img {
@@ -41,8 +41,8 @@ justify-content: center;
 
 .DropZone_box_aside_box {
     display: grid;
+    gap: 1rem;
     grid-template-columns: 1fr 2fr;
-    gap: 3rem;
     align-items: center;
 }
 
@@ -64,21 +64,3 @@ justify-content: center;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
-@media screen and (max-width: 35em) {
-    .DropZone_box_aside_box_preview_one {
-        display: grid;
-    }
-
-    .DropZone_box_aside_box {
-        grid-template-columns: 1fr;
-    }
-    .DropZone_box_aside_box_preview_three {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media screen and (min-width: 425px) and (max-width: 768px) {
-    .DropZone_box_aside_box {
-        grid-template-columns: 1fr;
-    }
-} 

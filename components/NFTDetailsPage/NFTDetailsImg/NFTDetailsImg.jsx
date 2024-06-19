@@ -5,7 +5,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import Style from "./NFTDetailsImg.module.css";
 import { useTheme } from "next-themes";
-import {Button} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { GoHeart } from "react-icons/go";
 import { FaCamera } from "react-icons/fa";
 const NFTDetailsImg = ({ nft }) => {
@@ -32,12 +32,25 @@ const NFTDetailsImg = ({ nft }) => {
       <div className={Style.NFTDetailsImg_box}>
         <div className={Style.NFTDetailsImg_box_NFT}>
           <div className={Style.NFTDetailsImg_box_NFT_like}>
-          <Button className="mt-1 rounded-xl" isIconOnly color="warning" variant="faded" size="sm" aria-label="Take a photo">
-            <FaCamera size={20}/>
-          </Button>
+            <Button
+              className="mt-1 rounded-xl"
+              isIconOnly
+              color="warning"
+              variant="faded"
+              size="sm"
+              aria-label="Take a photo"
+            >
+              <FaCamera size={20} />
+            </Button>
             <p onClick={likeNFT}>
-              <Button isIconOnly color="danger" aria-label="Like" size="sm" className="rounded-xl">
-                <GoHeart size={19}/>
+              <Button
+                isIconOnly
+                color="danger"
+                aria-label="Like"
+                size="sm"
+                className="rounded-xl"
+              >
+                <GoHeart size={19} />
               </Button>
               <span>26</span>
             </p>
