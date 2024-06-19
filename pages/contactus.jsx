@@ -6,7 +6,7 @@ import { FaPhoneAlt ,FaAddressBook } from "react-icons/fa";
 //INTERNAL IMPORT 
 
 import Style from '../styles/contactus.module.css'
-import formStyle from '../accountPage/Form/Form.module.css'
+import formStyle from '../components/accountPage/Form/Form.module.css'
 import {Button} from "../components/componentsindex"
 const contactus = () => {
   return (
