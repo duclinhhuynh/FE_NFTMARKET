@@ -1,27 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BsSearch, BsArrowRight } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
 import { DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
-import { Slider, Input } from "@nextui-org/react";
-//INTERNAL IMPORT
+import { Slider, Input, Select, SelectItem } from "@nextui-org/react";
+
 import Style from "./SearchBar.module.css";
-const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
+
+const SearchBar = ({
+  onHandleSearch,
+  onClearSearch,
+  onHandleSearchPrice,
+  onHandleSort,
+}) => {
   const [search, setSearch] = useState("");
   const [searchItem, setSearchItem] = useState(search);
-  const [calendercheck, setCalendercheck] = useState(false);
-  // const [value, setValue] = useState([10, 50]);
   const [priceRange, setPriceRange] = useState([10, 50]);
-  const [dateRange, setDateRange] = useState({
-    start: parseDate("2024-04-01"),
-    end: parseDate("2024-04-08"),
-  });
-  const openCalender = () => {
-    setCalendercheck(!calendercheck);
-  };
+
   useEffect(() => {
     const timer = setTimeout(() => setSearch(searchItem), 500);
     return () => clearTimeout(timer);
   }, [searchItem]);
+
   useEffect(() => {
     if (search) {
       onHandleSearch(search);
@@ -33,6 +32,7 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
   useEffect(() => {
     onHandleSearchPrice(priceRange);
   }, [priceRange]);
+  
   return (
     <div className={Style.searchBar}>
       <div className="flex flex-col flex-wrap rounded-xl gap-5 justify-around mt-[3rem] py-5 border p-5">
@@ -43,12 +43,8 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
             radius="lg"
             classNames={{
               label: "text-black/50 dark:text-white/90",
-              input: [
-              ],
+              input: [],
               innerWrapper: "bg-transparent",
-              inputWrapper: [
-                // "min-w-[250px]",
-              ],
             }}
             onChange={(e) => setSearchItem(e.target.value)}
             onClear={onClearSearch}
@@ -58,8 +54,24 @@ const SearchBar = ({ onHandleSearch, onClearSearch, onHandleSearchPrice }) => {
             }
           />
         </div>
+        <div>
+          <Select
+            label="Sort Price"
+            placeholder="Select sort"
+            initialSelectedKeys={['Lowest Price']}
+            defaultSelectedKeys={["Lowest Price"]}
+            className="max-w-xs"
 
-        <div className="flex gap-x-4 realative" onClick={() => openCalender()}>
+            onSelectionChange={(keys) => onHandleSort(keys.currentKey)}
+          >
+            <SelectItem key="Lowest Price">Lowest Price</SelectItem>
+            <SelectItem key="Highest Price">Highest Price</SelectItem>
+            <SelectItem key="Lowest ID">Lowest ID</SelectItem>
+            <SelectItem key="Highest ID">Highest ID</SelectItem>
+            <SelectItem key="Last">Last</SelectItem>
+          </Select>
+        </div>
+        <div className="flex gap-x-4 realative">
           <DateRangePicker
             label="Stay duration"
             isRequired

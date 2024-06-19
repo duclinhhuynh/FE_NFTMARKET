@@ -79,55 +79,7 @@ const Filter = ({ onHandleSelect }) => {
             Selected: {groupSelected.join(", ")}
           </p>
         </div>
-        {/* <div className={Style.filter_box_right}>
-                <div className={Style.filter_box_right_box}
-                    onClick={() => openFilter()}>
-                    <FaFilter/>
-                    <span>Filter</span> 
-                    {filter ? <FaAngleDown/> : <FaAngleUp/>}
-                </div>
-            </div> */}
       </div>
-      {/* {
-            filter && (
-                <div className={Style.filter_box_items}>
-                    <div className={Style.filter_box_items_box}>
-                        <div className={Style.filter_box_items_box_item}>
-                            <FaWallet/>
-                            <span>0.01 ETH</span>
-                            <AiFillCloseCircle/>
-                        </div>
-                    </div>
-                    <div className={Style.filter_box_items_box}>
-                       <div className={Style.filter_box_items_box_item_trans} 
-                       onClick={() => openImage()}>
-                        <FaImages/><small>Images</small>
-                        {image ? <AiFillCloseCircle/> : <TiTick/>}
-                        </div> 
-                    </div>
-                    <div className={Style.filter_box_items_box}>
-                       <div className={Style.filter_box_items_box_item_trans} 
-                       onClick={() => openVideo()}>
-                        <FaVideo/><small>Videos</small>
-                        {video ? <AiFillCloseCircle/> : <TiTick/>}
-                        </div> 
-                    </div>
-                    <div className={Style.filter_box_items_box}>
-                       <div className={Style.filter_box_items_box_item_trans} 
-                       onClick={() => openMusic()}>
-                        <FaMusic/><small>Musics</small>
-                        {music ? <AiFillCloseCircle/> : <TiTick/>}
-                        </div> 
-                    </div>
-                    <div className={Style.filter_box_items_box}>
-                        <div className={Style.filter_box_items_box_item}>
-                            <FaUserAlt/> <span>VeriFied</span>
-                            <MdVerified/>
-                        </div>
-                    </div>
-                </div>
-            )
-        } */}
     </div>
   );
 };

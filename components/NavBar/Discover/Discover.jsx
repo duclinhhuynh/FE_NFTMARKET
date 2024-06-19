@@ -18,8 +18,8 @@ const Discover = ({ setDiscover }) => {
     //   link: "Collection",
     // },
     {
-      name: "Search",
-      link: "searchPage",
+      name: "NFTs",
+      link: "NFTPage",
     },
     {
       name: "Author Profile",

@@ -2,17 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 
 // INTERNAL IMPORT
 import Style from "../styles/serachPage.module.css";
-import { Slider, Brand, Loader } from "../components/componentsindex";
+import { Loader } from "../components/componentsindex";
 import { SearchBar } from "../components/searchPage/searchPageIndex";
 import { Filter } from "../components/componentsindex";
-import {
-  NFTCardTwo,
-  Banner,
-} from "../components/collectionPage/collectionIndex";
-import images from "../img";
+import { NFTCardTwo } from "../components/collectionPage/collectionIndex";
 //IMPORT SMART CONTRACT
 import { NFTMarketplaceContext } from "../Context/NFTMarketplaceContext";
-const searchPage = () => {
+const NFTPage = () => {
   const { fetchNFTS } = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
   const [nftCopy, setNFTCoppy] = useState([]);
@@ -25,11 +21,10 @@ const searchPage = () => {
       .catch((error) => {
         console.error("Error fetching NFTs:", error);
       });
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, []);
 
   // Log the updated nfts state
   useEffect(() => {}, [nfts]);
-
   const onHandleSearch = (value) => {
     const filteredNFTS = nfts.filter(({ name }) =>
       name.toLowerCase().includes(value.toLowerCase())
@@ -72,6 +67,30 @@ const searchPage = () => {
       setNfts(nftCopy);
     }
   };
+  // select sort by price
+  const onHandleSort = (key) => {
+    let sortedNFTS = [...nfts];
+    switch (key) {
+      case "Lowest Price":
+        sortedNFTS.sort((a, b) => a.price - b.price);
+        break;
+      case "Highest Price":
+        sortedNFTS.sort((a, b) => b.price - a.price);
+        break;
+      case "Lowest ID":
+        sortedNFTS.sort((a, b) => a.id - b.id);
+        break;
+      case "Highest ID":
+        sortedNFTS.sort((a, b) => b.id - a.id);
+        break;
+      case "Last":
+        sortedNFTS.reverse();
+        break;
+      default:
+        break;
+    }
+    setNfts([...sortedNFTS]);
+  };
   return (
     <div className={Style.searchPage}>
       <div className="flex w-[90%] m-auto max-sm:flex-col gap-5">
@@ -80,6 +99,7 @@ const searchPage = () => {
             onHandleSearch={onHandleSearch}
             onClearSearch={onClearSearch}
             onHandleSearchPrice={onHandleSearchPrice}
+            onHandleSort={onHandleSort}
           />
           <Filter nftCopy={nftCopy} onHandleSelect={onHandleSelect} />
         </div>
@@ -91,4 +111,4 @@ const searchPage = () => {
   );
 };
 
-export default searchPage;
+export default NFTPage;
