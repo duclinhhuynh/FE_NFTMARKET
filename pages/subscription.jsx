@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Style from '../styles/subscription.module.css'
-import Subscription from '../subscription/Subscription'
+import Subscription from '../components/subscription/Subscription'
 import { IoDiamond } from "react-icons/io5";
 const subscription = () => {
     const subscriptionArray = [
