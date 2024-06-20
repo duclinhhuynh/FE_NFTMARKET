@@ -33,6 +33,9 @@ const config: Config = {
           secondary: "#0072f5",
           textprimary: "#000000",
           itembackground: "#ffffff",
+          bordercustom: "#ccc",
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          bghorver: "#f3f4f6"
         }
       },
       dark: {
@@ -40,8 +43,11 @@ const config: Config = {
           primary: "#FFD34E",
           secondary: "#0072f5",
           textprimary: "#ffffff",
-          itembackground: "#202020",
+          itembackground: "#111111",
+          bordercustom: "#292929",
           bg: "#111",
+          boxShadow: '0 2px 4px rgba(255, 255, 255, 0.1)',
+          bghorver: "#292929"
         }
       },
       // modern: {

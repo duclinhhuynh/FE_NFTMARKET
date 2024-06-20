@@ -1,5 +1,4 @@
 .NFTDetailsPage {
-    width: 90%;
     margin-block: 5rem;
 }
 
@@ -7,7 +6,7 @@
     width: 90%;
     margin: auto;
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     /* gap: 5rem; */
 }
 

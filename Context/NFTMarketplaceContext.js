@@ -182,7 +182,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
       console.log(imgHash);
       await createSale(imgHash, price);
-      router.push("/searchPage");
+      router.push("/NFTPage");
     } catch (error) {
       setError("Error while creating");
       setOpenError(true);

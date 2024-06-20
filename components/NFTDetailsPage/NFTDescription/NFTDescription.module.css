@@ -102,8 +102,9 @@
     padding-left: 7rem;
 }
 
-.NFTDescription_box_profile_biding {
-    margin-block: 1rem;
+.NFTDescription_box_profile_bidding {
+    display: grid;
+    gap: 1rem;
 }
 
 .NFTDescription_box_profile_biding p {
@@ -159,7 +160,6 @@
 }
 
 .NFTDescription_box_profile_biding_box_button{
-    margin-top: 3rem;
     display: flex;
     align-items: center;
     gap: 3rem;
@@ -170,7 +170,7 @@
 }
 
 .NFTDescription_box_profile_biding_box_tabs {
-    margin-top: 3rem;
+    margin-top: 2rem;
     display: flex;
     gap: 1rem;
 }

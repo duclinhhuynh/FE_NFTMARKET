@@ -26,7 +26,12 @@ const NFTDetailsImg = ({ nft }) => {
     // Fixed function name from likeNFt to likeNFT
     setLike(!like);
   };
+  const handleViewImage = () => {
+    const photoUrl = nft.imageurl; // Thay đổi URL ảnh tại đây
 
+    // Mở URL trong tab hoặc cửa sổ mới khi click vào button
+    window.open(photoUrl, "_blank");
+  };
   return (
     <div className={Style.NFTDetailsImg}>
       <div className={Style.NFTDetailsImg_box}>
@@ -35,12 +40,13 @@ const NFTDetailsImg = ({ nft }) => {
             <Button
               className="mt-1 rounded-xl"
               isIconOnly
-              color="warning"
+              color="primary"
               variant="faded"
               size="sm"
               aria-label="Take a photo"
+              onClick={handleViewImage}
             >
-              <FaCamera size={20} />
+              <FaCamera size={20}/>
             </Button>
             <p onClick={likeNFT}>
               <Button

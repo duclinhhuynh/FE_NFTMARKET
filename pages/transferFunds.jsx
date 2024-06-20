@@ -83,15 +83,15 @@ const TransferFunds = () => {
   };
   return (
     <ThemeSwitcherText>
-      <div className="mt-10 mb-52 ">
+      <div className="mt-10 mb-52">
         <div className="my-auto">
           <div className="flex justify-around sm:flex-col md:flex-row max-sm:flex-col max-sm:gap-5">
-            <div className="w-1/3 md:w-[40%] sm:w-[90%] max-sm:w-[90%] mx-auto h-max shadow-md p-2 border rounded-xl">
+            <div className="w-1/3 md:w-[40%] sm:w-[90%] max-sm:w-[90%] mx-auto h-max shadow-md p-2 border border-bordercustom rounded-xl">
               <h2 className="text-2xl font-semibold mb-2">
                 Transfer your ether
               </h2>
-              <div className="flex border border-solid rounded-xl">
-                <div className="flex flex-col justify-between">
+              <div className="bg-itembackground flex border border-bordercustom rounded-xl">
+                <div className="flex flex-col justify-between w-full">
                   <input
                     type="text"
                     value={currentAccount}
@@ -204,7 +204,7 @@ const TransferFunds = () => {
               </form>
             </div>
             <div className="w-[60%] md:w-[50%] sm:w-[90%] max-sm:w-[90%] flex flex-col gap-4 mx-auto">
-              <div className="flex xl:flex-row md:flex-col max-sm:flex-col justify-between gap-5 border rounded-xl p-5 shadow-md">
+              <div className="bg-itembackground flex xl:flex-row md:flex-col max-sm:flex-col justify-between gap-5 border border-bordercustom rounded-xl p-5 shadow-md">
                 <div className="min-w-[300px] flex flex-col gap-3">
                   <h3 className="text-gray-700 font-medium font-semibold">
                     overview
@@ -298,7 +298,7 @@ const TransferFunds = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between gap-5 border rounded-xl p-5 shadow-md">
+              <div className="bg-itembackground flex justify-between gap-5 border border-bordercustom rounded-xl p-5 shadow-md">
                 <div className="flex xl:flex-row md:flex-col max-sm:flex-col ">
                   <div className="min-w-[300px] flex flex-col gap-5">
                     <h3 className="text-gray-700 font-medium font-semibold">
