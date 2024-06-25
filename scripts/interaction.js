@@ -614,7 +614,7 @@ console.log(myPrivateKey);
 myaddress = "0x9065746167e5EfF3e98D4F9BF8984010fbE29a9f";
 
 async function interact(){
-    web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/');
+    const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/');
     floopContract = await new web3.eth.Contract(floopAbi, floopadress);
     // call function from contract: call ,send 
     myBalance = await floopContract.methods.balanceOf(myaddress).call();

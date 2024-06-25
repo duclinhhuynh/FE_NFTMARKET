@@ -56,7 +56,7 @@ const TransferFunds = () => {
     getAllTransactions();
   }, []);
   const copyAddressAccount = () => {
-    const copyText = document.getElementById("myInput");
+    const copyText = document.getElementById("yourAddress");
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
   };
@@ -69,7 +69,7 @@ const TransferFunds = () => {
     }, 700);
   };
   const copyAddressSend = () => {
-    const copyText = document.getElementById("myInput");
+    const copyText = document.getElementById("sendAddress");
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
   };
@@ -95,7 +95,13 @@ const TransferFunds = () => {
                   <input
                     type="text"
                     value={currentAccount}
-                    id="myInput"
+                    id="yourAddress"
+                    hidden
+                  />
+                  <input
+                    type="text"
+                    value={transferAccount}
+                    id="sendAddress"
                     hidden
                   />
                   <div className="flex xl:flex-row max-sm:flex-col md:flex-col ">
@@ -112,7 +118,7 @@ const TransferFunds = () => {
                         : currentAccount}
                       &nbsp;&nbsp;
                       <span className="flex ">
-                        {showCheck ? <FaRegCheckCircle /> : <FiCopy />}
+                        {showCheck ? <FaRegCheckCircle className="text-green-500"/> : <FiCopy />}
                       </span>
                     </p>
                     <p
@@ -128,7 +134,7 @@ const TransferFunds = () => {
                         : transferAccount}
                       &nbsp;&nbsp;
                       <span className="flex ">
-                        {showCheckSend ? <FaRegCheckCircle /> : <FiCopy />}
+                        {showCheckSend ? <FaRegCheckCircle className="text-green-500"/> : <FiCopy />}
                       </span>
                     </p>
                   </div>
@@ -170,9 +176,9 @@ const TransferFunds = () => {
                         id="currency"
                         name="currency"
                       >
-                        <option>ETH</option>
+                        <option>BSC</option>
                         <option>USD</option>
-                        <option className="">BTC</option>
+                        <option className="">ETH</option>
                       </select>
                     </div>
                   }
@@ -377,13 +383,14 @@ const TransferFunds = () => {
           <h2 className="text-2xl font-semibold ml-14 my-5">
             History your transfer
           </h2>
-          <div className="w-[95%] flex justify-center item-center m-auto bg-white rounded-xl border shadow-md">
+          <div className="w-[95%] flex justify-center item-center m-auto bg-itembackground rounded-xl border border-bordercustom shadow-md">
             <Table removeWrapper aria-label="Example static collection table">
               <TableHeader>
                 <TableColumn>Transaction ID</TableColumn>
                 <TableColumn>Amount</TableColumn>
                 <TableColumn>FROM</TableColumn>
                 <TableColumn>TO</TableColumn>
+                <TableColumn>Timestamp</TableColumn>
                 <TableColumn>MESSAGE</TableColumn>
               </TableHeader>
               <TableBody>
@@ -393,6 +400,7 @@ const TransferFunds = () => {
                     <TableCell>{el.amount}</TableCell>
                     <TableCell>{el.addressFrom}</TableCell>
                     <TableCell>{el.addressTo}</TableCell>
+                    <TableCell>{el.timestamp}</TableCell>
                     <TableCell>{el.message}</TableCell>
                   </TableRow>
                 ))}

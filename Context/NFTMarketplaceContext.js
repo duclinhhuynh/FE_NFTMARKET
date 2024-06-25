@@ -24,7 +24,10 @@ import {
   NFTMarketplaceABI,
   TransferFundsAddress,
   TransferFundsABI,
+  NftAuctionAddress,
+  NftAuctionABI,
 } from "./Constants";
+import { id } from "ethers/lib/utils";
 
 //Fetching smart contract
 const fetchContract = (signerOrProvider) =>
@@ -69,6 +72,23 @@ const connectToTransferFunds = async () => {
     );
   }
 };
+
+// auction 
+const fetchNftAuctionContract = (signerOrProvider) =>
+  new ethers.Contract(NftAuctionAddress, NftAuctionABI, signerOrProvider);
+const connectToNftAuction = async () => {
+  try {
+    const web3ModalInstance = new Web3Modal();
+    const connection = await web3ModalInstance.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = fetchNftAuctionContract(signer);
+    return contract;
+  } catch (error) {
+    console.log("Something went wrong while connecting with NftAuction contract:", error);
+  }
+};
+
 export const NFTMarketplaceContext = React.createContext();
 export const NFTMarketplaceProvider = ({ children }) => {
   const titleData = "Discover, collect, and sell NFTS ";
@@ -212,7 +232,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       setOpenError(true);
     }
   };
-
   // --FETCH nft functino
   const fetchNFTS = async () => {
     try {
@@ -339,7 +358,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
     try {
       const contract = await connectingWithSmartContract();
       const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-
+      console.log("nftid", nft.tokenId);
       const transaction = await contract.createMarketSale(nft.tokenId, {
         value: price,
       });
@@ -348,6 +367,18 @@ export const NFTMarketplaceProvider = ({ children }) => {
     } catch (error) {
       setError("Error while buying NFT");
       setOpenError(true);
+    }
+  };
+
+  const cancelMarketItem = async (nft) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const transaction = await contract.cancelMarketItem(nft.tokenId);
+      await transaction.wait();
+    } catch (error) {
+      setError("Error while unlisting token");
+      setOpenError(true);
+      console.log("Error while unlisting token", error);
     }
   };
   // TRANSFER FUNDs
@@ -390,6 +421,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       console.log("have a eroor transfer", error);
     }
   };
+
   // fetch all transaction
   const getAllTransactions = async () => {
     try {
@@ -413,6 +445,63 @@ export const NFTMarketplaceProvider = ({ children }) => {
       console.log("getAlltransaction", error);
     }
   };
+
+   // Auction functions
+   const createAuction = async (nftAddress, nftId, startingPrice, discountRate) => {
+    try {
+      const contract = await connectToNftAuction();
+      const price = ethers.utils.parseEther(startingPrice);
+      const discount = ethers.utils.parseEther(discountRate);
+      const transaction = await contract.createAuction(nftAddress, nftId, price, discount);
+      await transaction.wait();
+      console.log("Auction created successfully");
+    } catch (error) {
+      console.error("Error creating auction:", error);
+      setError("Error creating auction");
+      setOpenError(true);
+    }
+  };
+
+  const placeBid = async (auctionId, bidAmount) => {
+    try {
+      const contract = await connectToNftAuction();
+      const bid = ethers.utils.parseEther(bidAmount);
+      const transaction = await contract.placeBid(auctionId, { value: bid });
+      await transaction.wait();
+      console.log("Bid placed successfully");
+    } catch (error) {
+      console.error("Error placing bid:", error);
+      setError("Error placing bid");
+      setOpenError(true);
+    }
+  };
+
+  const endAuction = async (auctionId) => {
+    try {
+      const contract = await connectToNftAuction();
+      const transaction = await contract.endAuction(auctionId);
+      await transaction.wait();
+      console.log("Auction ended successfully");
+    } catch (error) {
+      console.error("Error ending auction:", error);
+      setError("Error ending auction");
+      setOpenError(true);
+    }
+  };
+  // Lấy lịch sử đấu giá của một người dùng cụ thể
+  const getAuctionHistoryForUser = async (userAddress) => {
+    try {
+      const contract = await connectToNftAuction();
+      const history = await contract.getAuctionHistory(userAddress);
+      console.log("Auction history for user", userAddress, history);
+      return history;
+    } catch (error) {
+      console.error("Error fetching auction history for user:", error);
+      setError("Error fetching auction history");
+      setOpenError(true);
+    }
+  };
+  
   return (
     <NFTMarketplaceContext.Provider
       value={{
@@ -437,6 +526,11 @@ export const NFTMarketplaceProvider = ({ children }) => {
         transaction,
         loading,
         getAllTransactions,
+        createAuction,
+        placeBid,
+        endAuction,
+        getAuctionHistoryForUser,
+        cancelMarketItem,
       }}
     >
       {children}

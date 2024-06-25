@@ -15,8 +15,11 @@ const NFTPage = () => {
   useEffect(() => {
     fetchNFTS()
       .then((item) => {
-        setNfts(item.reverse());
-        setNFTCoppy(item);
+        console.log("item", item);
+        if(item){
+          setNfts(item.reverse());
+          setNFTCoppy(item);
+        }
       })
       .catch((error) => {
         console.error("Error fetching NFTs:", error);

@@ -95,6 +95,8 @@ const reSellToken = () => {
                 variant="bordered"
                 className="max-w-xs"
                 placeholder={price}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
               />
             </div>
             <div>

@@ -11,13 +11,6 @@ import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
 const author = () => {
 
   //IMPORT SMART CONTRACT DATA
-    const popularArray = [
-        images.cartoon1,
-        images.cartoon2,
-        images.cartoon3,
-        images.cartoon4,
-        images.cartoon5,
-    ]
     const [colleciables, setColleciables] = useState(true);
     const [created, setCreated] = useState(false);
     const [like, setLike] = useState(false);
@@ -32,19 +25,16 @@ const author = () => {
       fetchMyNFTsOrListedNFTs()
         .then((items) => {
         setMyNFTs(items);
-        // console.log("item myNFT:",items)
+        console.log("item myNFT:",items)
       });
     },[]);
     useEffect(() => {
       fetchMyNFTsOrListedNFTs("fetchItemsListed") 
       .then((items) => {
         setNfts(items);
-        // console.log("item listed:",items)
+        console.log("item listed:",items)
       });
     }, []);
-
-  
-
 
   return (
     <div className={Style.banner}>

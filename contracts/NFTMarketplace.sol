@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-// INTERNAL IMPORT FOR NFT OPENZIPLINE 
+// INTERNAL IMPORT FOR NFT OPENZIPLINE
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -24,6 +24,7 @@ contract NFTMarketplace is ERC721URIStorage {
         address payable owner;
         uint256 price;
         bool sold;
+        bool canceled;
     }
 
     event MarketItemCreated(
@@ -31,9 +32,11 @@ contract NFTMarketplace is ERC721URIStorage {
         address seller,
         address owner,
         uint256 price,
-        bool sold
+        bool sold,
+        bool canceled
     );
-    // Hàm khởi tạo 
+
+    // Hàm khởi tạo
     constructor() ERC721("Metaverse Tokens", "METT") {
         owner = payable(msg.sender);
     }
@@ -55,13 +58,12 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createToken(string memory tokenURI, uint256 price)
-        public
-        payable
-        returns (uint256)
-    {
+    function createToken(
+        string memory tokenURI,
+        uint256 price
+    ) public payable returns (uint256) {
         _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current(); 
+        uint256 newTokenId = _tokenIds.current();
         // Lấy ID token mới.
         _mint(msg.sender, newTokenId);
         // Tạo mới một token và gán cho người gọi hàm.
@@ -83,6 +85,7 @@ contract NFTMarketplace is ERC721URIStorage {
             payable(msg.sender),
             payable(address(this)),
             price,
+            false,
             false
         );
 
@@ -93,6 +96,7 @@ contract NFTMarketplace is ERC721URIStorage {
             msg.sender,
             address(this),
             price,
+            false,
             false
         );
     }
@@ -110,7 +114,8 @@ contract NFTMarketplace is ERC721URIStorage {
         );
         // Kiểm tra nếu người gọi hàm trả đúng phí niêm yết.
         idToMarketItem[tokenId].sold = false;
-        //  Đặt trạng thái bán của token là false.
+        idToMarketItem[tokenId].canceled = false;
+        //  Đặt trạng thái bán và hủy của token là false.
         idToMarketItem[tokenId].price = price;
         // Cập nhật người bán là người gọi hàm.
         idToMarketItem[tokenId].seller = payable(msg.sender);
@@ -139,15 +144,45 @@ contract NFTMarketplace is ERC721URIStorage {
         payable(idToMarketItem[tokenId].seller).transfer(msg.value);
     }
 
+    /* Cancels a market item and returns the NFT to the owner */
+    function cancelMarketItem(uint256 tokenId) public {
+        MarketItem storage item = idToMarketItem[tokenId];
+        require(
+            item.seller == msg.sender,
+            "Only item seller can perform this operation"
+        );
+        require(item.sold == false, "Cannot cancel a sold item");
+
+        item.owner = payable(msg.sender);
+        item.seller = payable(address(0));
+        item.sold = false;
+        item.canceled = true;
+
+        _transfer(address(this), msg.sender, tokenId);
+    }
+
     /* Returns all unsold market items */
     function fetchMarketItem() public view returns (MarketItem[] memory) {
         uint256 itemCount = _tokenIds.current();
-        uint256 unsoldItemCount = _tokenIds.current() - _itemsSold.current();
+        uint256 unsoldItemCount = 0;
         uint256 currentIndex = 0;
+
+        // Đếm số lượng mục chưa bán và chưa bị hủy
+        for (uint256 i = 0; i < itemCount; i++) {
+            if (
+                idToMarketItem[i + 1].owner == address(this) &&
+                !idToMarketItem[i + 1].canceled
+            ) {
+                unsoldItemCount += 1;
+            }
+        }
 
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
         for (uint256 i = 0; i < itemCount; i++) {
-            if (idToMarketItem[i + 1].owner == address(this)) {
+            if (
+                idToMarketItem[i + 1].owner == address(this) &&
+                !idToMarketItem[i + 1].canceled
+            ) {
                 uint256 currentId = i + 1;
                 MarketItem storage currentItem = idToMarketItem[currentId];
                 items[currentIndex] = currentItem;

@@ -71,7 +71,7 @@ const AuthorTaps = ({
     const openTab = (e) => {
         const btnText = e.target.innerText;
         console.log(btnText)
-        if (btnText === "Created") {
+        if (btnText === "List") {
             setColleciables(true);
             setCreated(false);
             setFollower(false);
@@ -79,7 +79,7 @@ const AuthorTaps = ({
             setLike(false);
             setActiveBtn(1);
         } 
-        else if (btnText === "Purchased") {
+        else if (btnText === "Owner") {
             setColleciables(false);
             setCreated(true);
             setFollower(false);
@@ -120,11 +120,11 @@ const AuthorTaps = ({
                     <div className='flex gap-5'>
                         <Button variant="bordered" radius="lg"
                             className={`${activeBtn === 1 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e)}>Created
+                            onClick={(e) => openTab(e)}>List 
                         </Button>
                         <Button variant="bordered" radius="lg"
                             className={`${activeBtn === 2 ? Style.active : ""}`}
-                            onClick={(e) => openTab(e)}>Purchased
+                            onClick={(e) => openTab(e)}>Owner
                         </Button>
                         <Button variant="bordered" radius="lg"
                             className={`${activeBtn === 3 ? Style.active : ""}`}

@@ -23,78 +23,17 @@ import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
 import ThemeSwitcherText from "../../theme/ThemeSwitcherText";
 import { Tooltip, Button } from "@nextui-org/react";
 const NFTDescription = ({ nft }) => {
-  const [social, setSocial] = useState(false);
   const [NFTMenu, setNFTMenu] = useState(false);
   const [history, setHistory] = useState(true);
-  const [provanannce, setProvanance] = useState(false);
-  const [owner, setOwner] = useState(false);
   const [activeBtn, setActiveBtn] = useState(1);
   const [ethPrice, setEthPrice] = useState(null);
   const [showCheckShare, setShowCheckShare] = useState(false);
   const [openShare, setOpenShare] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const [openMore, setOpenMore] = useState(false);
-
-  const historyArray = [
-    images.user1,
-    images.user2,
-    images.user3,
-    images.user4,
-    images.user5,
-  ];
-  const provananceArray = [
-    images.user3,
-    images.user4,
-    images.user5,
-    images.user1,
-    images.user2,
-  ];
-  const ownerArray = [images.user4, images.user5, images.user3];
+  const [offerAmount, setOfferAmount] = useState("");
   const router = useRouter();
-  const openTabs = (e) => {
-    const tab = e.target.innerText;
-    if (tab === "Bid History") {
-      setHistory(true);
-      setProvanance(false);
-      setOwner(false);
-      setActiveBtn(1);
-    } else if (tab === "Provenance") {
-      setHistory(false);
-      setProvanance(true);
-      setOwner(false);
-      setActiveBtn(2);
-    } else if (tab === "Owner") {
-      setHistory(false);
-      setProvanance(false);
-      setOwner(true);
-      setActiveBtn(3);
-    }
-  };
-  const openSocial = () => {
-    if (!social) {
-      setSocial(true);
-      setNFTMenu(false);
-    } else {
-      setSocial(false);
-    }
-  };
-  const openNFTMenu = () => {
-    if (!NFTMenu) {
-      setNFTMenu(true);
-      setSocial(false);
-    } else {
-      setNFTMenu(false);
-    }
-  };
-  const openOwner = () => {
-    if (!owner) {
-      setOwner(true);
-      setHistory(false);
-      setProvanance(false);
-    } else {
-      setOwner(false);
-    }
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -109,7 +48,9 @@ const NFTDescription = ({ nft }) => {
   }, []);
 
   // SMART CONTRACT DATA
-  const { buyNFT, currentAccount } = useContext(NFTMarketplaceContext);
+  const { buyNFT,cancelMarketItem, currentAccount } = useContext(
+    NFTMarketplaceContext
+  );
   const copyAddress = () => {
     const copyText = document.getElementById("myInput");
     copyText.select();
@@ -164,6 +105,31 @@ const NFTDescription = ({ nft }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleCreateAuction = async () => {
+    // Gọi hàm createAuction từ context
+    await createAuction(nft.address, nft.id, "100", "0.1");
+    // Có thể thực hiện các hành động khác sau khi tạo đấu giá
+  };
+
+  const handlePlaceBid = async () => {
+    // Gọi hàm placeBid từ context
+    await placeBid(auctionId, bidAmount);
+    // Có thể thực hiện các hành động khác sau khi đặt giá
+  };
+
+  const handleEndAuction = async () => {
+    // Gọi hàm endAuction từ context
+    await endAuction(auctionId);
+    // Có thể thực hiện các hành động khác sau khi kết thúc đấu giá
+  };
+
+  const handleGetHistory = async () => {
+    // Gọi hàm getAuctionHistoryForUser từ context
+    const history = await getAuctionHistoryForUser(currentAccount);
+    console.log("Lịch sử đấu giá cho người dùng hiện tại:", history);
+    // Có thể thực hiện các hành động khác sau khi lấy lịch sử đấu giá
+  };
   return (
     <div className={Style.NFTDescription}>
       <ThemeSwitcherText>
@@ -181,7 +147,7 @@ const NFTDescription = ({ nft }) => {
                     className={`p-1.5 bg-bghorver text-textprimary rounded-xl cursor-pointer ${Style.network_share}`}
                     onClick={handleOpenShare}
                   >
-                    <FaShare/>
+                    <FaShare />
                   </div>
                 </Tooltip>
                 {openShare && (
@@ -228,7 +194,7 @@ const NFTDescription = ({ nft }) => {
                     className={`p-1.5 bg-bghorver text-textprimary rounded-xl cursor-pointer ${Style.network_share}`}
                     onClick={handleOpenMore}
                   >
-                    <BsThreeDots/>
+                    <BsThreeDots />
                   </div>
                 </Tooltip>
                 {openMore && (
@@ -366,7 +332,14 @@ const NFTDescription = ({ nft }) => {
                     }
                   >
                     {currentAccount == nft.seller.toLowerCase() ? (
-                      <p>You can not buy your NFT</p>
+                      <Button
+                        color="primary"
+                        variant="bordered"
+                        startContent={<FaListUl />}
+                        onClick={() => cancelMarketItem(nft)}
+                      >
+                        Cancel Sale
+                      </Button>
                     ) : currentAccount == nft.owner.toLowerCase() ? (
                       <Button
                         color="primary"
@@ -387,7 +360,6 @@ const NFTDescription = ({ nft }) => {
                         variant="bordered"
                         startContent={<FaWallet />}
                         onClick={() => buyNFT(nft)}
-                        classStyle={Style.button}
                       >
                         Buy NFT
                       </Button>
@@ -396,8 +368,7 @@ const NFTDescription = ({ nft }) => {
                       color="primary"
                       variant="bordered"
                       startContent={<BsFillTagsFill />}
-                      onClick={() => buyNFT(nft)}
-                      classStyle={Style.button}
+                      onClick={handlePlaceBid}
                     >
                       <div>Make offer</div>
                     </Button>
@@ -427,7 +398,7 @@ const NFTDescription = ({ nft }) => {
                     Owner
                   </button>
                 </div>
-                {history && (
+                {/* {history && (
                   <div
                     className={Style.NFTDescription_box_profile_biding_box_card}
                   >
@@ -447,7 +418,7 @@ const NFTDescription = ({ nft }) => {
                   >
                     <NFTTabs dataTabs={ownerArray} icon={<MdVerified />} />
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
