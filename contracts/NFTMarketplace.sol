@@ -131,19 +131,32 @@ contract NFTMarketplace is ERC721URIStorage {
     /* Transfers ownership of the item, as well as funds between parties */
     function createMarketSale(uint256 tokenId) public payable {
         uint256 price = idToMarketItem[tokenId].price;
+        address payable seller = idToMarketItem[tokenId].seller;
+
         require(
             msg.value == price,
             "Please submit the asking price in order to complete the purchase"
         );
+
+        // Cập nhật chủ sở hữu và trạng thái bán của mục thị trường
         idToMarketItem[tokenId].owner = payable(msg.sender);
         idToMarketItem[tokenId].sold = true;
-        idToMarketItem[tokenId].seller = payable(address(0));
-        _itemsSold.increment();
-        _transfer(address(this), msg.sender, tokenId);
-        payable(owner).transfer(listingPrice);
-        payable(idToMarketItem[tokenId].seller).transfer(msg.value);
-    }
 
+        // Tăng bộ đếm số mục đã bán
+        _itemsSold.increment();
+
+        // Chuyển quyền sở hữu của NFT từ hợp đồng (thị trường) sang người mua
+        _transfer(address(this), msg.sender, tokenId);
+
+        // Chuyển phí niêm yết cho chủ thị trường
+        payable(owner).transfer(listingPrice);
+
+        // Chuyển tiền cho người bán
+        seller.transfer(msg.value);
+
+        // Đặt người bán thành địa chỉ 0 để chỉ ra rằng không còn người bán cho NFT này nữa
+        idToMarketItem[tokenId].seller = payable(address(0));
+    }
     /* Cancels a market item and returns the NFT to the owner */
     function cancelMarketItem(uint256 tokenId) public {
         MarketItem storage item = idToMarketItem[tokenId];
