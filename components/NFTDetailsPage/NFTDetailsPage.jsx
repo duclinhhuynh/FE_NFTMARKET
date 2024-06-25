@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {NFTDescription, NFTDetailsImg, NFTTabs} from './NFTDetailsIndex'
+import {NFTDescription, NFTDetailsImg} from './NFTDetailsIndex'
 import Style from './NFTDetailsPage.module.css'
 const NFTDetailsPage = ({nft}) => {
   return (

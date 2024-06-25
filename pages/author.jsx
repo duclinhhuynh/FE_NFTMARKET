@@ -1,62 +1,71 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react';
+import Style from '../styles/author.module.css';
+import { AuthorProfileCard, AuthorTaps, AuthorNFTCardBox } from '../components/authorPage/componentIndex';
+import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext';
 
-// INTERNAL IMPORT
-import Style from '../styles/author.module.css'
-import {Banner, NFTCardTwo} from '../components/collectionPage/collectionIndex'
-// import {Brand, Title} from "../components/componentsindex"
-import {AuthorProfileCard, AuthorTaps, TabCard, AuthorNFTCardBox} from '../components/authorPage/componentIndex'
-// import FollowerTabCard from '../components/FollowerTab/FollowerTabCard/FollowerTabCard'
-import images from '../img'
-import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
-const author = () => {
+const Author = () => {
+  const [colleciables, setColleciables] = useState(true);
+  const [created, setCreated] = useState(false);
+  const [like, setLike] = useState(false);
+  const [follower, setFollower] = useState(false);
+  const [following, setFollowing] = useState(false);
+  const [nfts, setNfts] = useState([]);
+  const [myNFTs, setMyNFTs] = useState([]);
+  const { fetchMyNFTsOrListedNFTs, currentAccount } = useContext(NFTMarketplaceContext);
 
-  //IMPORT SMART CONTRACT DATA
-    const [colleciables, setColleciables] = useState(true);
-    const [created, setCreated] = useState(false);
-    const [like, setLike] = useState(false);
-    const [follower, setFollower] = useState(false);
-    const [following, setFollowing] = useState(false);
+  useEffect(() => {
+    const fetchNFTs = async () => {
+      try {
+        const ownedNFTs = await fetchMyNFTsOrListedNFTs();
+        setMyNFTs(ownedNFTs);
+        console.log("Owned NFTs:", ownedNFTs);
 
-    const {fetchMyNFTsOrListedNFTs, currentAccount} = useContext(NFTMarketplaceContext);
-    const [nfts, setNfts] = useState([]);
-    const [myNFTs,setMyNFTs] = useState([]); 
+        const listedNFTs = await fetchMyNFTsOrListedNFTs("fetchItemsListed");
+        setNfts(listedNFTs);
+        console.log("Listed NFTs:", listedNFTs);
+      } catch (error) {
+        console.error("Error fetching NFTs:", error);
+      }
+    };
 
-    useEffect(() => {
-      fetchMyNFTsOrListedNFTs()
-        .then((items) => {
-        setMyNFTs(items);
-        console.log("item myNFT:",items)
-      });
-    },[]);
-    useEffect(() => {
-      fetchMyNFTsOrListedNFTs("fetchItemsListed") 
-      .then((items) => {
-        setNfts(items);
-        console.log("item listed:",items)
-      });
-    }, []);
+    fetchNFTs();
+  }, [fetchMyNFTsOrListedNFTs]);
+
+  const handleMintNFT = async () => {
+    const name = 'Example NFT';
+    const description = 'This is an example NFT';
+    const imageurl = 'https://example.com/image.png';
+    const category = 'Art';
+
+    const tokenId = await mintNFT(name, imageurl, description, category);
+    console.log("Newly minted token ID:", tokenId);
+
+    if (tokenId) {
+      console.log("NFT successfully minted and assigned to the owner.");
+    }
+  };
 
   return (
     <div className={Style.banner}>
-        <AuthorProfileCard currentAccount={currentAccount}/>
-        <AuthorTaps 
-          setColleciables = {setColleciables} 
-          setCreated={setCreated} 
-          setLike = {setLike} 
-          setFollower = {setFollower}
-          setFollowing = {setFollowing}
-          />
-          <AuthorNFTCardBox
-            colleciables = {colleciables} 
-            created={created} 
-            like = {like} 
-            follower = {follower}
-            following = {following}
-            nfts = {nfts}
-            myNFTs = {myNFTs}
-          />
+      <AuthorProfileCard currentAccount={currentAccount} />
+      <AuthorTaps 
+        setColleciables={setColleciables} 
+        setCreated={setCreated} 
+        setLike={setLike} 
+        setFollower={setFollower} 
+        setFollowing={setFollowing} 
+      />
+      <AuthorNFTCardBox
+        colleciables={colleciables} 
+        created={created} 
+        like={like} 
+        follower={follower} 
+        following={following} 
+        nfts={nfts} 
+        myNFTs={myNFTs} 
+      />
     </div>
-  )
-}
+  );
+};
 
-export default author
+export default Author;

@@ -47,7 +47,7 @@ const reSellToken = () => {
       console.log("url resale", price, tokenURI, id);
       setIsLoading(true);
       await createSale(tokenURI, price, true, id);
-      router.push("/author");
+      router.push("/NFTPAGE");
     } catch (error) {
       console.log("Error while resell", error);
     }finally {

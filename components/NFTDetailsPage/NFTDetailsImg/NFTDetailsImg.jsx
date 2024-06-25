@@ -33,33 +33,31 @@ const NFTDetailsImg = ({ nft }) => {
     window.open(photoUrl, "_blank");
   };
   return (
-    <div className={Style.NFTDetailsImg}>
+    <div className={` ${Style.NFTDetailsImg}`}>
       <div className={Style.NFTDetailsImg_box}>
-        <div className={Style.NFTDetailsImg_box_NFT}>
-          <div className={Style.NFTDetailsImg_box_NFT_like}>
+        <div className={`${Style.NFTDetailsImg_box_NFT}`}>
+          <div className={`${Style.NFTDetailsImg_box_NFT_like}`}>
             <Button
               className="mt-1 rounded-xl"
               isIconOnly
-              color="primary"
-              variant="faded"
+              color="warning"
               size="sm"
               aria-label="Take a photo"
               onClick={handleViewImage}
             >
-              <FaCamera size={20}/>
+              <FaCamera size={20} />
             </Button>
-            <p onClick={likeNFT}>
+            <div onClick={likeNFT} className="flex items-center gap-1">
+              <span>26</span>
               <Button
                 isIconOnly
                 color="danger"
                 aria-label="Like"
                 size="sm"
-                className="rounded-xl"
-              >
-                <GoHeart size={19} />
-              </Button>
-              <span>26</span>
-            </p>
+                endContent={<GoHeart size={19} />}
+                className="rounded-xl z-1"
+              ></Button>
+            </div>
           </div>
           <div className={`mb-2 ${Style.NFTDetailsImg_box_NFT_img}`}>
             <Image
@@ -72,7 +70,7 @@ const NFTDetailsImg = ({ nft }) => {
             />
           </div>
         </div>
-        <div className="border rounded-md">
+        <div className="border border-bordercustom rounded-md mt-2 bg-itembackground">
           <div
             className={Style.NFTDetailsImg_box_description}
             onClick={openDescription}
@@ -80,15 +78,18 @@ const NFTDetailsImg = ({ nft }) => {
             <p className={Theme}>Description</p>
             {description ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
           </div>
+          {description ? (
+            <div className="border-b border-bordercustom"></div>
+          ) : (
+            ""
+          )}
           {description && (
-            <div
-              className={`border-t ${Style.NFTDetailsImg_box_description_box}`}
-            >
+            <div className={`${Style.NFTDetailsImg_box_description_box}`}>
               <p className={Theme}>{nft.description}</p>
             </div>
           )}
         </div>
-        <div className="border rounded-md mt-2">
+        <div className="border border-bordercustom rounded-md mt-2 bg-itembackground">
           <div
             className={Style.NFTDetailsImg_box_details}
             onClick={openDetails}
@@ -96,8 +97,9 @@ const NFTDetailsImg = ({ nft }) => {
             <p className={Theme}>Details</p>
             {details ? <TiArrowSortedUp /> : <TiArrowSortedDown />}
           </div>
+          {details ? <div className="border-b border-bordercustom"></div> : ""}
           {details && (
-            <div className={`border-t ${Style.NFTDetailsImg_box_details_box}`}>
+            <div className={`${Style.NFTDetailsImg_box_details_box}`}>
               <small>2000 x 2000 px.IMAGE(658kb)</small>
               <p className={Theme}>
                 <small>Contract Address</small>

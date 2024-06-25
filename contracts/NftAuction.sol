@@ -1,99 +1,86 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
-contract NftAuction {
-    struct Auction {
-        uint256 tokenId;
-        address payable seller;
-        uint256 startPrice;
-        uint256 highestBid;
-        address payable highestBidder;
-        uint256 endTime;
-        bool active;
-    }
+contract NftAuction is Ownable {
+    using SafeMath for uint256;
+    using Address for address;
 
-    mapping(uint256 => Auction) private idToAuction;
-    IERC721 private nftContract;
+    uint256 public auctionDurationBlocks; // Thời gian đấu giá tính bằng số block
+    uint256 public startPrice; // Giá khởi điểm
+    uint256 public endBlock; // Block kết thúc đấu giá
+    uint256 public tokenId; // ID của token NFT
+    bool public ended; // Biến cờ cho biết đấu giá đã kết thúc hay chưa
 
-    event AuctionCreated(
+    address payable public highestBidder; // Người đặt giá cao nhất
+    uint256 public highestBid; // Giá cao nhất
+
+    IERC721 public nftContract; // Contract của NFT
+
+    event AuctionStarted(
         uint256 indexed tokenId,
         uint256 startPrice,
-        uint256 endTime
+        uint256 auctionDurationBlocks,
+        uint256 endBlock
     );
+    event AuctionEnded(uint256 indexed tokenId, address winner, uint256 amount);
 
-    event BidPlaced(
-        uint256 indexed tokenId,
-        address bidder,
-        uint256 bidAmount
-    );
-
-    event AuctionEnded(
-        uint256 indexed tokenId,
-        address winner,
-        uint256 finalPrice
-    );
-
-    constructor(address nftContractAddress) {
-        nftContract = IERC721(nftContractAddress);
+    constructor(
+        address _nftContract,
+        uint256 _tokenId,
+        uint256 _startPrice,
+        uint256 _auctionDurationBlocks
+    ) {
+        nftContract = IERC721(_nftContract);
+        tokenId = _tokenId;
+        startPrice = _startPrice;
+        auctionDurationBlocks = _auctionDurationBlocks;
     }
 
-    /* Create an auction for a token */
-    function createAuction(uint256 tokenId, uint256 startPrice, uint256 duration) public {
-        require(nftContract.ownerOf(tokenId) == msg.sender, "Only item owner can create auction");
-        require(nftContract.getApproved(tokenId) == address(this), "Contract must be approved to transfer token");
+    function startAuction() external onlyOwner {
+        require(!ended, "Auction has already ended");
 
-        idToAuction[tokenId] = Auction({
-            tokenId: tokenId,
-            seller: payable(msg.sender),
-            startPrice: startPrice,
-            highestBid: 0,
-            highestBidder: payable(address(0)),
-            endTime: block.timestamp + duration,
-            active: true
-        });
+        // Transfer NFT đến contract này
+        nftContract.transferFrom(owner(), address(this), tokenId);
 
-        nftContract.transferFrom(msg.sender, address(this), tokenId);
-        emit AuctionCreated(tokenId, startPrice, block.timestamp + duration);
+        endBlock = block.number.add(auctionDurationBlocks);
+        emit AuctionStarted(tokenId, startPrice, auctionDurationBlocks, endBlock);
     }
 
-    /* Place a bid on an auction */
-    function placeBid(uint256 tokenId) public payable {
-        Auction storage auction = idToAuction[tokenId];
-        require(auction.active, "Auction is not active");
-        require(block.timestamp < auction.endTime, "Auction has ended");
-        require(msg.value > auction.highestBid, "Bid must be higher than current highest bid");
+    function placeBid() external payable {
+        require(block.number <= endBlock, "Auction has ended");
+        require(msg.value > highestBid, "Bid must be higher than current highest bid");
 
-        if (auction.highestBid > 0) {
-            auction.highestBidder.transfer(auction.highestBid);
+        if (highestBidder != address(0)) {
+            // Trả lại tiền cho người đặt giá cao nhất hiện tại
+            payable(highestBidder).transfer(highestBid);
         }
 
-        auction.highestBid = msg.value;
-        auction.highestBidder = payable(msg.sender);
-
-        emit BidPlaced(tokenId, msg.sender, msg.value);
+        highestBidder = payable(msg.sender);
+        highestBid = msg.value;
     }
 
-    /* End an auction and transfer the NFT to the highest bidder */
-    function endAuction(uint256 tokenId) public {
-        Auction storage auction = idToAuction[tokenId];
-        require(auction.active, "Auction is not active");
-        require(block.timestamp >= auction.endTime, "Auction is still ongoing");
+    function endAuction() external onlyOwner {
+        require(block.number > endBlock, "Auction has not ended yet");
+        require(!ended, "Auction has already ended");
 
-        auction.active = false;
-        if (auction.highestBidder != address(0)) {
-            nftContract.transferFrom(address(this), auction.highestBidder, tokenId);
-            auction.seller.transfer(auction.highestBid);
-            emit AuctionEnded(tokenId, auction.highestBidder, auction.highestBid);
-        } else {
-            nftContract.transferFrom(address(this), auction.seller, tokenId);
-            emit AuctionEnded(tokenId, address(0), 0);
+        // Chuyển NFT cho người đặt giá cao nhất
+        nftContract.transferFrom(address(this), highestBidder, tokenId);
+
+        // Kết thúc đấu giá
+        ended = true;
+        emit AuctionEnded(tokenId, highestBidder, highestBid);
+
+        // Trả lại tiền cho người đặt giá cao nhất nếu còn dư
+        if (highestBid > 0) {
+            payable(owner()).transfer(highestBid);
         }
-    }
-
-    /* Get auction details */
-    function getAuctionDetails(uint256 tokenId) public view returns (Auction memory) {
-        return idToAuction[tokenId];
     }
 }

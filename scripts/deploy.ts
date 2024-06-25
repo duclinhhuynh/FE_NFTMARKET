@@ -29,13 +29,6 @@ async function main() {
         //   await nftAuction.deployed();
         //   console.log("NftAuction deployed to:", nftAuction.address);
 
-        // const NFT = await ethers.getContractFactory("NFT");
-        // const nft = await NFT.deploy();
-
-        // // Check if deploymentTransaction is a contract instance
-        // await nft.deployed();
-        // console.log(`NFTMarketplace contract deployed to address: ${nft.address}`);
-
     } catch (error) {
         console.error("Deployment failed:", error);
         process.exit(1);

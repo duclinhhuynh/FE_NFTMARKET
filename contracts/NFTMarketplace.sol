@@ -17,6 +17,7 @@ contract NFTMarketplace is ERC721URIStorage {
     address payable owner;
 
     mapping(uint256 => MarketItem) private idToMarketItem;
+    mapping(uint256 => Offer[]) private tokenIdToOffers;
 
     struct MarketItem {
         uint256 tokenId;
@@ -25,6 +26,11 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 price;
         bool sold;
         bool canceled;
+    }
+    struct Offer {
+        address bidder;
+        uint256 price;
+        bool active;
     }
 
     event MarketItemCreated(
@@ -251,5 +257,30 @@ contract NFTMarketplace is ERC721URIStorage {
             }
         }
         return items;
+    }
+    function makeOffer(uint256 tokenId) public payable {
+        require(
+            idToMarketItem[tokenId].owner == msg.sender,
+            "Only item owner can make offer"
+        );
+        require(
+            idToMarketItem[tokenId].sold == false,
+            "Cannot make offer on a sold item"
+        );
+
+        tokenIdToOffers[tokenId].push(
+            Offer({bidder: msg.sender, price: msg.value, active: true})
+        );
+    }
+
+    function unmakeOffer(uint256 tokenId) public {
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].bidder == msg.sender && offers[i].active) {
+                offers[i].active = false;
+                payable(msg.sender).transfer(offers[i].price);
+                break;
+            }
+        }
     }
 }

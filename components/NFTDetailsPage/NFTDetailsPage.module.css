@@ -1,5 +1,6 @@
 .NFTDetailsPage {
     margin-block: 5rem;
+    z-index: 10000;
 }
 
 .NFTDetailsPage_box {

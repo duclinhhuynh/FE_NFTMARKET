@@ -5,8 +5,6 @@ import {Buton, Category, Brand} from "../components/componentsindex"
 import NFTDetailsPage from "../components/NFTDetailsPage/NFTDetailsPage"
 
 //import smart cotract data
-import {NFTMartketplaceContext} from "../Context/NFTMarketplaceContext";
-
 const NFTDetails = () => {
   // const {currentAccount} = useContext(NFTMartketplaceContext);
 

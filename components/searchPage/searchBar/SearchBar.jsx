@@ -71,7 +71,7 @@ const SearchBar = ({
             <SelectItem key="Last">Last</SelectItem>
           </Select>
         </div>
-        <div className="flex gap-x-4 realative">
+        <div className="flex gap-x-4 relative">
           <DateRangePicker
             label="Stay duration"
             isRequired
