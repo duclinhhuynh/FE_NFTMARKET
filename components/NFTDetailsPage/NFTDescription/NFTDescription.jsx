@@ -14,6 +14,7 @@ import { BsFillTagsFill, BsThreeDots } from "react-icons/bs";
 import { FiCopy, FiRefreshCcw } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiWebmoney } from "react-icons/si";
+import { MdCancel } from "react-icons/md";
 import Style from "./NFTDescription.module.css";
 import images from "../../../img";
 import { NFTTabs } from "../NFTDetailsIndex";
@@ -32,7 +33,36 @@ const NFTDescription = ({ nft }) => {
   const [showCheck, setShowCheck] = useState(false);
   const [openMore, setOpenMore] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  // SMART CONTRACT DATA
+  const { buyNFT, cancelMarketItem, currentAccount } = useContext(
+    NFTMarketplaceContext
+  );
+  // loading
+  const handleCancelMarket = async () => {
+    try {
+      setIsLoading(true);
+      await cancelMarketItem(nft);
+    } catch (error) {
+      console.error("Error cancelling sale:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBuy = async () => {
+    try {
+      setIsLoading(true);
+      await buyNFT(nft);
+    } catch (error) {
+      console.error("Error cancelling sale:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,10 +77,6 @@ const NFTDescription = ({ nft }) => {
     fetchData();
   }, []);
 
-  // SMART CONTRACT DATA
-  const { buyNFT,cancelMarketItem, currentAccount } = useContext(
-    NFTMarketplaceContext
-  );
   const copyAddress = () => {
     const copyText = document.getElementById("myInput");
     copyText.select();
@@ -335,10 +361,11 @@ const NFTDescription = ({ nft }) => {
                       <Button
                         color="primary"
                         variant="bordered"
-                        startContent={<FaListUl />}
-                        onClick={() => cancelMarketItem(nft)}
+                        startContent={isLoading ? "Loading..." : <MdCancel/>}
+                        onClick={handleCancelMarket}
+                        isLoading = {isLoading}
                       >
-                        Cancel Sale
+                        {isLoading ? "Cancelling..." : "Cancel"}
                       </Button>
                     ) : currentAccount == nft.owner.toLowerCase() ? (
                       <Button
@@ -358,10 +385,11 @@ const NFTDescription = ({ nft }) => {
                       <Button
                         color="primary"
                         variant="bordered"
-                        startContent={<FaWallet />}
-                        onClick={() => buyNFT(nft)}
+                        startContent={isLoading ? "Loading..." : <FaWallet/>}
+                        onClick={handleBuy}
+                        isLoading = {isLoading}
                       >
-                        Buy NFT
+                        {isLoading ? "Buying..." : "Buy NFT"}
                       </Button>
                     )}
                     <Button

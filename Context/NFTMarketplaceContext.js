@@ -214,24 +214,42 @@ export const NFTMarketplaceProvider = ({ children }) => {
     try {
       const ethers = require("ethers");
       console.log("url sale", url, formInputPrice, isReselling, id);
+  
+      // Kiểm tra và phân tích giá từ form
       const price = ethers.utils.parseUnits(formInputPrice, "ether");
+  
+      // Kết nối với hợp đồng thông minh
       const contract = await connectingWithSmartContract();
-
+  
+      // Lấy giá niêm yết từ hợp đồng
       const listingPrice = await contract.getListingPrice();
-      const transaction = isReselling
-        ? await contract.reSellToken(id, price, {
-            value: listingPrice.toString(),
-          })
-        : await contract.createToken(url, price, {
-            value: listingPrice.toString(),
-          });
+  
+      // Tạo giao dịch tương ứng với trường hợp đang bán lại hay tạo mới
+      let transaction;
+      if (isReselling) {
+        transaction = await contract.resellToken(id, price, {
+          value: listingPrice.toString(),
+        });
+      } else {
+        transaction = await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        });
+      }
+      
+      // Chờ giao dịch được xác nhận
+      console.log("Transaction submitted", transaction);
       await transaction.wait();
+  
+      // Đăng nhập giao dịch thành công
+      console.log("Transaction confirmed", transaction);
     } catch (error) {
-      setError("Error while creating sale:");
-      console.log("error while salde", error);
+      // Xử lý lỗi và hiển thị thông báo lỗi
+      console.error("Error while creating sale", error);
+      setError("Error while creating sale: " + error.message);
       setOpenError(true);
     }
   };
+  
   // --FETCH nft functino
   const fetchNFTS = async () => {
     try {
@@ -363,7 +381,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         value: price,
       });
       await transaction.wait();
-      router.push("/author");
+      router.push("/NFTPage");
     } catch (error) {
       setError("Error while buying NFT");
       setOpenError(true);
@@ -375,6 +393,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       const contract = await connectingWithSmartContract();
       const transaction = await contract.cancelMarketItem(nft.tokenId);
       await transaction.wait();
+      router.push("/author");
     } catch (error) {
       setError("Error while unlisting token");
       setOpenError(true);

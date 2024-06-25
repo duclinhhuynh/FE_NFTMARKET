@@ -1,16 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
-import Style from "../styles/reSellToken.module.css";
-import fromStyle from "../components/accountPage/Form/Form.module.css";
 import Image from "next/image";
-import formStyle from "../components/accountPage/Form/Form.module.css";
 //IMPORT SMART CONTRACT
 import {
   NFTMarketplaceContext,
   fetchNFTS,
 } from "../Context/NFTMarketplaceContext";
-import { Button, Input, Textarea} from "@nextui-org/react";
+import { FaListUl } from "react-icons/fa";
+import { Button, Input, Textarea } from "@nextui-org/react";
 const reSellToken = () => {
   const { createSale } = useContext(NFTMarketplaceContext);
   const [price, setPrice] = useState("");
@@ -19,6 +16,7 @@ const reSellToken = () => {
   const [des, setDes] = useState("");
   const router = useRouter();
   const { id, tokenURI } = router.query;
+  const [isLoading, setIsLoading] = useState(false);
   const fetchNFTS = async () => {
     if (!tokenURI) return;
     const response = await fetch(tokenURI);
@@ -43,13 +41,17 @@ const reSellToken = () => {
   useEffect(() => {
     fetchNFTS();
   }, [id]);
-  const resell = async () => {
+
+  const handleCreateSale = async () => {
     try {
       console.log("url resale", price, tokenURI, id);
-      await createSale(tokenURI, price, null, id);
+      setIsLoading(true);
+      await createSale(tokenURI, price, true, id);
       router.push("/author");
     } catch (error) {
       console.log("Error while resell", error);
+    }finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -88,8 +90,8 @@ const reSellToken = () => {
                 isReadOnly
               />
             </div>
-            <div >
-            <label htmlFor="">Type your price</label>
+            <div>
+              <label htmlFor="">Type your price</label>
               <Input
                 type="number"
                 variant="bordered"
@@ -103,9 +105,11 @@ const reSellToken = () => {
               <Button
                 color="primary"
                 variant="bordered"
-                onClick={() => resell()}
+                startContent={isLoading ? "Loading..." : <FaListUl/>}
+                onClick={() => handleCreateSale()}
+                isLoading = {isLoading}
               >
-                List on MarketPlace
+                 {isLoading ? "Listing..." : "List on MarketPlace"}
               </Button>
             </div>
           </div>
