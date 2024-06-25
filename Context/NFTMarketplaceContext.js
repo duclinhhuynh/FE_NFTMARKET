@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, use } from "react";
 
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
@@ -73,7 +73,7 @@ const connectToTransferFunds = async () => {
   }
 };
 
-// auction 
+// auction
 const fetchNftAuctionContract = (signerOrProvider) =>
   new ethers.Contract(NftAuctionAddress, NftAuctionABI, signerOrProvider);
 const connectToNftAuction = async () => {
@@ -85,7 +85,10 @@ const connectToNftAuction = async () => {
     const contract = fetchNftAuctionContract(signer);
     return contract;
   } catch (error) {
-    console.log("Something went wrong while connecting with NftAuction contract:", error);
+    console.log(
+      "Something went wrong while connecting with NftAuction contract:",
+      error
+    );
   }
 };
 
@@ -97,7 +100,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
   const [openError, setOpenError] = useState(false);
   const [currentAccount, setCurrentAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
-
   const router = useRouter();
   // const checkContract = async() => {
   //     const contract = await connectingWithSmartContract();
@@ -214,16 +216,16 @@ export const NFTMarketplaceProvider = ({ children }) => {
     try {
       const ethers = require("ethers");
       console.log("url sale", url, formInputPrice, isReselling, id);
-  
+
       // Kiểm tra và phân tích giá từ form
       const price = ethers.utils.parseUnits(formInputPrice, "ether");
-  
+
       // Kết nối với hợp đồng thông minh
       const contract = await connectingWithSmartContract();
-  
+
       // Lấy giá niêm yết từ hợp đồng
       const listingPrice = await contract.getListingPrice();
-  
+
       // Tạo giao dịch tương ứng với trường hợp đang bán lại hay tạo mới
       let transaction;
       if (isReselling) {
@@ -235,11 +237,11 @@ export const NFTMarketplaceProvider = ({ children }) => {
           value: listingPrice.toString(),
         });
       }
-      
+
       // Chờ giao dịch được xác nhận
       console.log("Transaction submitted", transaction);
       await transaction.wait();
-  
+
       // Đăng nhập giao dịch thành công
       console.log("Transaction confirmed", transaction);
     } catch (error) {
@@ -249,7 +251,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       setOpenError(true);
     }
   };
-  
+
   // --FETCH nft functino
   const fetchNFTS = async () => {
     try {
@@ -387,6 +389,64 @@ export const NFTMarketplaceProvider = ({ children }) => {
       setOpenError(true);
     }
   };
+  // Make offer function
+  // Trong NFTMarketplaceProvider
+  const makeOffer = async (nft, price) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const formattedPrice = ethers.utils.parseUnits(price.toString(), "ether");
+      const transaction = await contract.makeOffer(nft.tokenId, formattedPrice, {
+        value: formattedPrice,
+      });
+      await transaction.wait();
+      console.log("Offer made successfully");
+      // Xử lý sau khi đặt giá thành công (nếu cần)
+    } catch (error) {
+      setError("Error making offer");
+      setOpenError(true);
+      console.error("Error making offer:", error);
+    }
+  };
+  
+    // unMake offer function
+  const unMakeOffer = async (nft) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const transaction = await contract.unmakeOffer(nft.tokenId);
+      await transaction.wait();
+      console.log("Offer canceled successfully");
+      // Xử lý sau khi hủy giá thành công (nếu cần)
+    } catch (error) {
+      setError("Error canceling offer");
+      setOpenError(true);
+      console.error("Error canceling offer:", error);
+    }
+  };
+
+  const fetchOffers = async (tokenId) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const offers = await contract.getOffers(tokenId);
+  
+      const formattedOffers = offers.map((offer) => ({
+        bidder: offer.bidder,
+        price: ethers.utils.formatUnits(offer.price.toString(), "ether"),
+        active: offer.active,
+      }));
+      return formattedOffers;
+    } catch (error) {
+      console.error("Error fetching offers:", error);
+      return [];
+    }
+  };
+  
+  const displayOffers = async (tokenId) => {
+    const offers = await fetchOffers(tokenId);
+    offers.forEach((offer) => {
+      console.log(`Bidder: ${offer.bidder}, Price: ${offer.price} ETH, Active: ${offer.active}`);
+    });
+    setALlOffer(offers)
+  };
 
   const cancelMarketItem = async (nft) => {
     try {
@@ -465,13 +525,23 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
-   // Auction functions
-   const createAuction = async (nftAddress, nftId, startingPrice, discountRate) => {
+  // Auction functions
+  const createAuction = async (
+    nftAddress,
+    nftId,
+    startingPrice,
+    discountRate
+  ) => {
     try {
       const contract = await connectToNftAuction();
       const price = ethers.utils.parseEther(startingPrice);
       const discount = ethers.utils.parseEther(discountRate);
-      const transaction = await contract.createAuction(nftAddress, nftId, price, discount);
+      const transaction = await contract.createAuction(
+        nftAddress,
+        nftId,
+        price,
+        discount
+      );
       await transaction.wait();
       console.log("Auction created successfully");
     } catch (error) {
@@ -520,7 +590,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       setOpenError(true);
     }
   };
-  
+
   return (
     <NFTMarketplaceContext.Provider
       value={{
@@ -550,6 +620,10 @@ export const NFTMarketplaceProvider = ({ children }) => {
         endAuction,
         getAuctionHistoryForUser,
         cancelMarketItem,
+        makeOffer,
+        unMakeOffer,
+        displayOffers,
+        fetchOffers
       }}
     >
       {children}

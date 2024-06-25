@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ import {
   FaRegFlag,
   FaListUl,
 } from "react-icons/fa";
+import { BiBug } from "react-icons/bi";
 import { BsFillTagsFill, BsThreeDots } from "react-icons/bs";
 import { FiCopy, FiRefreshCcw } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
@@ -35,6 +36,9 @@ import {
   DateRangePicker,
   Select,
   SelectItem,
+  Listbox,
+  ListboxItem,
+  ListboxSection,
 } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 const NFTDescription = ({ nft }) => {
@@ -47,25 +51,37 @@ const NFTDescription = ({ nft }) => {
   const [showCheck, setShowCheck] = useState(false);
   const [openMore, setOpenMore] = useState(false);
   const [offer, setOffer] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [valueOffer, setValueOffer] = useState();
+  const [stateOffer, setStateOffer] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isLoadingBuy, setIsLoadingBuy] = useState(false);
+  const [isLoadingOffer, setIsLoadingOffer] = useState(false);
+  const [isLoadingCancel, setIsLoadingCancel] = useState(false);
+  const [isLoadingCancelOffer, setIsLoadingCancelOffer] = useState(false);
+  const [allOffers, setAllOffers] = useState([]);
+
   const router = useRouter();
   const duration = [
-    {key: "3days", label: "3 days"},
-    {key: "24h", label: "24 h"},
-    {key: "1h", label: "1h"},
-    {key: "7days", label: "7 days"},
-    {key: "1month", label: "1 month"},
-    {key: "6months", label: "6 month"},
+    { key: "3days", label: "3 days" },
+    { key: "24h", label: "24 h" },
+    { key: "1h", label: "1h" },
+    { key: "7days", label: "7 days" },
+    { key: "1month", label: "1 month" },
+    { key: "6months", label: "6 month" },
   ];
   // SMART CONTRACT DATA
-  const { buyNFT, cancelMarketItem, currentAccount } = useContext(
-    NFTMarketplaceContext
-  );
+  const {
+    buyNFT,
+    cancelMarketItem,
+    unMakeOffer,
+    makeOffer,
+    fetchOffers,
+    currentAccount,
+  } = useContext(NFTMarketplaceContext);
   // loading
   const handleCancelMarket = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingCancel(true);
       await cancelMarketItem(nft);
     } catch (error) {
       console.error("Error cancelling sale:", error);
@@ -76,12 +92,36 @@ const NFTDescription = ({ nft }) => {
 
   const handleBuy = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingBuy(true);
       await buyNFT(nft);
+      setIsLoadingBuy(false);
     } catch (error) {
       console.error("Error cancelling sale:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingBuy(false);
+    }
+  };
+  const handleMakeOffer = async () => {
+    try {
+      setIsLoadingOffer(true);
+      await makeOffer(nft, valueOffer);
+      fetchOffers(nft.tokenId);
+      setStateOffer(true);
+      setIsLoadingOffer(false);
+    } catch (error) {
+      console.error("Error handleMakeOffer sale:", error);
+      setIsLoadingOffer(false);
+    }
+  };
+  const handleCancelOffer = async () => {
+    try {
+      setIsLoadingCancelOffer(true);
+      await unMakeOffer(nft);
+      fetchOffers(nft.tokenId);
+      setIsLoadingCancelOffer(false);
+    } catch (error) {
+      console.error("Error handleCancelOffer sale:", error);
+      setIsLoadingCancelOffer(false);
     }
   };
 
@@ -97,7 +137,20 @@ const NFTDescription = ({ nft }) => {
 
     fetchData();
   }, []);
+  // fetch offers
+  useEffect(() => {
+    const fetchNFTOffers = async () => {
+      try {
+        const offers = await fetchOffers(nft.tokenId);
+        setAllOffers(offers);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+      }
+    };
 
+    // Fetch offers when nft.tokenId changes
+    fetchNFTOffers();
+  }, [allOffers, nft.tokenId]);
   const copyAddress = () => {
     const copyText = document.getElementById("myInput");
     copyText.select();
@@ -392,12 +445,12 @@ const NFTDescription = ({ nft }) => {
                             color="primary"
                             variant="bordered"
                             startContent={
-                              isLoading ? "Loading..." : <MdCancel />
+                              isLoadingCancel ? "Loading..." : <MdCancel />
                             }
                             onClick={handleCancelMarket}
-                            isLoading={isLoading}
+                            isLoading={isLoadingCancel}
                           >
-                            {isLoading ? "Cancelling..." : "Cancel"}
+                            {isLoadingCancel ? "Cancelling..." : "Cancel"}
                           </Button>
                         ) : currentAccount == nft.owner.toLowerCase() ? (
                           <Button
@@ -418,27 +471,49 @@ const NFTDescription = ({ nft }) => {
                             color="primary"
                             variant="bordered"
                             startContent={
-                              isLoading ? "Loading..." : <FaWallet />
+                              isLoadingBuy ? "Loading..." : <FaWallet />
                             }
                             onClick={handleBuy}
-                            isLoading={isLoading}
+                            isLoading={isLoadingBuy}
                           >
-                            {isLoading ? "Buying..." : "Buy NFT"}
+                            {isLoadingBuy ? "Buying..." : "Buy NFT"}
                           </Button>
                         )}
                       </div>
                       <div>
                         {currentAccount != nft.owner.toLowerCase() &&
                         currentAccount != nft.seller.toLowerCase() ? (
-                          <Button
-                            color="primary"
-                            variant="bordered"
-                            startContent={<BsFillTagsFill />}
-                            onClick={handleOpenOffer}
-                            onPress={onOpen}
-                          >
-                            <div>Make offer</div>
-                          </Button>
+                          <div>
+                            {stateOffer ? (
+                              <Button
+                                color="primary"
+                                variant="bordered"
+                                startContent={
+                                  isLoadingCancelOffer ? (
+                                    "Loading..."
+                                  ) : (
+                                    <BsFillTagsFill />
+                                  )
+                                }
+                                onClick={handleCancelOffer}
+                                isLoading={isLoadingCancelOffer}
+                              >
+                                {isLoadingCancelOffer
+                                  ? "Calling..."
+                                  : "Cancel Offer"}
+                              </Button>
+                            ) : (
+                              <Button
+                                color="primary"
+                                variant="bordered"
+                                startContent={<BsFillTagsFill />}
+                                onClick={handleOpenOffer}
+                                onPress={onOpen}
+                              >
+                                <div>Make offer</div>
+                              </Button>
+                            )}
+                          </div>
                         ) : (
                           ""
                         )}
@@ -446,50 +521,37 @@ const NFTDescription = ({ nft }) => {
                     </div>
                   </div>
                 </div>
-                <div className="border px-5 rounded-xl border-bordercustom bg-itembackground">
-                  <div
-                    className={Style.NFTDescription_box_profile_biding_box_tabs}
-                  >
-                    <button
-                      className={`${activeBtn === 1 ? Style.active : ""}`}
-                      onClick={(e) => openTabs(e)}
+                <div className="border rounded-xl border-bordercustom bg-itembackground">
+                  <div className="w-full flex justify-center item-center m-auto bg-itembackground rounded-xl shadow-md">
+                    <Listbox
+                      variant="flat"
+                      aria-label="User Menu"
+                      onAction={(key) => alert(key)}
+                    
                     >
-                      Bid History
-                    </button>
-                    <button
-                      className={`${activeBtn === 2 ? Style.active : ""}`}
-                      onClick={(e) => openTabs(e)}
-                    >
-                      Provenance
-                    </button>
-                    <button
-                      className={`${activeBtn === 3 ? Style.active : ""}`}
-                      onClick={(e) => openTabs(e)}
-                    >
-                      Owner
-                    </button>
+                      <ListboxItem
+                          isReadOnly
+                          color="primary"
+                          startContent = {"Bidder"}
+                          endContent={"Price"}
+                        >
+                       <ListboxSection title="Actions" showDivider></ListboxSection>
+                      </ListboxItem>
+                      {allOffers.map((offer) => (
+                        <ListboxItem
+                          key= {offer.price}
+                          startContent = {
+                          <div className="p-2 rounded-xl bg-success/10 text-success">
+                            <BiBug className="text-lg "/>
+                          </div>
+                        }
+                          endContent={`$ ${offer.price}`}
+                          
+                        > <p>{offer.bidder}</p>
+                        </ListboxItem>
+                      ))}
+                    </Listbox>
                   </div>
-                  {/* {history && (
-                  <div
-                    className={Style.NFTDescription_box_profile_biding_box_card}
-                  >
-                    <NFTTabs dataTabs={historyArray} />
-                  </div>
-                )}
-                {provanannce && (
-                  <div
-                    className={Style.NFTDescription_box_profile_biding_box_card}
-                  >
-                    <NFTTabs dataTabs={provananceArray} />
-                  </div>
-                )}
-                {owner && (
-                  <div
-                    className={Style.NFTDescription_box_profile_biding_box_card}
-                  >
-                    <NFTTabs dataTabs={ownerArray} icon={<MdVerified />} />
-                  </div>
-                )} */}
                 </div>
               </div>
             </div>
@@ -515,6 +577,8 @@ const NFTDescription = ({ nft }) => {
                     type="number"
                     label="Enter your balance"
                     className="max-w-xs"
+                    value={valueOffer}
+                    onChange={(e) => setValueOffer(e.target.value)}
                   />
                   <div className="flex gap-x-4 relative">
                     <Select
@@ -541,8 +605,17 @@ const NFTDescription = ({ nft }) => {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Close
                   </Button>
-                  <Button  startContent={<BsFillTagsFill />} color="primary" variant="bordered" onPress={onClose}>
-                    Place Offer
+                  <Button
+                    onClick={handleMakeOffer}
+                    startContent={
+                      isLoadingOffer ? "Loading..." : <BsFillTagsFill />
+                    }
+                    color="primary"
+                    variant="bordered"
+                    onPress={onClose}
+                    isLoading={isLoadingOffer}
+                  >
+                    {isLoadingOffer ? "Placing..." : "Place Offer"}
                   </Button>
                 </ModalFooter>
               </>

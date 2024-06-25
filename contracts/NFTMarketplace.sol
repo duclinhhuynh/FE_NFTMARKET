@@ -6,8 +6,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import "hardhat/console.sol";
-
 contract NFTMarketplace is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -27,6 +25,7 @@ contract NFTMarketplace is ERC721URIStorage {
         bool sold;
         bool canceled;
     }
+
     struct Offer {
         address bidder;
         uint256 price;
@@ -42,40 +41,32 @@ contract NFTMarketplace is ERC721URIStorage {
         bool canceled
     );
 
-    // Hàm khởi tạo
+    // Constructor
     constructor() ERC721("Metaverse Tokens", "METT") {
         owner = payable(msg.sender);
     }
 
-    /* Updates the listing price of the contract */
     function updateListingPrice(uint256 _listingPrice) public payable {
         require(
             owner == msg.sender,
             "Only marketplace owner can update listing price."
         );
-        //  Kiểm tra nếu người gọi hàm là chủ sở hữu thị trường.
         listingPrice = _listingPrice;
-        // Cập nhật giá niêm yết.
     }
 
-    /* Returns the listing price of the contract */
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
     }
 
-    /* Mints a token and lists it in the marketplace */
     function createToken(
         string memory tokenURI,
         uint256 price
     ) public payable returns (uint256) {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
-        // Lấy ID token mới.
         _mint(msg.sender, newTokenId);
-        // Tạo mới một token và gán cho người gọi hàm.
         _setTokenURI(newTokenId, tokenURI);
         createMarketItem(newTokenId, price);
-        // Gọi hàm createMarketItem để niêm yết token.
         return newTokenId;
     }
 
@@ -85,7 +76,6 @@ contract NFTMarketplace is ERC721URIStorage {
             msg.value == listingPrice,
             "Price must be equal to listing price"
         );
-        // Kiểm tra nếu người gọi hàm trả đúng phí niêm yết.
         idToMarketItem[tokenId] = MarketItem(
             tokenId,
             payable(msg.sender),
@@ -94,9 +84,7 @@ contract NFTMarketplace is ERC721URIStorage {
             false,
             false
         );
-
         _transfer(msg.sender, address(this), tokenId);
-        // Chuyển token từ người gọi hàm đến hợp đồng.
         emit MarketItemCreated(
             tokenId,
             msg.sender,
@@ -107,63 +95,40 @@ contract NFTMarketplace is ERC721URIStorage {
         );
     }
 
-    /* allows someone to resell a token they have purchased */
     function resellToken(uint256 tokenId, uint256 price) public payable {
         require(
             idToMarketItem[tokenId].owner == msg.sender,
             "Only item owner can perform this operation"
         );
-        //  Kiểm tra nếu người gọi hàm là chủ sở hữu của token.
         require(
             msg.value == listingPrice,
             "Price must be equal to listing price"
         );
-        // Kiểm tra nếu người gọi hàm trả đúng phí niêm yết.
         idToMarketItem[tokenId].sold = false;
         idToMarketItem[tokenId].canceled = false;
-        //  Đặt trạng thái bán và hủy của token là false.
         idToMarketItem[tokenId].price = price;
-        // Cập nhật người bán là người gọi hàm.
         idToMarketItem[tokenId].seller = payable(msg.sender);
-        // : Cập nhật chủ sở hữu là hợp đồng.
         idToMarketItem[tokenId].owner = payable(address(this));
-        // : Giảm bộ đếm số mục đã bán.
         _itemsSold.decrement();
-
         _transfer(msg.sender, address(this), tokenId);
     }
 
-    /* Creates the sale of a marketplace item */
-    /* Transfers ownership of the item, as well as funds between parties */
     function createMarketSale(uint256 tokenId) public payable {
         uint256 price = idToMarketItem[tokenId].price;
         address payable seller = idToMarketItem[tokenId].seller;
-
         require(
             msg.value == price,
             "Please submit the asking price in order to complete the purchase"
         );
-
-        // Cập nhật chủ sở hữu và trạng thái bán của mục thị trường
         idToMarketItem[tokenId].owner = payable(msg.sender);
         idToMarketItem[tokenId].sold = true;
-
-        // Tăng bộ đếm số mục đã bán
         _itemsSold.increment();
-
-        // Chuyển quyền sở hữu của NFT từ hợp đồng (thị trường) sang người mua
         _transfer(address(this), msg.sender, tokenId);
-
-        // Chuyển phí niêm yết cho chủ thị trường
         payable(owner).transfer(listingPrice);
-
-        // Chuyển tiền cho người bán
         seller.transfer(msg.value);
-
-        // Đặt người bán thành địa chỉ 0 để chỉ ra rằng không còn người bán cho NFT này nữa
         idToMarketItem[tokenId].seller = payable(address(0));
     }
-    /* Cancels a market item and returns the NFT to the owner */
+
     function cancelMarketItem(uint256 tokenId) public {
         MarketItem storage item = idToMarketItem[tokenId];
         require(
@@ -171,22 +136,17 @@ contract NFTMarketplace is ERC721URIStorage {
             "Only item seller can perform this operation"
         );
         require(item.sold == false, "Cannot cancel a sold item");
-
         item.owner = payable(msg.sender);
         item.seller = payable(address(0));
         item.sold = false;
         item.canceled = true;
-
         _transfer(address(this), msg.sender, tokenId);
     }
 
-    /* Returns all unsold market items */
     function fetchMarketItem() public view returns (MarketItem[] memory) {
         uint256 itemCount = _tokenIds.current();
         uint256 unsoldItemCount = 0;
         uint256 currentIndex = 0;
-
-        // Đếm số lượng mục chưa bán và chưa bị hủy
         for (uint256 i = 0; i < itemCount; i++) {
             if (
                 idToMarketItem[i + 1].owner == address(this) &&
@@ -195,7 +155,6 @@ contract NFTMarketplace is ERC721URIStorage {
                 unsoldItemCount += 1;
             }
         }
-
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
         for (uint256 i = 0; i < itemCount; i++) {
             if (
@@ -211,18 +170,15 @@ contract NFTMarketplace is ERC721URIStorage {
         return items;
     }
 
-    /* Returns only items that a user has purchased */
     function fetchMyNFTs() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _tokenIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
-
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].owner == msg.sender) {
                 itemCount += 1;
             }
         }
-
         MarketItem[] memory items = new MarketItem[](itemCount);
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].owner == msg.sender) {
@@ -235,18 +191,15 @@ contract NFTMarketplace is ERC721URIStorage {
         return items;
     }
 
-    /* Returns only items a user has listed */
     function fetchItemsListed() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _tokenIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
-
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].seller == msg.sender) {
                 itemCount += 1;
             }
         }
-
         MarketItem[] memory items = new MarketItem[](itemCount);
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].seller == msg.sender) {
@@ -258,18 +211,31 @@ contract NFTMarketplace is ERC721URIStorage {
         }
         return items;
     }
-    function makeOffer(uint256 tokenId) public payable {
+
+    function makeOffer(uint256 tokenId, uint256 price) public payable {
         require(
-            idToMarketItem[tokenId].owner == msg.sender,
-            "Only item owner can make offer"
+            idToMarketItem[tokenId].owner != msg.sender,
+            "Owner cannot make offer on their own item"
         );
         require(
             idToMarketItem[tokenId].sold == false,
             "Cannot make offer on a sold item"
         );
+        require(
+            idToMarketItem[tokenId].canceled == false,
+            "Cannot make offer on a canceled item"
+        );
+        require(
+            msg.value == price,
+            "Offer price must be equal to the value sent"
+        );
+        require(
+            price > 0,
+            "Offer price must be greater than 0"
+        );
 
         tokenIdToOffers[tokenId].push(
-            Offer({bidder: msg.sender, price: msg.value, active: true})
+            Offer({bidder: msg.sender, price: price, active: true})
         );
     }
 
@@ -282,5 +248,9 @@ contract NFTMarketplace is ERC721URIStorage {
                 break;
             }
         }
+    }
+
+    function getOffers(uint256 tokenId) public view returns (Offer[] memory) {
+        return tokenIdToOffers[tokenId];
     }
 }
