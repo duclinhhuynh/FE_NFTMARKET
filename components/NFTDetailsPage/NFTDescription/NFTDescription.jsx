@@ -18,6 +18,7 @@ import { SiWebmoney } from "react-icons/si";
 import { MdCancel } from "react-icons/md";
 import Style from "./NFTDescription.module.css";
 import images from "../../../img";
+import CountDown from "../../CountDown/CountDown";
 import { fetchPrice } from "../../../api/api";
 import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
 // next ui
@@ -35,9 +36,12 @@ import {
   DateRangePicker,
   Select,
   SelectItem,
-  Listbox,
-  ListboxItem,
-  ListboxSection,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 const NFTDescription = ({ nft }) => {
@@ -49,24 +53,104 @@ const NFTDescription = ({ nft }) => {
   const [openShare, setOpenShare] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const [openMore, setOpenMore] = useState(false);
-  const [offer, setOffer] = useState(true);
   const [valueOffer, setValueOffer] = useState();
-  const [stateOffer, setStateOffer] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isLoadingBuy, setIsLoadingBuy] = useState(false);
   const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const [isLoadingCancelOffer, setIsLoadingCancelOffer] = useState(false);
-  const [isActiveOffer,setIsActiveOffer] = useState(false);
-  const router = useRouter();
+  const [isActiveOffer, setIsActiveOffer] = useState(false);
+  // data select offer
+  const [selectedCopy, setSelectedDataCopy] = useState({
+    start: parseDate(new Date().toISOString().split("T")[0]),
+    end: parseDate(
+      new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0]
+    ),
+  });
+  const [selectedDates, setSelectedDates] = useState({
+    start: parseDate(new Date().toISOString().split("T")[0]),
+    end: parseDate(
+      new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0]
+    ),
+  });
+
   const duration = [
-    { key: "3days", label: "3 days" },
+    { key: "5min", label: "5 min" },
+    { key: "5h", label: "5 hours" },
     { key: "24h", label: "24 h" },
-    { key: "1h", label: "1h" },
+    { key: "3days", label: "3 days" },
     { key: "7days", label: "7 days" },
     { key: "1month", label: "1 month" },
-    { key: "6months", label: "6 month" },
+    { key: "6months", label: "6 months" },
   ];
+  const [selectedDuration, setSelectedDuration] = useState(duration[0].key);
+
+  const handleSelectChange = (selectedKey) => {
+    if (selectedKey instanceof Set) {
+      selectedKey = Array.from(selectedKey)[0];
+    }
+
+    const selectedItem = duration.find((item) => item.key === selectedKey);
+
+    if (!selectedItem) {
+      console.error(`No duration item found for key: ${selectedKey}`);
+      return;
+    }
+
+    setSelectedDuration(selectedItem.key);
+
+    let endDate;
+    const startDate = new Date();
+
+    switch (selectedItem.key) {
+      case "5min":
+        endDate = new Date(startDate.getTime() + 5 * 60 * 1000);
+        break;
+      case "3days":
+        endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+        break;
+      case "24h":
+        endDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
+        break;
+      case "5h":
+        endDate = new Date(startDate.getTime() + 5 * 60 * 60 * 1000);
+        break;
+      case "7days":
+        endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        break;
+      case "1month":
+        endDate = new Date(
+          startDate.getFullYear(),
+          startDate.getMonth() + 1,
+          startDate.getDate()
+        );
+        break;
+      case "6months":
+        endDate = new Date(
+          startDate.getFullYear(),
+          startDate.getMonth() + 6,
+          startDate.getDate()
+        );
+        break;
+      default:
+        endDate = null;
+    }
+
+    setSelectedDates({
+      start: startDate,
+      end: endDate ? endDate : null,
+    });
+    // tách ra để tránh bug
+    setSelectedDataCopy({
+      start: parseDate(startDate.toISOString().split("T")[0]),
+      end: endDate ? parseDate(endDate.toISOString().split("T")[0]) : null,
+    });
+  };
+
   // SMART CONTRACT DATA
   const {
     buyNFT,
@@ -100,29 +184,45 @@ const NFTDescription = ({ nft }) => {
       setIsLoadingBuy(false);
     }
   };
+
   const handleMakeOffer = async () => {
+    let desiredTimestamp = null;
+
+    // Ensure selectedDates.end is correctly formatted
+    if (selectedDates.end instanceof Date) {
+      desiredTimestamp = selectedDates.end.toISOString();
+    } else if (selectedDates.end) {
+      desiredTimestamp = new Date(selectedDates.end).toISOString();
+    } else {
+      console.error("No valid end date selected.");
+      return;
+    }
+
     try {
       setIsLoadingOffer(true);
-      await makeOffer(nft, valueOffer);
+      await makeOffer(nft, valueOffer, desiredTimestamp);
       await fetchOffers(nft.tokenId);
-      setIsLoadingCancelOffer(false)
+      setIsLoadingOffer(false);
       setIsActiveOffer(true);
     } catch (error) {
-      console.error("Error handleMakeOffer sale:", error);
+      console.error("Error making offer:", error);
       setIsLoadingOffer(false);
+      return;
     }
   };
+
   const handleCancelOffer = async () => {
     try {
       setIsLoadingCancelOffer(true);
       await unMakeOffer(nft);
       await fetchOffers(nft.tokenId);
       setIsLoadingCancelOffer(false);
-      setIsLoadingOffer(false)
+      setIsLoadingOffer(false);
       setIsActiveOffer(false);
     } catch (error) {
       console.error("Error handleCancelOffer sale:", error);
       setIsLoadingCancelOffer(false);
+      return;
     }
   };
 
@@ -144,11 +244,15 @@ const NFTDescription = ({ nft }) => {
       if (nft.tokenId) {
         const offers = await fetchOffers(nft.tokenId);
         setIsActiveOffer(
-          offers.some(offer => offer.bidder.toLowerCase() === currentAccount.toLowerCase() && offer.active)
+          offers.some(
+            (offer) =>
+              offer.bidder.toLowerCase() === currentAccount.toLowerCase() &&
+              offer.active
+          )
         );
       }
     };
-  
+
     fetchAndCheckOffers();
   }, [fetchOffers, nft.tokenId, currentAccount]);
   const copyAddress = () => {
@@ -210,28 +314,6 @@ const NFTDescription = ({ nft }) => {
     };
   }, []);
 
-  const handleCreateAuction = async () => {
-    // Gọi hàm createAuction từ context
-    await createAuction(nft.address, nft.id, "100", "0.1");
-    // Có thể thực hiện các hành động khác sau khi tạo đấu giá
-  };
-
-  const handlePlaceBid = async () => {
-    // Gọi hàm placeBid từ context
-  };
-
-  const handleEndAuction = async () => {
-    // Gọi hàm endAuction từ context
-    await endAuction(auctionId);
-    // Có thể thực hiện các hành động khác sau khi kết thúc đấu giá
-  };
-
-  const handleGetHistory = async () => {
-    // Gọi hàm getAuctionHistoryForUser từ context
-    const history = await getAuctionHistoryForUser(currentAccount);
-    console.log("Lịch sử đấu giá cho người dùng hiện tại:", history);
-    // Có thể thực hiện các hành động khác sau khi lấy lịch sử đấu giá
-  };
   return (
     <>
       <div className={Style.NFTDescription}>
@@ -481,81 +563,103 @@ const NFTDescription = ({ nft }) => {
                         )}
                       </div>
                       <div>
-                          {currentAccount !== nft.seller.toLowerCase()
-                          && currentAccount !== nft.owner.toLowerCase() &&
-                          <div>
-                            {isActiveOffer ? (
-                              <Button
-                                color="primary"
-                                variant="bordered"
-                                startContent={
-                                  isLoadingCancelOffer ? (
-                                    "Loading..."
-                                  ) : (
-                                    <BsFillTagsFill />
-                                  )
-                                }
-                                onClick={handleCancelOffer}
-                                isLoading={isLoadingCancelOffer}
-                              >
-                                {isLoadingCancelOffer
-                                  ? "Calling..."
-                                  : "Cancel Offer"}
-                              </Button>
-                            ) :
-                            (
-                              <Button
-                                color="primary"
-                                variant="bordered"
-                                startContent={ isLoadingOffer ? (
-                                  "Loading..."
-                                ) : (
-                                  <BsFillTagsFill />
-                                ) }
-                                onClick={handleOpenOffer}
-                                onPress={onOpen}
-                                isLoading = {isLoadingOffer}
-                              >
-                                <div>Make offer</div>
-                              </Button>
-                            )}
-                          </div>
-                          }
+                        {currentAccount !== nft.seller.toLowerCase() &&
+                          currentAccount !== nft.owner.toLowerCase() && (
+                            <div>
+                              {isActiveOffer ? (
+                                <Button
+                                  color="primary"
+                                  variant="bordered"
+                                  startContent={
+                                    isLoadingCancelOffer ? (
+                                      "Loading..."
+                                    ) : (
+                                      <BsFillTagsFill />
+                                    )
+                                  }
+                                  onClick={handleCancelOffer}
+                                  isLoading={isLoadingCancelOffer}
+                                >
+                                  {isLoadingCancelOffer
+                                    ? "Calling..."
+                                    : "Cancel Offer"}
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="primary"
+                                  variant="bordered"
+                                  startContent={
+                                    isLoadingOffer ? (
+                                      "Loading..."
+                                    ) : (
+                                      <BsFillTagsFill />
+                                    )
+                                  }
+                                  onClick={handleOpenOffer}
+                                  onPress={onOpen}
+                                  isLoading={isLoadingOffer}
+                                >
+                                  <div>Make offer</div>
+                                </Button>
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="border rounded-xl border-bordercustom bg-itembackground">
-                  <div className="w-full flex justify-center item-center m-auto bg-itembackground rounded-xl shadow-md">
-                    <Listbox
-                      variant="flat"
-                      aria-label="User Menu"
-                      onAction={(key) => alert(key)}
-                    
-                    >
-                      <ListboxItem
-                          isReadOnly
-                          color="primary"
-                          startContent = {"Bidder"}
-                          endContent={"Price"}
-                        >
-                       <ListboxSection title="Actions" showDivider></ListboxSection>
-                      </ListboxItem>
-                      {allOffers.filter((offer) => offer.active)
-                      .map((offer) => (
-                        <ListboxItem
-                          key= {offer.price}
-                          startContent = {
-                          <div className="p-2 rounded-xl bg-success/10 text-success">
-                            <BiBug className="text-lg "/>
-                          </div>
-                        }
-                          endContent={`$ ${offer.price}`}
-                          
-                        > <p>{offer.bidder}</p>
-                        </ListboxItem>
-                      ))}
-                    </Listbox>
+                  <div className="w-full flex justify-center item-center m-auto bg-itembackground rounded-xl">
+                    <div className="w-full">
+                      <Table
+                        removeWrapper
+                        isCompact
+                        aria-label="Example table with custom cells, pagination and sorting"
+                        bottomContentPlacement="outside"
+                      >
+                        <TableHeader >
+                          <TableColumn className="flex items-center">
+                            <span className="p-2 text-[20px]">
+                              <BiBug className="text-success" />
+                            </span>
+                            Bidder
+                          </TableColumn>
+                          <TableColumn>Price</TableColumn>
+                          <TableColumn>Time Stamp</TableColumn>
+                          <TableColumn>Accept</TableColumn>
+                        </TableHeader>
+                        <TableBody>
+                          {allOffers
+                            .filter((offer) => offer.active)
+                            .sort((a, b) => b.price - a.price)
+                            .map((offer, index) => (
+                              <TableRow key={offer.bidder + offer.timestamp}>
+                                <TableCell>
+                                  {offer.bidder.slice(0, 7) +
+                                    "..." +
+                                    offer.bidder.slice(-3)}
+                                </TableCell>
+                                <TableCell>{offer.price}</TableCell>
+                                <TableCell>
+                                  <CountDown timestamp={offer.timestamp} />
+                                </TableCell>
+                                <TableCell>
+                                  {/* Đặt firstRowDisplayed thành true khi hiển thị hàng đầu tiên */}
+                                  {index === 0 && (
+                                    <Button
+                                       size="sm"
+                                      color="default"
+                                      onClick={() => (true)}
+                                    >
+                                      Accept
+                                    </Button>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -589,20 +693,23 @@ const NFTDescription = ({ nft }) => {
                     <Select
                       color=""
                       items={duration}
-                      label="Favorite duration"
+                      label="Select fast duration"
                       placeholder="Select duration"
                       className="max-w-xs"
+                      selectedKey={selectedDuration.key}
+                      onSelectionChange={handleSelectChange}
                     >
-                      {(duration) => <SelectItem>{duration.label}</SelectItem>}
+                      {(item) => (
+                        <SelectItem key={item.key}>{item.label}</SelectItem>
+                      )}
                     </Select>
                     <DateRangePicker
                       label="Stay duration"
-                      isRequired
-                      defaultValue={{
-                        start: parseDate("2024-04-01"),
-                        end: parseDate("2024-04-08"),
-                      }}
+                      isReadOnly
+                      defaultValue={selectedCopy}
+                      value={selectedCopy}
                       className="max-w-xs"
+                      onChange={(value) => setSelectedDataCopy(value)}
                     />
                   </div>
                 </ModalBody>

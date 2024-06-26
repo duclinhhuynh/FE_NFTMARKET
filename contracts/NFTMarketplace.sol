@@ -29,6 +29,7 @@ contract NFTMarketplace is ERC721URIStorage {
     struct Offer {
         address bidder;
         uint256 price;
+        uint256 timestamp; // Thêm timestamp để theo dõi thời gian offer
         bool active;
     }
 
@@ -71,7 +72,7 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
     function createMarketItem(uint256 tokenId, uint256 price) private {
-        require(price > 0, "Price must be at least 1 wei");
+        require(price > 0, "Price must be greater than 0");
         require(
             msg.value == listingPrice,
             "Price must be equal to listing price"
@@ -212,7 +213,7 @@ contract NFTMarketplace is ERC721URIStorage {
         return items;
     }
 
-    function makeOffer(uint256 tokenId, uint256 price) public payable {
+    function makeOffer(uint256 tokenId, uint256 price, uint256 desiredTimestamp) public payable {
         require(
             idToMarketItem[tokenId].owner != msg.sender,
             "Owner cannot make offer on their own item"
@@ -231,9 +232,51 @@ contract NFTMarketplace is ERC721URIStorage {
         );
         require(price > 0, "Offer price must be greater than 0");
 
+        // Thêm offer vào danh sách với desiredTimestamp
         tokenIdToOffers[tokenId].push(
-            Offer({bidder: msg.sender, price: price, active: true})
+            Offer({
+                bidder: msg.sender,
+                price: price,
+                timestamp: desiredTimestamp, // Lưu desiredTimestamp vào offer
+                active: true
+            })
         );
+    }
+
+    function acceptOffer(uint256 tokenId) public {
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+        require(
+            idToMarketItem[tokenId].owner == msg.sender,
+            "Only item owner can accept an offer"
+        );
+        uint256 highestOfferPrice = 0;
+        address highestOfferBidder;
+        uint256 highestOfferIndex = 0;
+
+        // Tìm offer cao nhất
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active && offers[i].price > highestOfferPrice) {
+                highestOfferPrice = offers[i].price;
+                highestOfferBidder = offers[i].bidder;
+                highestOfferIndex = i;
+            }
+        }
+
+        // Chấp nhận offer cao nhất
+        idToMarketItem[tokenId].owner = payable(highestOfferBidder);
+        idToMarketItem[tokenId].sold = true;
+        _itemsSold.increment();
+        _transfer(address(this), highestOfferBidder, tokenId);
+        // Chuyển tiền cho seller
+        idToMarketItem[tokenId].seller.transfer(highestOfferPrice);
+
+        // Hủy các offer còn lại
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (i != highestOfferIndex) {
+                offers[i].active = false;
+                payable(offers[i].bidder).transfer(offers[i].price);
+            }
+        }
     }
 
     function unmakeOffer(uint256 tokenId) public {
@@ -242,7 +285,7 @@ contract NFTMarketplace is ERC721URIStorage {
             if (offers[i].bidder == msg.sender && offers[i].active) {
                 offers[i].active = false;
                 payable(msg.sender).transfer(offers[i].price);
-                break; 
+                break;
             }
         }
     }

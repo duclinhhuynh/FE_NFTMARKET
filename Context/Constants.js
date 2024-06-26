@@ -4,7 +4,7 @@
 import nftMarketplace from './NFTMarketplace.json';
 import transferFunds from './TransferFunds.json';
 import nftAution from './NftAuction.json';
-export const NFTMarketplaceAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+export const NFTMarketplaceAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"
 export const NFTMarketplaceABI = nftMarketplace.abi
 export const TransferFundsAddress = "0x2b8a2A0D08ce91999E271A92cb7fF022cb38395E"
 export const TransferFundsABI = transferFunds.abi
