@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BsFillCameraFill } from "react-icons/bs";
 import { useRouter } from "next/router";
-
+import { MdOutlineCreate } from "react-icons/md";
 import formStyle from "../accountPage/Form/Form.module.css";
 import { DropZone } from "./UploadNFTIndex";
 // next ui
@@ -14,6 +13,7 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const collections = [
     { key: "Image", label: "Image" },
     { key: "Photography", label: "Photography" },
@@ -23,6 +23,18 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
   ];
 
   const router = useRouter();
+
+  const handleCreateLoading = () => {
+    createNFT(
+      name,
+      price,
+      image,
+      description,
+      category,
+      router
+    )
+    setIsLoading(true);
+  }
   const handleClearPrice = () => {
     setPrice("");
   };
@@ -137,30 +149,21 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
           <div className="m-2 flex justify-around">
             <Button
               color="secondary"
-              onClick={async () =>
-                createNFT(
-                  name,
-                  price,
-                  image,
-                  description,
-                  category,
-                  router
-                  // website,
-                  // royalties,
-                  // fileSize,
-                  // category
-                )
+              onClick={async () => handleCreateLoading()}
+              isLoading={isLoading}
+              startContent={
+                isLoading ? "Loading..." : <MdOutlineCreate />
               }
             >
-              <span className="text-white font-bold">Create</span>
+              {isLoading ? "Creating..." : "Create NFT"}
             </Button>
-            <Button
+            {/* <Button
               endContent={<BsFillCameraFill size={20} color="primary" />}
               color="success"
               onClick={() => {}}
             >
               <span className="text-white font-bold">Preview</span>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

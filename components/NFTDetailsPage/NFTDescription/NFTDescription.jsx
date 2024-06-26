@@ -20,7 +20,6 @@ import Style from "./NFTDescription.module.css";
 import images from "../../../img";
 import { fetchPrice } from "../../../api/api";
 import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
-import { NFTMakeOffer } from "../NFTDetailsIndex";
 // next ui
 import ThemeSwitcherText from "../../theme/ThemeSwitcherText";
 import {
@@ -58,8 +57,7 @@ const NFTDescription = ({ nft }) => {
   const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const [isLoadingCancelOffer, setIsLoadingCancelOffer] = useState(false);
-  const [allOffers, setAllOffers] = useState([]);
-
+  const [isActiveOffer,setIsActiveOffer] = useState(false);
   const router = useRouter();
   const duration = [
     { key: "3days", label: "3 days" },
@@ -77,6 +75,7 @@ const NFTDescription = ({ nft }) => {
     makeOffer,
     fetchOffers,
     currentAccount,
+    allOffers,
   } = useContext(NFTMarketplaceContext);
   // loading
   const handleCancelMarket = async () => {
@@ -86,7 +85,7 @@ const NFTDescription = ({ nft }) => {
     } catch (error) {
       console.error("Error cancelling sale:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingCancel(false);
     }
   };
 
@@ -105,9 +104,9 @@ const NFTDescription = ({ nft }) => {
     try {
       setIsLoadingOffer(true);
       await makeOffer(nft, valueOffer);
-      fetchOffers(nft.tokenId);
-      setStateOffer(true);
-      setIsLoadingOffer(false);
+      await fetchOffers(nft.tokenId);
+      setIsLoadingCancelOffer(false)
+      setIsActiveOffer(true);
     } catch (error) {
       console.error("Error handleMakeOffer sale:", error);
       setIsLoadingOffer(false);
@@ -117,8 +116,10 @@ const NFTDescription = ({ nft }) => {
     try {
       setIsLoadingCancelOffer(true);
       await unMakeOffer(nft);
-      fetchOffers(nft.tokenId);
+      await fetchOffers(nft.tokenId);
       setIsLoadingCancelOffer(false);
+      setIsLoadingOffer(false)
+      setIsActiveOffer(false);
     } catch (error) {
       console.error("Error handleCancelOffer sale:", error);
       setIsLoadingCancelOffer(false);
@@ -139,18 +140,17 @@ const NFTDescription = ({ nft }) => {
   }, []);
   // fetch offers
   useEffect(() => {
-    const fetchNFTOffers = async () => {
-      try {
+    const fetchAndCheckOffers = async () => {
+      if (nft.tokenId) {
         const offers = await fetchOffers(nft.tokenId);
-        setAllOffers(offers);
-      } catch (error) {
-        console.error("Error fetching offers:", error);
+        setIsActiveOffer(
+          offers.some(offer => offer.bidder.toLowerCase() === currentAccount.toLowerCase() && offer.active)
+        );
       }
     };
-
-    // Fetch offers when nft.tokenId changes
-    fetchNFTOffers();
-  }, [allOffers, nft.tokenId]);
+  
+    fetchAndCheckOffers();
+  }, [fetchOffers, nft.tokenId, currentAccount]);
   const copyAddress = () => {
     const copyText = document.getElementById("myInput");
     copyText.select();
@@ -481,10 +481,10 @@ const NFTDescription = ({ nft }) => {
                         )}
                       </div>
                       <div>
-                        {currentAccount != nft.owner.toLowerCase() &&
-                        currentAccount != nft.seller.toLowerCase() ? (
+                          {currentAccount !== nft.seller.toLowerCase()
+                          && currentAccount !== nft.owner.toLowerCase() &&
                           <div>
-                            {stateOffer ? (
+                            {isActiveOffer ? (
                               <Button
                                 color="primary"
                                 variant="bordered"
@@ -502,21 +502,25 @@ const NFTDescription = ({ nft }) => {
                                   ? "Calling..."
                                   : "Cancel Offer"}
                               </Button>
-                            ) : (
+                            ) :
+                            (
                               <Button
                                 color="primary"
                                 variant="bordered"
-                                startContent={<BsFillTagsFill />}
+                                startContent={ isLoadingOffer ? (
+                                  "Loading..."
+                                ) : (
+                                  <BsFillTagsFill />
+                                ) }
                                 onClick={handleOpenOffer}
                                 onPress={onOpen}
+                                isLoading = {isLoadingOffer}
                               >
                                 <div>Make offer</div>
                               </Button>
                             )}
                           </div>
-                        ) : (
-                          ""
-                        )}
+                          }
                       </div>
                     </div>
                   </div>
@@ -537,7 +541,8 @@ const NFTDescription = ({ nft }) => {
                         >
                        <ListboxSection title="Actions" showDivider></ListboxSection>
                       </ListboxItem>
-                      {allOffers.map((offer) => (
+                      {allOffers.filter((offer) => offer.active)
+                      .map((offer) => (
                         <ListboxItem
                           key= {offer.price}
                           startContent = {

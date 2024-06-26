@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, use } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
@@ -100,6 +100,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
   const [openError, setOpenError] = useState(false);
   const [currentAccount, setCurrentAccount] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
+  const [allOffers, setAllOffers] = useState([]);
   const router = useRouter();
   // const checkContract = async() => {
   //     const contract = await connectingWithSmartContract();
@@ -400,7 +401,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       });
       await transaction.wait();
       console.log("Offer made successfully");
-      // Xử lý sau khi đặt giá thành công (nếu cần)
     } catch (error) {
       setError("Error making offer");
       setOpenError(true);
@@ -423,31 +423,26 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
-  const fetchOffers = async (tokenId) => {
+  const fetchOffers = useCallback(async (tokenId) => {
     try {
       const contract = await connectingWithSmartContract();
       const offers = await contract.getOffers(tokenId);
-  
+
       const formattedOffers = offers.map((offer) => ({
         bidder: offer.bidder,
         price: ethers.utils.formatUnits(offer.price.toString(), "ether"),
         active: offer.active,
       }));
+      
+      console.log(formattedOffers);
+      setAllOffers(formattedOffers);
       return formattedOffers;
     } catch (error) {
       console.error("Error fetching offers:", error);
       return [];
     }
-  };
+  }, [currentAccount]);
   
-  const displayOffers = async (tokenId) => {
-    const offers = await fetchOffers(tokenId);
-    offers.forEach((offer) => {
-      console.log(`Bidder: ${offer.bidder}, Price: ${offer.price} ETH, Active: ${offer.active}`);
-    });
-    setALlOffer(offers)
-  };
-
   const cancelMarketItem = async (nft) => {
     try {
       const contract = await connectingWithSmartContract();
@@ -622,8 +617,8 @@ export const NFTMarketplaceProvider = ({ children }) => {
         cancelMarketItem,
         makeOffer,
         unMakeOffer,
-        displayOffers,
-        fetchOffers
+        fetchOffers,
+        allOffers,
       }}
     >
       {children}

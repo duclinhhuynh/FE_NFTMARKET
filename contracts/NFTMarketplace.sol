@@ -229,10 +229,7 @@ contract NFTMarketplace is ERC721URIStorage {
             msg.value == price,
             "Offer price must be equal to the value sent"
         );
-        require(
-            price > 0,
-            "Offer price must be greater than 0"
-        );
+        require(price > 0, "Offer price must be greater than 0");
 
         tokenIdToOffers[tokenId].push(
             Offer({bidder: msg.sender, price: price, active: true})
@@ -245,7 +242,7 @@ contract NFTMarketplace is ERC721URIStorage {
             if (offers[i].bidder == msg.sender && offers[i].active) {
                 offers[i].active = false;
                 payable(msg.sender).transfer(offers[i].price);
-                break;
+                break; 
             }
         }
     }
