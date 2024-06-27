@@ -143,7 +143,7 @@ const NavBar = () => {
               <p>Discover</p>
               {discover && (
                 <div className={Style.navbar_container_right_discover_box}>
-                  <div className={`rounded-xl shadow-md border ${
+                  <div className={`rounded-xl shadow-md border border-bordercustom bg-itembackground ${
                       theme === "light" ? "bg-white" : "bg-black text-white"
                     }`}>
                     <Discover setDiscover={setDiscover} />

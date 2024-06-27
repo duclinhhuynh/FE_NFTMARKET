@@ -8,7 +8,6 @@ const DropZone = ({title, heading, subHeading, name,price, website, description,
   royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
-  const [droppedFiles, setDroppedFiles] = useState([]);
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
       const url = await uploadToIPFS(acceptedFiles[0]); // Wait for the promise to resolve

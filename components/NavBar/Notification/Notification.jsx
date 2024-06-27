@@ -235,7 +235,7 @@ const Notification = () => {
      <Listbox
         topContent={topContent}
         classNames={{
-          base: `max-w-xs border rounded-xl ${theme === 'light' ? 'bg-white' : 'bg-black text-white'}`,
+          base: `max-w-xs border border-bordercustom bg-itembackground rounded-xl `,
           list: "max-h-[300px] overflow-scroll"
         }}
         defaultSelectedKeys={["1"]}

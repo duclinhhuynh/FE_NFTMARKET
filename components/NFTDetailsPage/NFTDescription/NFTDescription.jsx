@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, use } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import {
   FaShare,
   FaRegFlag,
   FaListUl,
+  FaCheck,
 } from "react-icons/fa";
 import { BiBug } from "react-icons/bi";
 import { BsFillTagsFill, BsThreeDots } from "react-icons/bs";
@@ -21,29 +22,18 @@ import images from "../../../img";
 import CountDown from "../../CountDown/CountDown";
 import { fetchPrice } from "../../../api/api";
 import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
+import OfferModal from "../Modal/OfferModal";
 // next ui
 import ThemeSwitcherText from "../../theme/ThemeSwitcherText";
 import {
   Tooltip,
   Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  Input,
-  DateRangePicker,
-  Select,
-  SelectItem,
   Table,
-  TableHeader,
   TableColumn,
   TableBody,
   TableRow,
   TableCell,
 } from "@nextui-org/react";
-import { parseDate } from "@internationalized/date";
 const NFTDescription = ({ nft }) => {
   const [NFTMenu, setNFTMenu] = useState(false);
   const [history, setHistory] = useState(true);
@@ -53,105 +43,16 @@ const NFTDescription = ({ nft }) => {
   const [openShare, setOpenShare] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const [openMore, setOpenMore] = useState(false);
-  const [valueOffer, setValueOffer] = useState();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isLoadingBuy, setIsLoadingBuy] = useState(false);
-  const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const [isLoadingCancelOffer, setIsLoadingCancelOffer] = useState(false);
+  const [isLoadingAccept, setIsLoadingAccept] = useState(false);
   const [isActiveOffer, setIsActiveOffer] = useState(false);
+  const [isLoadingOffer, setIsLoadingOffer] = useState(false);
+  const [openModelOffer, setOpenModalOffer] = useState(false);
+
   const router = useRouter();
   // data select offer
-  const [selectedCopy, setSelectedDataCopy] = useState({
-    start: parseDate(new Date().toISOString().split("T")[0]),
-    end: parseDate(
-      new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0]
-    ),
-  });
-  const [selectedDates, setSelectedDates] = useState({
-    start: parseDate(new Date().toISOString().split("T")[0]),
-    end: parseDate(
-      new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0]
-    ),
-  });
-
-  const duration = [
-    { key: "5min", label: "5 min" },
-    { key: "5h", label: "5 hours" },
-    { key: "24h", label: "24 h" },
-    { key: "3days", label: "3 days" },
-    { key: "7days", label: "7 days" },
-    { key: "1month", label: "1 month" },
-    { key: "6months", label: "6 months" },
-  ];
-  const [selectedDuration, setSelectedDuration] = useState(duration[0].key);
-
-  const handleSelectChange = (selectedKey) => {
-    if (selectedKey instanceof Set) {
-      selectedKey = Array.from(selectedKey)[0];
-    }
-
-    const selectedItem = duration.find((item) => item.key === selectedKey);
-
-    if (!selectedItem) {
-      console.error(`No duration item found for key: ${selectedKey}`);
-      return;
-    }
-
-    setSelectedDuration(selectedItem.key);
-
-    let endDate;
-    const startDate = new Date();
-
-    switch (selectedItem.key) {
-      case "5min":
-        endDate = new Date(startDate.getTime() + 1 * 60 * 1000);
-        break;
-      case "3days":
-        endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
-        break;
-      case "24h":
-        endDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
-        break;
-      case "5h":
-        endDate = new Date(startDate.getTime() + 5 * 60 * 60 * 1000);
-        break;
-      case "7days":
-        endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-        break;
-      case "1month":
-        endDate = new Date(
-          startDate.getFullYear(),
-          startDate.getMonth() + 1,
-          startDate.getDate()
-        );
-        break;
-      case "6months":
-        endDate = new Date(
-          startDate.getFullYear(),
-          startDate.getMonth() + 6,
-          startDate.getDate()
-        );
-        break;
-      default:
-        endDate = null;
-    }
-
-    setSelectedDates({
-      start: startDate,
-      end: endDate ? endDate : null,
-    });
-    // tách ra để tránh bug
-    setSelectedDataCopy({
-      start: parseDate(startDate.toISOString().split("T")[0]),
-      end: endDate ? parseDate(endDate.toISOString().split("T")[0]) : null,
-    });
-  };
-
   // SMART CONTRACT DATA
   const {
     buyNFT,
@@ -161,13 +62,20 @@ const NFTDescription = ({ nft }) => {
     fetchOffers,
     currentAccount,
     allOffers,
-    acceptOffer
+    acceptOffer,
+    accountBalance
   } = useContext(NFTMarketplaceContext);
   // loading
+
+  const handleOpenOffer = () => {
+    setOpenModalOffer(true);
+  };
+
   const handleCancelMarket = async () => {
     try {
       setIsLoadingCancel(true);
       await cancelMarketItem(nft);
+      router.push("author");
     } catch (error) {
       console.error("Error cancelling sale:", error);
     } finally {
@@ -187,33 +95,6 @@ const NFTDescription = ({ nft }) => {
     }
   };
 
-  const handleMakeOffer = async () => {
-    let desiredTimestamp = null;
-
-    // Ensure selectedDates.end is correctly formatted
-    if (selectedDates.end instanceof Date) {
-      desiredTimestamp = selectedDates.end.toISOString();
-    } else if (selectedDates.end) {
-      desiredTimestamp = new Date(selectedDates.end).toISOString();
-    } else {
-      console.error("No valid end date selected.");
-      return;
-    }
-
-    try {
-      setIsLoadingOffer(true);
-      console.log("desiredTimestamp",desiredTimestamp);
-      await makeOffer(nft, valueOffer, desiredTimestamp);
-      await fetchOffers(nft.tokenId);
-      setIsLoadingOffer(false);
-      setIsActiveOffer(true);
-    } catch (error) {
-      console.error("Error making offer:", error);
-      setIsLoadingOffer(false);
-      return;
-    }
-  };
-
   const handleCancelOffer = async () => {
     try {
       setIsLoadingCancelOffer(true);
@@ -228,7 +109,17 @@ const NFTDescription = ({ nft }) => {
       return;
     }
   };
-
+  const handleAcceptOffer = async () => {
+    try {
+      setIsLoadingAccept(true);
+      await acceptOffer(nft);
+      await fetchOffers(nft.tokenId);
+      setIsLoadingAccept(false);
+    } catch (error) {
+      setIsLoadingAccept(false);
+      return;
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -297,10 +188,6 @@ const NFTDescription = ({ nft }) => {
   const handleOpenMore = () => {
     setOpenMore(!openMore);
     setOpenShare(false);
-  };
-
-  const handleOpenOffer = () => {
-    onOpen();
   };
   // close model
   useEffect(() => {
@@ -435,7 +322,7 @@ const NFTDescription = ({ nft }) => {
                       onMouseDown={handleMouseDown}
                       className="flex cursor-pointer items-center gap-2 p-2"
                     >
-                      Ronaos <MdVerified />
+                      Ronaldo <MdVerified />
                       <input
                         type="text"
                         value={nft.seller}
@@ -598,9 +485,7 @@ const NFTDescription = ({ nft }) => {
                                       <BsFillTagsFill />
                                     )
                                   }
-                                  onClick={handleOpenOffer}
-                                  onPress={onOpen}
-                                  isLoading={isLoadingOffer}
+                                  onClick={() => handleOpenOffer()}
                                 >
                                   <div>Make offer</div>
                                 </Button>
@@ -611,25 +496,23 @@ const NFTDescription = ({ nft }) => {
                     </div>
                   </div>
                 </div>
-                <div className="border rounded-xl border-bordercustom bg-itembackground">
-                  <div className="w-full flex justify-center item-center m-auto bg-itembackground rounded-xl">
-                    <div className="w-full">
-                      <Table
-                        removeWrapper
-                        isCompact
-                        bottomContentPlacement="outside"
-                      >
-                        <TableHeader >
-                          <TableColumn className="flex items-center">
-                            <span className="p-2 text-[20px]">
-                              <BiBug className="text-success" />
-                            </span>
-                            Bidder
-                          </TableColumn>
-                          <TableColumn>Price</TableColumn>
-                          <TableColumn>Time Stamp</TableColumn>
-                          <TableColumn>Accept</TableColumn>
-                        </TableHeader>
+                <div className="border rounded-lg border-bordercustom rounded-xl bg-itembackground">
+                  <div className="w-full flex justify-center item-center m-auto">
+                    <div className="w-full ">
+                      <Table removeWrapper>
+                        <TableColumn className="flex items-center">
+                          <span className="text-[20px] p-2">
+                            <BiBug className="text-success" />
+                          </span>
+                          Bidder
+                        </TableColumn>
+                        <TableColumn>Price</TableColumn>
+                        <TableColumn>Bidding ends</TableColumn>
+
+                        <TableColumn className="text-right">
+                          {currentAccount.toLowerCase() ===
+                            nft.seller.toLowerCase() && <p>Accept Highest</p>}
+                        </TableColumn>
                         <TableBody>
                           {allOffers
                             .filter((offer) => offer.active)
@@ -645,17 +528,30 @@ const NFTDescription = ({ nft }) => {
                                 <TableCell>
                                   <CountDown timestamp={offer.timestamp} />
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="text-right">
                                   {/* Đặt firstRowDisplayed thành true khi hiển thị hàng đầu tiên */}
-                                  {index === 0 && (
-                                    <Button
-                                       size="sm"
-                                      color="default"
-                                      onClick={() => acceptOffer(nft)}
-                                    >
-                                      Accept
-                                    </Button>
-                                  )}
+                                  {currentAccount.toLowerCase() ===
+                                    nft.seller.toLowerCase() &&
+                                    index === 0 && (
+                                      <Button
+                                        startContent={
+                                          isLoadingAccept ? (
+                                            "Loading..."
+                                          ) : (
+                                            <FaCheck />
+                                          )
+                                        }
+                                        variant="bordered"
+                                        size="sm"
+                                        color="default"
+                                        isLoading={isLoadingAccept}
+                                        onClick={() => handleAcceptOffer()}
+                                      >
+                                        {isLoadingAccept
+                                          ? "Accepting..."
+                                          : "Accept"}
+                                      </Button>
+                                    )}
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -669,73 +565,17 @@ const NFTDescription = ({ nft }) => {
           </div>
         </ThemeSwitcherText>
       </div>
+      {/* // offer modal*/}
       <div>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          className="text-textprimary"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Placing an offer for item
-                </ModalHeader>
-                <ModalBody>
-                  <h2>Offer Price</h2>
-                  <p className="text-xs">Available balance:</p>
-                  <Input
-                    type="number"
-                    label="Enter your balance"
-                    className="max-w-xs"
-                    value={valueOffer}
-                    onChange={(e) => setValueOffer(e.target.value)}
-                  />
-                  <div className="flex gap-x-4 relative">
-                    <Select
-                      color=""
-                      items={duration}
-                      label="Select fast duration"
-                      placeholder="Select duration"
-                      className="max-w-xs"
-                      selectedKey={selectedDuration.key}
-                      onSelectionChange={handleSelectChange}
-                    >
-                      {(item) => (
-                        <SelectItem key={item.key}>{item.label}</SelectItem>
-                      )}
-                    </Select>
-                    <DateRangePicker
-                      label="Stay duration"
-                      isReadOnly
-                      defaultValue={selectedCopy}
-                      value={selectedCopy}
-                      className="max-w-xs"
-                      onChange={(value) => setSelectedDataCopy(value)}
-                    />
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button
-                    onClick={handleMakeOffer}
-                    startContent={
-                      isLoadingOffer ? "Loading..." : <BsFillTagsFill />
-                    }
-                    color="primary"
-                    variant="bordered"
-                    onPress={onClose}
-                    isLoading={isLoadingOffer}
-                  >
-                    {isLoadingOffer ? "Placing..." : "Place Offer"}
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+        <OfferModal
+          openModelOffer={openModelOffer}
+          setOpenModalOffer={setOpenModalOffer}
+          makeOffer={makeOffer}
+          fetchOffers = {fetchOffers}
+          setIsActiveOffer = {setIsActiveOffer}
+          nft = {nft} 
+          accountBalance = {accountBalance}
+        />
       </div>
     </>
   );

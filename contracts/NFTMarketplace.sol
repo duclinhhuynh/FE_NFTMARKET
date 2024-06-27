@@ -140,6 +140,15 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         payable(owner).transfer(listingPrice);
         seller.transfer(msg.value);
         idToMarketItem[tokenId].seller = payable(address(0));
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active) {
+                offers[i].active = false;
+                // trả lại tiền cho bọn họ
+                payable(offers[i].bidder).transfer(offers[i].price);
+            }
+        }
     }
 
     function cancelMarketItem(uint256 tokenId) public nonReentrant {
@@ -149,8 +158,6 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             "Only item seller can perform this operation"
         );
         require(item.sold == false, "Cannot cancel a sold item");
-        // bỏ các offer hết hạn
-        _cancelExpiredOffers(tokenId);
         // Ensure safe decrement
         if (_itemsSold.current() > 0) {
             _itemsSold.decrement();
@@ -290,12 +297,13 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
 
         uint256 highestOfferPrice = 0;
         address highestOfferBidder;
-
+        uint256 highestOfferIndex = 0;
         // Tìm offer cao nhất
         for (uint256 i = 0; i < offers.length; i++) {
             if (offers[i].active && offers[i].price > highestOfferPrice) {
                 highestOfferPrice = offers[i].price;
                 highestOfferBidder = offers[i].bidder;
+                highestOfferIndex = i;
             }
         }
 
@@ -305,13 +313,17 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         _itemsSold.increment();
         _transfer(address(this), highestOfferBidder, tokenId);
 
-        // Chuyển tiền cho buyer
+        // Chuyển tiền cho seller
         idToMarketItem[tokenId].seller.transfer(highestOfferPrice);
         // đặt địa chỉ để nó không nằm trên chợ nữa
         idToMarketItem[tokenId].seller = payable(address(0));
         // Hủy các offer còn lại
         for (uint256 i = 0; i < offers.length; i++) {
-            if (offers[i].active) {
+            if (i == highestOfferIndex && offers[i].active) {
+                offers[i].active = false;
+            }
+            // chỉ trả cho những offer khác ngoại trừ offer cao nhất
+            else if (i != highestOfferIndex && offers[i].active) {
                 offers[i].active = false;
                 payable(offers[i].bidder).transfer(offers[i].price);
             }

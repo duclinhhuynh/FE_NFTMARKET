@@ -76,8 +76,8 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
               onChange={(e) => setCategory(e.target.value)}
               className="max-w-full"
             >
-              {collections.map((animal) => (
-                <SelectItem key={animal.key}>{animal.label}</SelectItem>
+              {collections.map((item) => (
+                <SelectItem key={item.key}>{item.label}</SelectItem>
               ))}
             </Select>
           </div>
@@ -157,13 +157,6 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
             >
               {isLoading ? "Creating..." : "Create NFT"}
             </Button>
-            {/* <Button
-              endContent={<BsFillCameraFill size={20} color="primary" />}
-              color="success"
-              onClick={() => {}}
-            >
-              <span className="text-white font-bold">Preview</span>
-            </Button> */}
           </div>
         </div>
       </div>

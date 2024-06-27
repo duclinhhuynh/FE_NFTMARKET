@@ -169,41 +169,47 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
-  // createNFT function
-  const createNFT = async (
-    name,
-    price,
-    imageurl,
-    description,
-    category,
-    router
-  ) => {
-    if (!category || !name || !description || !price || !imageurl) {
-      console.log("Data Is Missing");
-      return setError("Data Is Missing"), setOpenError(true);
-    }
-    const data = JSON.stringify({ name, description, imageurl, category });
-    console.log("data", data);
+  const uploadJSONToPinata = async (data) => {
     try {
       const resFile = await axios({
         method: "POST",
         url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-        data: data,
+        data: JSON.stringify(data),
         headers: {
           pinata_api_key: api_key,
           pinata_secret_key: api_serect,
-          //   "Content-Type": `application/json`,
           Authorization: `Bearer ${pinata_JWT}`,
         },
       });
-      console.log("iphashres", resFile.data.IpfsHash);
-      // Upload image file to Pinata IPFS
-      const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-      console.log(imgHash);
+  
+      const ipfsHash = resFile.data.IpfsHash;
+      const imgHash = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+      console.log("Uploaded to Pinata:", imgHash);
+  
+      return imgHash;
+    } catch (error) {
+      console.error("Error while uploading to Pinata:", error);
+      throw new Error("Failed to upload to Pinata");
+    }
+  };
+  // createNFT function
+  const createNFT = async (name, price, imageurl, description, category, router) => {
+    if (!category || !name || !description || !price || !imageurl) {
+      console.log("Data Is Missing");
+      setError("Data Is Missing");
+      setOpenError(true);
+      return;
+    }
+  
+    const data = { name, description, imageurl, category };
+    console.log("Data to upload:", data);
+  
+    try {
+      const imgHash = await uploadJSONToPinata(data);
       await createSale(imgHash, price);
       router.push("/NFTPage");
     } catch (error) {
-      setError("Error while creating");
+      setError("Error while creating NFT");
       setOpenError(true);
     }
   };
@@ -380,7 +386,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         value: price,
       });
       await transaction.wait();
-      router.push("/NFTPage");
+      router.push("/author");
     } catch (error) {
       setError("Error while buying NFT");
       throw error;
@@ -429,25 +435,12 @@ export const NFTMarketplaceProvider = ({ children }) => {
       throw error; // Ném lại lỗi để bắt ở nơi gọi hàm unMakeOffer
     }
   };
-  // Function to cancel expired offers for a specific token ID
-  // const cancelExpiredOffers = async (tokenId) => {
-  //   try {
-  //     const contract = await connectingWithSmartContract();
-  //     // Call the smart contract's cancelExpiredOffers function
-  //     const transaction = await contract.cancelExpiredOffers(tokenId);
-  //     await transaction.wait();
-  //     console.log("Expired offers canceled successfully");
-  //   } catch (error) {
-  //     console.error("Error canceling expired offers:", error);
-  //     throw error;
-  //   }
-  // };
-  // acept price higest
   const acceptOffer = async (nft) => {
     try {
       const contract = await connectingWithSmartContract();
       const transaction = await contract.acceptOffer(nft.tokenId);
       await transaction.wait();
+      router.push("/author")
       console.log("Offer acceptOffer successfully");
     } catch (error) {
       console.error("Error canceling offer:", error);
@@ -601,19 +594,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       setOpenError(true);
     }
   };
-  // Lấy lịch sử đấu giá của một người dùng cụ thể
-  const getAuctionHistoryForUser = async (userAddress) => {
-    try {
-      const contract = await connectToNftAuction();
-      const history = await contract.getAuctionHistory(userAddress);
-      console.log("Auction history for user", userAddress, history);
-      return history;
-    } catch (error) {
-      console.error("Error fetching auction history for user:", error);
-      setError("Error fetching auction history");
-      setOpenError(true);
-    }
-  };
 
   return (
     <NFTMarketplaceContext.Provider
@@ -642,7 +622,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
         createAuction,
         placeBid,
         endAuction,
-        getAuctionHistoryForUser,
         cancelMarketItem,
         makeOffer,
         unMakeOffer,
