@@ -47,7 +47,7 @@ const reSellToken = () => {
       console.log("url resale", price, tokenURI, id);
       setIsLoading(true);
       await createSale(tokenURI, price, true, id);
-      router.push("/NFTPAGE");
+      router.push("/NFTPage");
     } catch (error) {
       console.log("Error while resell", error);
     }finally {

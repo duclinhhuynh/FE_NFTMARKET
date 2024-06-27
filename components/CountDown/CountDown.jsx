@@ -13,9 +13,9 @@ const CountDown = ({ timestamp }) => {
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
   
       if (days > 0) {
-        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        return `${days}d : ${hours}h : ${minutes}m : ${seconds}s`;
       } else {
-        return `${hours}h ${minutes}m ${seconds}s`;
+        return `${hours}h : ${minutes}m : ${seconds}s`;
       }
     } else {
       return "Offer has expired!";

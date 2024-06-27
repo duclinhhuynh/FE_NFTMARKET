@@ -106,7 +106,7 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
                 type="number"
                 variant="bordered"
                 defaultValue={1}
-                placeholder="1"
+                placeholder="Enter your price"
                 onClear={handleClearPrice}
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}

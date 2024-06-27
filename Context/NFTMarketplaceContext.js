@@ -27,7 +27,6 @@ import {
   NftAuctionAddress,
   NftAuctionABI,
 } from "./Constants";
-import { id } from "ethers/lib/utils";
 
 //Fetching smart contract
 const fetchContract = (signerOrProvider) =>
@@ -392,11 +391,14 @@ export const NFTMarketplaceProvider = ({ children }) => {
     try {
       const contract = await connectingWithSmartContract();
       const formattedPrice = ethers.utils.parseUnits(price.toString(), "ether");
-  
+
       // Chuyển desiredTimestamp thành Unix timestamp
-      const unixTimestamp = Math.floor(new Date(desiredTimestamp).getTime() / 1000);
-  
+      const unixTimestamp = Math.floor(
+        new Date(desiredTimestamp).getTime() / 1000
+      );
+
       // Gọi hàm makeOffer từ smart contract và truyền value vào transaction
+      console.log("unixTimestamp", unixTimestamp);
       const transaction = await contract.makeOffer(
         nft.tokenId,
         formattedPrice,
@@ -406,10 +408,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
         }
       );
       await transaction.wait();
-  
-      // Sau khi gọi makeOffer thành công, gọi startCountdown để bắt đầu đếm ngược
-      startCountdown(nft.tokenId, desiredTimestamp);
-  
       console.log("Offer made successfully");
     } catch (error) {
       setError("Error making offer");
@@ -417,27 +415,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       throw error;
     }
   };
-  
-  const startCountdown = async (tokenId, desiredTimestamp) => {
-    const currentTime = Math.floor(Date.now() / 1000); // Thời gian hiện tại (đơn vị giây)
-  
-    // Chuyển đổi desiredTimestamp thành Unix timestamp
-    const unixTimestamp = Math.floor(new Date(desiredTimestamp).getTime() / 1000);
-  
-    // Tính thời gian hết hạn (cancelTime) dựa trên unixTimestamp
-    const cancelTime = unixTimestamp + 24 * 60 * 60; // Thời gian hết hạn + 1 ngày (86400 giây)
-  
-    console.log("Current time:", currentTime);
-    console.log("Desired Unix timestamp:", unixTimestamp);
-    console.log("Cancel Unix timestamp:", cancelTime);
-  
-    // Kiểm tra khi nào nên hủy offer
-    if (currentTime >= cancelTime) {
-      await unMakeOffer(tokenId);
-    }
-  };
-  
-  
+
   // unMake offer function
   const unMakeOffer = async (nft) => {
     try {
@@ -451,29 +429,51 @@ export const NFTMarketplaceProvider = ({ children }) => {
       throw error; // Ném lại lỗi để bắt ở nơi gọi hàm unMakeOffer
     }
   };
+  // Function to cancel expired offers for a specific token ID
+  // const cancelExpiredOffers = async (tokenId) => {
+  //   try {
+  //     const contract = await connectingWithSmartContract();
+  //     // Call the smart contract's cancelExpiredOffers function
+  //     const transaction = await contract.cancelExpiredOffers(tokenId);
+  //     await transaction.wait();
+  //     console.log("Expired offers canceled successfully");
+  //   } catch (error) {
+  //     console.error("Error canceling expired offers:", error);
+  //     throw error;
+  //   }
+  // };
+  // acept price higest
+  const acceptOffer = async (nft) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const transaction = await contract.acceptOffer(nft.tokenId);
+      await transaction.wait();
+      console.log("Offer acceptOffer successfully");
+    } catch (error) {
+      console.error("Error canceling offer:", error);
+      throw error;
+    }
+  };
   // Fetch all offers
-  const fetchOffers = useCallback(
-    async (tokenId) => {
-      try {
-        const contract = await connectingWithSmartContract();
-        const offers = await contract.getOffers(tokenId);
+  const fetchOffers = useCallback(async (tokenId) => {
+    try {
+      const contract = await connectingWithSmartContract();
+      const offers = await contract.getOffers(tokenId);
+      const formattedOffers = offers.map((offer) => ({
+        bidder: offer.bidder,
+        price: ethers.utils.formatUnits(offer.price.toString(), "ether"),
+        active: offer.active,
+        timestamp: new Date(offer.timestamp * 1000).toISOString(),
+      }));
+      console.log(formattedOffers);
+      setAllOffers(formattedOffers);
 
-        const formattedOffers = offers.map((offer) => ({
-          bidder: offer.bidder,
-          price: ethers.utils.formatUnits(offer.price.toString(), "ether"),
-          active: offer.active,
-          timestamp: new Date(offer.timestamp * 1000).toISOString()
-        }));
-        console.log(formattedOffers);
-        setAllOffers(formattedOffers);
-        return formattedOffers;
-      } catch (error) {
-        console.error("Error fetching offers:", error);
-        return [];
-      }
-    },
-    [currentAccount]
-  );
+      return formattedOffers;
+    } catch (error) {
+      console.error("Error fetching offers:", error);
+      return [];
+    }
+  }, []);
   // cancelMarketItem
   const cancelMarketItem = async (nft) => {
     try {
@@ -648,6 +648,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         unMakeOffer,
         fetchOffers,
         allOffers,
+        acceptOffer,
       }}
     >
       {children}

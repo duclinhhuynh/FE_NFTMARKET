@@ -5,9 +5,13 @@ pragma solidity >=0.4.22 <0.9.0;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract NFTMarketplace is ERC721URIStorage {
+contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     using Counters for Counters.Counter;
+    using SafeMath for uint256;
+
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
 
@@ -42,16 +46,20 @@ contract NFTMarketplace is ERC721URIStorage {
         bool canceled
     );
 
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "Only marketplace owner can call this function."
+        );
+        _;
+    }
+
     // Constructor
     constructor() ERC721("Metaverse Tokens", "METT") {
         owner = payable(msg.sender);
     }
 
-    function updateListingPrice(uint256 _listingPrice) public payable {
-        require(
-            owner == msg.sender,
-            "Only marketplace owner can update listing price."
-        );
+    function updateListingPrice(uint256 _listingPrice) public onlyOwner {
         listingPrice = _listingPrice;
     }
 
@@ -62,7 +70,11 @@ contract NFTMarketplace is ERC721URIStorage {
     function createToken(
         string memory tokenURI,
         uint256 price
-    ) public payable returns (uint256) {
+    ) public payable nonReentrant returns (uint256) {
+        require(
+            msg.value == listingPrice,
+            "Price must be equal to listing price"
+        );
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
@@ -73,10 +85,7 @@ contract NFTMarketplace is ERC721URIStorage {
 
     function createMarketItem(uint256 tokenId, uint256 price) private {
         require(price > 0, "Price must be greater than 0");
-        require(
-            msg.value == listingPrice,
-            "Price must be equal to listing price"
-        );
+
         idToMarketItem[tokenId] = MarketItem(
             tokenId,
             payable(msg.sender),
@@ -96,7 +105,10 @@ contract NFTMarketplace is ERC721URIStorage {
         );
     }
 
-    function resellToken(uint256 tokenId, uint256 price) public payable {
+    function resellToken(
+        uint256 tokenId,
+        uint256 price
+    ) public payable nonReentrant {
         require(
             idToMarketItem[tokenId].owner == msg.sender,
             "Only item owner can perform this operation"
@@ -114,7 +126,7 @@ contract NFTMarketplace is ERC721URIStorage {
         _transfer(msg.sender, address(this), tokenId);
     }
 
-    function createMarketSale(uint256 tokenId) public payable {
+    function createMarketSale(uint256 tokenId) public payable nonReentrant {
         uint256 price = idToMarketItem[tokenId].price;
         address payable seller = idToMarketItem[tokenId].seller;
         require(
@@ -130,13 +142,20 @@ contract NFTMarketplace is ERC721URIStorage {
         idToMarketItem[tokenId].seller = payable(address(0));
     }
 
-    function cancelMarketItem(uint256 tokenId) public {
+    function cancelMarketItem(uint256 tokenId) public nonReentrant {
         MarketItem storage item = idToMarketItem[tokenId];
         require(
             item.seller == msg.sender,
             "Only item seller can perform this operation"
         );
         require(item.sold == false, "Cannot cancel a sold item");
+        // bỏ các offer hết hạn
+        _cancelExpiredOffers(tokenId);
+        // Ensure safe decrement
+        if (_itemsSold.current() > 0) {
+            _itemsSold.decrement();
+        }
+
         item.owner = payable(msg.sender);
         item.seller = payable(address(0));
         item.sold = false;
@@ -148,6 +167,8 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 itemCount = _tokenIds.current();
         uint256 unsoldItemCount = 0;
         uint256 currentIndex = 0;
+        MarketItem[] memory items;
+
         for (uint256 i = 0; i < itemCount; i++) {
             if (
                 idToMarketItem[i + 1].owner == address(this) &&
@@ -156,18 +177,20 @@ contract NFTMarketplace is ERC721URIStorage {
                 unsoldItemCount += 1;
             }
         }
-        MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+
+        items = new MarketItem[](unsoldItemCount);
+
         for (uint256 i = 0; i < itemCount; i++) {
             if (
                 idToMarketItem[i + 1].owner == address(this) &&
                 !idToMarketItem[i + 1].canceled
             ) {
                 uint256 currentId = i + 1;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
+                items[currentIndex] = idToMarketItem[currentId];
                 currentIndex += 1;
             }
         }
+
         return items;
     }
 
@@ -175,20 +198,24 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 totalItemCount = _tokenIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
+        MarketItem[] memory items;
+
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].owner == msg.sender) {
                 itemCount += 1;
             }
         }
-        MarketItem[] memory items = new MarketItem[](itemCount);
+
+        items = new MarketItem[](itemCount);
+
         for (uint256 i = 0; i < totalItemCount; i++) {
             if (idToMarketItem[i + 1].owner == msg.sender) {
                 uint256 currentId = i + 1;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
+                items[currentIndex] = idToMarketItem[currentId];
                 currentIndex += 1;
             }
         }
+
         return items;
     }
 
@@ -213,7 +240,11 @@ contract NFTMarketplace is ERC721URIStorage {
         return items;
     }
 
-    function makeOffer(uint256 tokenId, uint256 price, uint256 desiredTimestamp) public payable {
+    function makeOffer(
+        uint256 tokenId,
+        uint256 price,
+        uint256 desiredTimestamp
+    ) public payable nonReentrant {
         require(
             idToMarketItem[tokenId].owner != msg.sender,
             "Owner cannot make offer on their own item"
@@ -232,6 +263,9 @@ contract NFTMarketplace is ERC721URIStorage {
         );
         require(price > 0, "Offer price must be greater than 0");
 
+        // Kiểm tra và hủy các offer hết hạn
+        _cancelExpiredOffers(tokenId);
+
         // Thêm offer vào danh sách với desiredTimestamp
         tokenIdToOffers[tokenId].push(
             Offer({
@@ -243,22 +277,25 @@ contract NFTMarketplace is ERC721URIStorage {
         );
     }
 
-    function acceptOffer(uint256 tokenId) public {
+    // chấp nhận trả cho offer cao nhất
+    function acceptOffer(uint256 tokenId) public nonReentrant {
         Offer[] storage offers = tokenIdToOffers[tokenId];
         require(
-            idToMarketItem[tokenId].owner == msg.sender,
+            idToMarketItem[tokenId].seller == msg.sender,
             "Only item owner can accept an offer"
         );
+
+        // Kiểm tra và hủy các offer hết hạn
+        _cancelExpiredOffers(tokenId);
+
         uint256 highestOfferPrice = 0;
         address highestOfferBidder;
-        uint256 highestOfferIndex = 0;
 
         // Tìm offer cao nhất
         for (uint256 i = 0; i < offers.length; i++) {
             if (offers[i].active && offers[i].price > highestOfferPrice) {
                 highestOfferPrice = offers[i].price;
                 highestOfferBidder = offers[i].bidder;
-                highestOfferIndex = i;
             }
         }
 
@@ -267,19 +304,21 @@ contract NFTMarketplace is ERC721URIStorage {
         idToMarketItem[tokenId].sold = true;
         _itemsSold.increment();
         _transfer(address(this), highestOfferBidder, tokenId);
-        // Chuyển tiền cho seller
-        idToMarketItem[tokenId].seller.transfer(highestOfferPrice);
 
+        // Chuyển tiền cho buyer
+        idToMarketItem[tokenId].seller.transfer(highestOfferPrice);
+        // đặt địa chỉ để nó không nằm trên chợ nữa
+        idToMarketItem[tokenId].seller = payable(address(0));
         // Hủy các offer còn lại
         for (uint256 i = 0; i < offers.length; i++) {
-            if (i != highestOfferIndex) {
+            if (offers[i].active) {
                 offers[i].active = false;
                 payable(offers[i].bidder).transfer(offers[i].price);
             }
         }
     }
 
-    function unmakeOffer(uint256 tokenId) public {
+    function unmakeOffer(uint256 tokenId) public nonReentrant {
         Offer[] storage offers = tokenIdToOffers[tokenId];
         for (uint256 i = 0; i < offers.length; i++) {
             if (offers[i].bidder == msg.sender && offers[i].active) {
@@ -292,5 +331,17 @@ contract NFTMarketplace is ERC721URIStorage {
 
     function getOffers(uint256 tokenId) public view returns (Offer[] memory) {
         return tokenIdToOffers[tokenId];
+    }
+
+    // hủy các offer hết hạn
+    function _cancelExpiredOffers(uint256 tokenId) private {
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+        uint256 currentTime = block.timestamp;
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active && offers[i].timestamp < currentTime) {
+                offers[i].active = false;
+                payable(offers[i].bidder).transfer(offers[i].price);
+            }
+        }
     }
 }

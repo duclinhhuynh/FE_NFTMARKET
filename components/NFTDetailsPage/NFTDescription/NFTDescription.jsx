@@ -60,6 +60,7 @@ const NFTDescription = ({ nft }) => {
   const [isLoadingCancel, setIsLoadingCancel] = useState(false);
   const [isLoadingCancelOffer, setIsLoadingCancelOffer] = useState(false);
   const [isActiveOffer, setIsActiveOffer] = useState(false);
+  const router = useRouter();
   // data select offer
   const [selectedCopy, setSelectedDataCopy] = useState({
     start: parseDate(new Date().toISOString().split("T")[0]),
@@ -108,7 +109,7 @@ const NFTDescription = ({ nft }) => {
 
     switch (selectedItem.key) {
       case "5min":
-        endDate = new Date(startDate.getTime() + 5 * 60 * 1000);
+        endDate = new Date(startDate.getTime() + 1 * 60 * 1000);
         break;
       case "3days":
         endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
@@ -160,6 +161,7 @@ const NFTDescription = ({ nft }) => {
     fetchOffers,
     currentAccount,
     allOffers,
+    acceptOffer
   } = useContext(NFTMarketplaceContext);
   // loading
   const handleCancelMarket = async () => {
@@ -200,6 +202,7 @@ const NFTDescription = ({ nft }) => {
 
     try {
       setIsLoadingOffer(true);
+      console.log("desiredTimestamp",desiredTimestamp);
       await makeOffer(nft, valueOffer, desiredTimestamp);
       await fetchOffers(nft.tokenId);
       setIsLoadingOffer(false);
@@ -614,7 +617,6 @@ const NFTDescription = ({ nft }) => {
                       <Table
                         removeWrapper
                         isCompact
-                        aria-label="Example table with custom cells, pagination and sorting"
                         bottomContentPlacement="outside"
                       >
                         <TableHeader >
@@ -649,7 +651,7 @@ const NFTDescription = ({ nft }) => {
                                     <Button
                                        size="sm"
                                       color="default"
-                                      onClick={() => (true)}
+                                      onClick={() => acceptOffer(nft)}
                                     >
                                       Accept
                                     </Button>
