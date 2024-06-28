@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { Button ,Image} from "@nextui-org/react";
 
 // INTERNAL IMPORT
-import { BsImage } from "react-icons/bs";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { MdVerified, MdTimer } from "react-icons/md";
 import Style from "./NFTCardTwo.module.css";
-import { LikeProfile } from "../../componentsindex";
 import Link from "next/link";
 import { fetchPrice } from "../../../api/api";
 

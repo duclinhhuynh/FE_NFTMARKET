@@ -21,7 +21,7 @@ const collection = () => {
     <div className={Style.collection}>
         <CollectionProfile collectionArray={collectionArray} />
         <Filter/>
-        <NFTCardTwo/>
+        <NFTCardTwo />
         <Slider/>
         <Brand/>
     </div>

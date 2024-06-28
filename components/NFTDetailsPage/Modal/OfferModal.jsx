@@ -128,7 +128,6 @@ const OfferModal = ({
     }
     try {
       setIsLoadingOffer(true);
-      console.log("desiredTimestamp", desiredTimestamp);
       await makeOffer(nft, valueOffer, desiredTimestamp);
       await fetchOffers(nft.tokenId);
       setOpenModalOffer();

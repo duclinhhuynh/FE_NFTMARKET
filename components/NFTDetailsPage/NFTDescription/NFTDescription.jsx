@@ -36,9 +36,6 @@ import {
   TableCell,
 } from "@nextui-org/react";
 const NFTDescription = ({ nft }) => {
-  const [NFTMenu, setNFTMenu] = useState(false);
-  const [history, setHistory] = useState(true);
-  const [activeBtn, setActiveBtn] = useState(1);
   const [ethPrice, setEthPrice] = useState(null);
   const [showCheckShare, setShowCheckShare] = useState(false);
   const [openShare, setOpenShare] = useState(false);
@@ -66,7 +63,8 @@ const NFTDescription = ({ nft }) => {
     acceptOffer,
     accountBalance,
     createSale,
-    uploadJSONToPinata
+    uploadJSONToPinata,
+    unpinFromPinata
   } = useContext(NFTMarketplaceContext);
   // loading
 
@@ -590,6 +588,7 @@ const NFTDescription = ({ nft }) => {
          nft = {nft}
          accountBalance = {accountBalance}
          uploadJSONToPinata = {uploadJSONToPinata}
+         unpinFromPinata = {unpinFromPinata}
         />
       </div>
     </>

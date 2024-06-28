@@ -18,11 +18,11 @@ const Author = () => {
       try {
         const ownedNFTs = await fetchMyNFTsOrListedNFTs();
         setMyNFTs(ownedNFTs);
-        console.log("Owned NFTs:", ownedNFTs);
+        // console.log("Owned NFTs:", ownedNFTs);
 
         const listedNFTs = await fetchMyNFTsOrListedNFTs("fetchItemsListed");
         setNfts(listedNFTs);
-        console.log("Listed NFTs:", listedNFTs);
+        // console.log("Listed NFTs:", listedNFTs);
       } catch (error) {
         console.error("Error fetching NFTs:", error);
       }

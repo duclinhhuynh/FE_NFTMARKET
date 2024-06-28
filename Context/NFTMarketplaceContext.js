@@ -8,7 +8,7 @@ import axios from "axios";
 const dotenv = require("dotenv");
 dotenv.config();
 const api_key = process.env.NEXT_PUBLIC_API_PINATA;
-const api_serect = process.env.NEXT_PUBLIC_API_SECRET_PINATA;
+const api_secret = process.env.NEXT_PUBLIC_API_SECRET_PINATA;
 const pinata_JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
 //INTERNAL IMPORT
 import {
@@ -144,7 +144,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         data: formData,
         headers: {
           pinata_api_key: api_key,
-          pinata_secret_key: api_serect,
+          pinata_secret_key: api_secret,
           Authorization: `Bearer ${pinata_JWT}`,
           // Set appropriate Content-Type header for FormData
           "Content-Type": "multipart/form-data",
@@ -167,11 +167,11 @@ export const NFTMarketplaceProvider = ({ children }) => {
         data: JSON.stringify(data),
         headers: {
           pinata_api_key: api_key,
-          pinata_secret_key: api_serect,
+          pinata_secret_key: api_secret,
           Authorization: `Bearer ${pinata_JWT}`,
         },
       });
-  
+
       const ipfsHash = resFile.data.IpfsHash;
       const imgHash = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
       return imgHash;
@@ -181,18 +181,46 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
+  const unpinFromPinata = async (ipfsHash) => {
+    try {
+      const response = await axios.delete(`https://api.pinata.cloud/pinning/unpin/${ipfsHash}`, {
+        headers: {
+          pinata_api_key: api_key,
+          pinata_secret_key: api_secret,
+          Authorization: `Bearer ${pinata_JWT}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(`Successfully unpinned ${ipfsHash}`);
+      } else {
+        throw new Error(`Failed to unpin from Pinata. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error while unpinning from Pinata:", error);
+      throw new Error("Failed to unpin from Pinata");
+    }
+  };
+  
+
   // createNFT function
-  const createNFT = async (name, price, imageurl, description, category, router) => {
+  const createNFT = async (
+    name,
+    price,
+    imageurl,
+    description,
+    category,
+    router
+  ) => {
     if (!category || !name || !description || !price || !imageurl) {
       console.log("Data Is Missing");
       setError("Data Is Missing");
       setOpenError(true);
       return;
     }
-  
+
     const data = { name, description, imageurl, category };
     console.log("Data to upload:", data);
-  
+
     try {
       const imgHash = await uploadJSONToPinata(data);
       console.log("img hash create", imgHash);
@@ -228,13 +256,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
           value: listingPrice.toString(),
         });
       }
-
-      // Chờ giao dịch được xác nhận
-      console.log("Transaction submitted", transaction);
       await transaction.wait();
-
-      // Đăng nhập giao dịch thành công
-      console.log("Transaction confirmed", transaction);
     } catch (error) {
       // Xử lý lỗi và hiển thị thông báo lỗi
       console.error("Error while creating sale", error);
@@ -244,37 +266,79 @@ export const NFTMarketplaceProvider = ({ children }) => {
   };
 
   // --FETCH nft functino
-  const fetchNFTS = async () => {
+  // const fetchNFTS = async () => {
+  //   try {
+  //     const contract = await connectingWithSmartContract();
+  //     const data = await contract.fetchMarketItem(); // Correct method name
+  //     const items = await Promise.all(
+  //       data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+  //         const tokenURI = await contract.tokenURI(tokenId);
+  //         try {
+  //           const response = await fetch(tokenURI);
+  //           const jsonData = await response.json(); // Sửa đổi để lấy JSON trực tiếp
+
+  //           const name = jsonData.name || "Name not available";
+  //           const description = jsonData.description || "Description not available";
+  //           const imageurl = jsonData.imageurl || "Image URL not available";
+  //           const category = jsonData.category || "Category not available";
+
+  //           const price = ethers.utils.formatUnits(unformattedPrice.toString(), "ether");
+
+  //           return {
+  //             price,
+  //             tokenId: tokenId.toNumber(),
+  //             seller,
+  //             owner,
+  //             name,
+  //             description,
+  //             category,
+  //             imageurl,
+  //             tokenURI,
+  //           };
+  //         } catch (error) {
+  //           console.error("Error fetching tokenURI data:", error);
+  //           setError("Error fetching tokenURI data:");
+  //           setOpenError(true);
+  //         }
+  //       })
+  //     );
+  //     return items;
+  //   } catch (error) {
+  //     console.error("Error fetching market items:", error);
+  //     setError("Error fetching data");
+  //     setOpenError(true);
+  //   }
+  // };
+   // --FETCH nft functino
+   const fetchNFTS = async () => {
     try {
       const contract = await connectingWithSmartContract();
-      const data = await contract.fetchMarketItem(); // Correct method name
+      const data = await contract.fetchMarketItem(); // Assuming this method fetches market items correctly
+  
+      // Use Promise.all to concurrently fetch and process each NFT item
       const items = await Promise.all(
         data.map(async ({ tokenId, seller, owner, price: unfomattedPrice }) => {
-          const tokenURI = await contract.tokenURI(tokenId);
           try {
-            const response = await fetch(tokenURI);
-            const data = await response.json();
-            const jsonDataString = Object.keys(data)[0];
-            const jsonData = JSON.parse(jsonDataString);
-            // Extract name, description, and imageurl from the parsed JSON object
-            const name = jsonData.hasOwnProperty("name")
-              ? jsonData.name
-              : "Name not available";
-            const description = jsonData.hasOwnProperty("description")
-              ? jsonData.description
-              : "Description not available";
-            const imageurl = jsonData.hasOwnProperty("imageurl")
-              ? jsonData.imageurl
-              : "Image URL not available";
-            const category = jsonData.hasOwnProperty("category")
-              ? jsonData.category
-              : "Name not available";
-            const price = ethers.utils.formatUnits(
-              unfomattedPrice.toString(),
-              "ether"
-            );
+            const tokenURI = await contract.tokenURI(tokenId); // Fetch tokenURI for each tokenId
+            const response = await fetch(tokenURI); // Fetch JSON data from tokenURI
+            
+            if (!response.ok) {
+              throw new Error(`Failed to fetch tokenURI data for tokenId: ${tokenId}`);
+            }
+  
+            const jsonData = await response.json();
+            const jsonDataString = Object.keys(jsonData)[0]; // Assuming jsonData is an object
+            const parsedData = JSON.parse(jsonDataString); // Parse JSON data
+            
+            // Extract properties or provide defaults if not present
+            const name = parsedData.name || "Name not available";
+            const description = parsedData.description || "Description not available";
+            const imageurl = parsedData.imageurl || "Image URL not available";
+            const category = parsedData.category || "Category not available";
+            const formattedPrice = ethers.utils.formatUnits(unfomattedPrice.toString(), "ether");
+  
             return {
-              price,
+              price: formattedPrice,
               tokenId: tokenId.toNumber(),
               seller,
               owner,
@@ -285,23 +349,82 @@ export const NFTMarketplaceProvider = ({ children }) => {
               tokenURI,
             };
           } catch (error) {
-            setError("Error fetching tokenURI data:");
-            setOpenError(true);
+            console.error(`Error fetching data for tokenId ${tokenId}:`, error);
+            // Handle errors here if needed
+            // You can log errors or set an error state if necessary
+            return null; // Return null or handle error gracefully
           }
         })
       );
-      return items;
+  
+      // Filter out null items (items that encountered errors)
+      const validItems = items.filter(item => item !== null);
+      return validItems;
     } catch (error) {
+      console.error("Error fetching NFT data:", error);
+      // Handle errors at the higher level if needed
       // setError("Error fetching data");
       // setOpenError(true);
+      return []; // Return empty array or handle error gracefully
     }
   };
-
   useEffect(() => {
     fetchNFTS();
   }, []);
 
   // FETCHING MY NFT OR LISTED NFTS
+
+  // const fetchMyNFTsOrListedNFTs = async (type) => {
+  //   try {
+  //     const contract = await connectingWithSmartContract();
+  //     let data;
+  //     if (type === "fetchItemsListed") {
+  //       data = await contract.fetchItemsListed();
+  //     } else {
+  //       data = await contract.fetchMyNFTs();
+  //     }
+
+  //     const items = await Promise.all(
+  //       data.map(async ({ tokenId, seller, owner, price: unfomattedPrice }) => {
+  //         const tokenURI = await contract.tokenURI(tokenId);
+  //         try {
+  //           const response = await fetch(tokenURI);
+  //           if (!response.ok) {
+  //             throw new Error("Failed to fetch tokenURI data");
+  //           }
+  //           const jsonData = await response.json();
+
+  //           // Extract name, description, and imageurl from the parsed JSON object
+  //           const category = jsonData.category || "Category not available";
+  //           const name = jsonData.name || "Name not available";
+  //           const description = jsonData.description || "Description not available";
+  //           const imageurl = jsonData.imageurl || "Image URL not available";
+
+  //           const price = ethers.utils.formatUnits(unfomattedPrice.toString(), "ether");
+
+  //           return {
+  //             price,
+  //             tokenId: tokenId.toNumber(),
+  //             seller,
+  //             owner,
+  //             imageurl,
+  //             category,
+  //             name,
+  //             description,
+  //             tokenURI,
+  //           };
+  //         } catch (error) {
+  //           console.error("Error fetching tokenURI data:", error);
+  //           throw error;
+  //         }
+  //       })
+  //     );
+  //     return items;
+  //   } catch (error) {
+  //     console.error("Error fetching NFT data:", error);
+  //     return [];
+  //   }
+  // };
   const fetchMyNFTsOrListedNFTs = async (type) => {
     try {
       const contract = await connectingWithSmartContract();
@@ -360,7 +483,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       console.log(error);
     }
   };
-
+  
   useEffect(() => {
     fetchMyNFTsOrListedNFTs();
   }, []);
@@ -369,7 +492,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
     try {
       const contract = await connectingWithSmartContract();
       const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-      console.log("nftid", nft.tokenId);
       const transaction = await contract.createMarketSale(nft.tokenId, {
         value: price,
       });
@@ -416,7 +538,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       const contract = await connectingWithSmartContract();
       const transaction = await contract.unmakeOffer(nft.tokenId);
       await transaction.wait();
-      console.log("Offer canceled successfully");
       // Xử lý sau khi hủy giá thành công (nếu cần)
     } catch (error) {
       console.error("Error canceling offer:", error);
@@ -428,8 +549,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
       const contract = await connectingWithSmartContract();
       const transaction = await contract.acceptOffer(nft.tokenId);
       await transaction.wait();
-      router.push("/author")
-      console.log("Offer acceptOffer successfully");
+      router.push("/author");
     } catch (error) {
       console.error("Error canceling offer:", error);
       throw error;
@@ -446,7 +566,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
         active: offer.active,
         timestamp: new Date(offer.timestamp * 1000).toISOString(),
       }));
-      console.log(formattedOffers);
       setAllOffers(formattedOffers);
 
       return formattedOffers;
@@ -470,7 +589,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
   };
   // TRANSFER FUNDs
   const transferEther = async (address, ether, message) => {
-    console.log("adress", address, ether, message);
     try {
       if (currentAccount) {
         const contract = await connectToTransferFunds();
@@ -512,7 +630,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       if (ethereum) {
         const contract = await connectToTransferFunds();
         const availableTransaction = await contract.getAllTransaction();
-        console.log("avaible", availableTransaction);
         const readTransaction = availableTransaction.map((transaction) => ({
           addressTo: transaction.receiver,
           addressFrom: transaction.sender,
@@ -548,7 +665,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
         discount
       );
       await transaction.wait();
-      console.log("Auction created successfully");
     } catch (error) {
       console.error("Error creating auction:", error);
       setError("Error creating auction");
@@ -592,6 +708,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         connectWallet,
         uploadFileToIPFS,
         uploadJSONToPinata,
+        unpinFromPinata,
         createNFT,
         fetchNFTS,
         fetchMyNFTsOrListedNFTs,

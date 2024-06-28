@@ -18,41 +18,46 @@ const ListNftModal = ({
   accountBalance,
   createSale,
   uploadJSONToPinata,
+  unpinFromPinata,
   nft,
 }) => {
   const [price, setPrice] = useState();
-  const [image, setImage] = useState("");
+  const [imageurl, setImage] = useState("");
   const [name, setName] = useState("");
-  const [des, setDes] = useState("");
+  const [description, setDes] = useState("");
   const [category, setCategory] = useState("");
   const router = useRouter();
   const { id, tokenURI } = router.query;
   const [isLoadingSell, setIsLoadingSell] = useState(false);
   const fetchNFTS = async () => {
-    if (!tokenURI) return;
-    const response = await fetch(tokenURI);
-    const data = await response.json();
-    const jsonDataString = Object.keys(data)[0];
-    const jsonData = JSON.parse(jsonDataString);
-    // Extract name, description, and imageurl from the parsed JSON object
-    const name = jsonData.hasOwnProperty("name")
-      ? jsonData.name
-      : "Name not available";
-    const description = jsonData.hasOwnProperty("description")
-      ? jsonData.description
-      : "Description not available";
-    const imageurl = jsonData.hasOwnProperty("imageurl")
-      ? jsonData.imageurl
-      : "Image URL not available";
-    const categoryl = jsonData.hasOwnProperty("category")
-      ? jsonData.category
-      : "category not available";
-    console.log("jsonData", jsonData);
-    setImage(imageurl);
-    setName(name);
-    setDes(description);
-    setCategory(categoryl);
+    try {
+      if (!tokenURI) {
+        console.error("tokenURI is not available");
+        return;
+      }
+      
+      const response = await fetch(tokenURI);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tokenURI data");
+      }
+      
+      const jsonData = await response.json();
+      
+      const name = jsonData.name || "Name not available";
+      const description = jsonData.description || "Description not available";
+      const imageurl = jsonData.imageurl || "Image URL not available";
+      const category = jsonData.category || "Category not available";
+      
+      console.log("jsonData", jsonData);
+      setImage(imageurl);
+      setName(name);
+      setDes(description);
+      setCategory(category);
+    } catch (error) {
+      console.error("Error fetching tokenURI data:", error);
+    }
   };
+  
   useEffect(() => {
     fetchNFTS();
   }, [id]);
@@ -60,14 +65,17 @@ const ListNftModal = ({
   const handleCreateSale = async () => {
     try {
       setIsLoadingSell(true);
-      if (!name || !des || !price || !image) {
+      if (!name || !description || !price || !imageurl) {
         console.log("Data Is Missing");
         setError("Data Is Missing");
       }
       console.log("all set set", tokenURI, price, true, nft.tokenId);
-      const data = { name, des, image, category };
+      const unpinfshash = tokenURI.split('/').pop();
+      console.log("ip hast ", unpinfshash);
+      const data = { name, description, imageurl, category };
       const imghash = await uploadJSONToPinata(data);
       await createSale(imghash, price, true, nft.tokenId);
+      // await unpinFromPinata(unpinfshash);
       router.push("/NFTPage");
     } catch (error) {
       console.log("Error while resell", error);
@@ -94,7 +102,7 @@ const ListNftModal = ({
                     Available balance: {parseFloat(accountBalance).toFixed(4)}
                   </p>
                 </div>
-                <Image src={image} isBlurred width={240} />
+                <Image src={imageurl} isBlurred width={240} />
               </div>
               <div className="w-[50%] flex flex-col gap-4 relative ">
                 <Input
