@@ -5,19 +5,20 @@ import Style from './DropZone.module.css'
 import images from '../../../img'
 // import { accessSync } from 'fs'
 const DropZone = ({title, heading, subHeading, name,price, website, description,
-  royalties,fileSize, properties, category, image, uploadToIPFS,setImage,
+  royalties,fileSize, properties, category, image, uploadFileToIPFS,setImage,
 }) => {
   const [fileUrl, setFileUrl] = useState(false);
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
-      const url = await uploadToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
+      const url = await uploadFileToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
+      console.log("url dropzone", url);
         setFileUrl(url);
         setImage(url);
         console.log("url of drop ", url);
     } catch (error) {
       console.error("Error uploading file to IPFS:", error);
     }
-  },[setImage, uploadToIPFS]);
+  },[setImage, uploadFileToIPFS]);
    const {getRootProps, getInputProps} = useDropzone({
       onDrop,
       accept: "image/*, .gif",

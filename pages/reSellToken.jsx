@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 //IMPORT SMART CONTRACT
 import {
-  NFTMarketplaceContext,  
-  // fetchNFTS,
+  NFTMarketplaceContext,
+  fetchNFTS,
 } from "../Context/NFTMarketplaceContext";
 import { FaListUl } from "react-icons/fa";
 import { Button, Input, Textarea } from "@nextui-org/react";
@@ -44,57 +44,16 @@ const reSellToken = () => {
 
   const handleCreateSale = async () => {
     try {
-      const data = {
-        name: name,
-        description: des,
-        imageurl: image, // thêm imageurl nếu cần thiết
-        price: price,
-      };
-  
-      // Kiểm tra nếu các trường dữ liệu cần thiết có đủ hay không
-      if (!data.name || !data.description || !data.price || !data.imageurl) {
-        console.log("Data Is Missing");
-        setError("Data Is Missing");
-        setOpenError(true);
-        return;
-      }
-  
-      console.log("Data to update:", data);
-  
-      // Tạo JSON string từ dữ liệu
-      // const jsonData = JSON.stringify(data);
-  
-      // // Gửi dữ liệu mới lên Pinata
-      // const resFile = await axios({
-      //   method: "POST",
-      //   url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-      //   data: jsonData,
-      //   headers: {
-      //     pinata_api_key: api_key,
-      //     pinata_secret_key: api_serect,
-      //     Authorization: `Bearer ${pinata_JWT}`,
-      //   },
-      // });
-  
-      // console.log("Pinata IPFS hash response:", resFile.data.IpfsHash);
-  
-      // // URL của dữ liệu đã cập nhật trên IPFS
-      // const updatedDataUrl = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-      // console.log("Updated Data URL:", updatedDataUrl);
-  
-      // // Sử dụng URL mới để tạo hoặc bán lại token
-      // await createSale(tokenURI, price, isReselling, id);
-  
-      // router.push("/NFTPage");
+      console.log("url resale", price, tokenURI, id);
+      setIsLoading(true);
+      await createSale(tokenURI, price, true, id);
+      router.push("/NFTPage");
     } catch (error) {
-      console.error("Error while updating and reselling:", error);
-      setError("Error while updating and reselling: " + error.message);
-      setOpenError(true);
-    } finally {
+      console.log("Error while resell", error);
+    }finally {
       setIsLoading(false);
     }
   };
-  
   return (
     <div className="w-full mb-20">
       <div className="m-auto">

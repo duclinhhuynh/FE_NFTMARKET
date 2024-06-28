@@ -23,6 +23,7 @@ import CountDown from "../../CountDown/CountDown";
 import { fetchPrice } from "../../../api/api";
 import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
 import OfferModal from "../Modal/OfferModal";
+import ListNftModal from "../Modal/ListNftModal";
 // next ui
 import ThemeSwitcherText from "../../theme/ThemeSwitcherText";
 import {
@@ -50,7 +51,7 @@ const NFTDescription = ({ nft }) => {
   const [isActiveOffer, setIsActiveOffer] = useState(false);
   const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [openModelOffer, setOpenModalOffer] = useState(false);
-
+  const [openModelSell, setOpenModalSell] = useState(false);
   const router = useRouter();
   // data select offer
   // SMART CONTRACT DATA
@@ -63,12 +64,17 @@ const NFTDescription = ({ nft }) => {
     currentAccount,
     allOffers,
     acceptOffer,
-    accountBalance
+    accountBalance,
+    createSale,
+    uploadJSONToPinata
   } = useContext(NFTMarketplaceContext);
   // loading
 
   const handleOpenOffer = () => {
     setOpenModalOffer(true);
+  };
+  const handleOpenSell = () => {
+    setOpenModalSell(true);
   };
 
   const handleCancelMarket = async () => {
@@ -126,7 +132,7 @@ const NFTDescription = ({ nft }) => {
         const response = await fetchPrice();
         setEthPrice(response.ethereum.usd);
       } catch (error) {
-        console.error("Error fetching ETH price:", error);
+        // console.error("Error fetching ETH price:", error);
       }
     };
 
@@ -430,9 +436,10 @@ const NFTDescription = ({ nft }) => {
                             variant="bordered"
                             startContent={<FaListUl />}
                             onClick={() =>
-                              router.push(
-                                `/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
-                              )
+                              // router.push(
+                              //   `/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
+                              // )
+                              handleOpenSell()
                             }
                             classStyle={Style.button}
                           >
@@ -575,6 +582,14 @@ const NFTDescription = ({ nft }) => {
           setIsActiveOffer = {setIsActiveOffer}
           nft = {nft} 
           accountBalance = {accountBalance}
+        />
+        <ListNftModal 
+         setOpenModalSell = {setOpenModalSell}
+         openModelSell = {openModelSell}
+         createSale = {createSale}
+         nft = {nft}
+         accountBalance = {accountBalance}
+         uploadJSONToPinata = {uploadJSONToPinata}
         />
       </div>
     </>

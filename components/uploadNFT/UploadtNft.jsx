@@ -6,7 +6,7 @@ import { DropZone } from "./UploadNFTIndex";
 // next ui
 import { Input, Textarea, Select, SelectItem, Button } from "@nextui-org/react";
 
-const UploadNFT = ({ uploadToIPFS, createNFT }) => {
+const UploadNFT = ({ uploadFileToIPFS, createNFT }) => {
   const [price, setPrice] = useState(1);
   const [name, setName] = useState("");
   const [website, setWebsite] = useState("");
@@ -55,7 +55,7 @@ const UploadNFT = ({ uploadToIPFS, createNFT }) => {
             description={description}
             category={category}
             setImage={setImage}
-            uploadToIPFS={uploadToIPFS}
+            uploadFileToIPFS={uploadFileToIPFS}
           />
         </div>
         <div className="w-1/2 max-md:w-[100%]">

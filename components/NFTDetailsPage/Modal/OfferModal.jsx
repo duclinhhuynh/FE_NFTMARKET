@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -10,6 +10,7 @@ import {
   Select,
   SelectItem,
   DateRangePicker,
+  Image,
 } from "@nextui-org/react";
 import { BsFillTagsFill } from "react-icons/bs";
 import { parseDate } from "@internationalized/date";
@@ -20,7 +21,7 @@ const OfferModal = ({
   makeOffer,
   setIsActiveOffer,
   accountBalance,
-  nft
+  nft,
 }) => {
   const [valueOffer, setValueOffer] = useState();
   const [isLoadingOffer, setIsLoadingOffer] = useState(false);
@@ -140,42 +141,37 @@ const OfferModal = ({
     }
   };
   const handleCloseModal = () => {
-    setOpenModalOffer(false)
-  }
+    setOpenModalOffer(false);
+  };
   return (
-    <Modal
-      isOpen={openModelOffer}
-      className="text-textprimary"
-    >
+    <Modal size="md" isOpen={openModelOffer} className="text-textprimary">
       <div onClick={handleCloseModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}> 
-            <ModalHeader className="flex flex-col gap-1">
-              Placing an offer for item
-            </ModalHeader>
-            <ModalBody>
-              <h2>Offer Price</h2>
-              <p className="text-xs">Available balance: {parseFloat(accountBalance).toFixed(4)}</p>
-              <Input
-                type="number"
-                label="Enter your balance"
-                className="max-w-xs"
-                value={valueOffer}
-                onChange={(e) => setValueOffer(e.target.value)}
-              />
-              <div className="flex gap-x-4 relative">
-                <Select
-                  color=""
-                  items={duration}
-                  label="Select fast duration"
-                  placeholder="Select duration"
-                  className="max-w-xs"
-                  selectedKey={selectedDuration.key}
-                  onSelectionChange={handleSelectChange}
-                >
-                  {(item) => (
-                    <SelectItem key={item.key}>{item.label}</SelectItem>
-                  )}
-                </Select>
+        <ModalContent onClick={(e) => e.stopPropagation()}>
+          <ModalHeader className="flex flex-col gap-1">
+            Placing an offer for item
+          </ModalHeader>
+          <ModalBody>
+            <div className="flex items-center">
+              <div className="w-[49%] flex flex-col justify-between gap-5">
+                <div className="m-2 flex flex-col">
+                  <h2>Offer Price</h2>
+                  <p className="text-xs">
+                    Available balance: {parseFloat(accountBalance).toFixed(4)}
+                  </p>
+                </div>
+                <div className="relative w-full">
+                  <Image
+                    isBlurred
+                    src={nft.imageurl} // Ensure this path is correct
+                    alt="NFT image"
+                    width={240}
+                    height={240}
+                    className="m-0"
+                    objectFit="cover"
+                  />
+                </div>
+              </div>
+              <div className="w-[51%] flex flex-col gap-4 ">
                 <DateRangePicker
                   label="Stay duration"
                   isReadOnly
@@ -184,25 +180,45 @@ const OfferModal = ({
                   className="max-w-xs"
                   onChange={(value) => setSelectedDataCopy(value)}
                 />
+                <Select
+                  color=""
+                  items={duration}
+                  label="Select fast duration"
+                  placeholder="Select duration"
+                  // className="max-w-xs"
+                  selectedKey={selectedDuration.key}
+                  onSelectionChange={handleSelectChange}
+                >
+                  {(item) => (
+                    <SelectItem key={item.key}>{item.label}</SelectItem>
+                  )}
+                </Select>
+                <Input
+                  type="number"
+                  label="Enter your balance"
+                  className="max-w-xs"
+                  value={valueOffer}
+                  onChange={(e) => setValueOffer(e.target.value)}
+                />
+                <div className="flex gap-x-4 relative"></div>
               </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="danger" variant="light" onPress={handleCloseModal}>
-                Close
-              </Button>
-              <Button
-                onClick={handleMakeOffer}
-                startContent={
-                  isLoadingOffer ? "Loading..." : <BsFillTagsFill />
-                }
-                color="primary"
-                variant="bordered"
-                isLoading={isLoadingOffer}
-              >
-                {isLoadingOffer ? "Placing..." : "Place Offer"}
-              </Button>
-            </ModalFooter>
-      </ModalContent>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={handleCloseModal}>
+              Close
+            </Button>
+            <Button
+              onClick={handleMakeOffer}
+              startContent={isLoadingOffer ? "Loading..." : <BsFillTagsFill />}
+              color="primary"
+              variant="bordered"
+              isLoading={isLoadingOffer}
+            >
+              {isLoadingOffer ? "Placing..." : "Place Offer"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </div>
     </Modal>
   );

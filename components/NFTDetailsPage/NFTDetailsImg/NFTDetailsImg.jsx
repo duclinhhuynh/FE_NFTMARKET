@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import { BsImages } from "react-icons/bs";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import Style from "./NFTDetailsImg.module.css";
 import { useTheme } from "next-themes";
-import { Button } from "@nextui-org/react";
+import { Button ,Image} from "@nextui-org/react";
 import { GoHeart } from "react-icons/go";
 import { FaCamera } from "react-icons/fa";
 const NFTDetailsImg = ({ nft }) => {
@@ -61,8 +59,9 @@ const NFTDetailsImg = ({ nft }) => {
           </div>
           <div className={`mb-2 ${Style.NFTDetailsImg_box_NFT_img}`}>
             <Image
+               isBlurred 
               src={nft.imageurl} // Ensure this path is correct
-              className={Style.NFTDetailsImg_box_NFT_img_img}
+              className={`p-1 border border-bordercustom ${Style.NFTDetailsImg_box_NFT_img_img}`}
               alt="NFT image"
               width={700}
               height={800}

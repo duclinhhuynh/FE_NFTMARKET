@@ -6,18 +6,10 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import axios from "axios";
 const dotenv = require("dotenv");
-dotenv.config({ path: "../.env" });
-
-// const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
-// const projectSecretKey  = process.env.NEXT_PUBLIC_SECRET_KEY;
-// const auth = `Basic ${Buffer.from(`${projectId}:${projectSecretKey}`).toString("base64")}`;
-const api_key = "1bb65d408f739aeeff34";
-
-const api_serect =
-  "655ca77cc1c0b94f5aa1b30bb2ce78ed40dd0144b143e834e523afaf2a02ec38";
-
-const pinata_JWT =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MjY1YzcyNC0zYzFjLTQyOWMtYTJhNS0yZjM1ZmM3NjRhZmUiLCJlbWFpbCI6ImxpbmgxODYyMDAyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiIxYmI2NWQ0MDhmNzM5YWVlZmYzNCIsInNjb3BlZEtleVNlY3JldCI6IjY1NWNhNzdjYzFjMGI5NGY1YWExYjMwYmIyY2U3OGVkNDBkZDAxNDRiMTQzZTgzNGU1MjNhZmFmMmEwMmVjMzgiLCJpYXQiOjE3MTIwNTU1Mjh9.egg-vIkPfHAyNeztpNCpJrXUyLPWZQ95rc627G_l3bc";
+dotenv.config();
+const api_key = process.env.NEXT_PUBLIC_API_PINATA;
+const api_serect = process.env.NEXT_PUBLIC_API_SECRET_PINATA;
+const pinata_JWT = process.env.NEXT_PUBLIC_PINATA_JWT;
 //INTERNAL IMPORT
 import {
   NFTMarketplaceAddress,
@@ -142,11 +134,10 @@ export const NFTMarketplaceProvider = ({ children }) => {
   };
 
   // upload to ipfs function
-  const uploadToIPFS = async (file) => {
+  const uploadFileToIPFS = async (file) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-
       const resFile = await axios({
         method: "post",
         url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -161,7 +152,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       });
 
       const imgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
-      console.log("imgHash", imgHash);
       return imgHash;
     } catch (error) {
       console.error("Error while uploading to IPFS:", error);
@@ -184,14 +174,13 @@ export const NFTMarketplaceProvider = ({ children }) => {
   
       const ipfsHash = resFile.data.IpfsHash;
       const imgHash = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
-      console.log("Uploaded to Pinata:", imgHash);
-  
       return imgHash;
     } catch (error) {
       console.error("Error while uploading to Pinata:", error);
       throw new Error("Failed to upload to Pinata");
     }
   };
+
   // createNFT function
   const createNFT = async (name, price, imageurl, description, category, router) => {
     if (!category || !name || !description || !price || !imageurl) {
@@ -206,6 +195,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
   
     try {
       const imgHash = await uploadJSONToPinata(data);
+      console.log("img hash create", imgHash);
       await createSale(imgHash, price);
       router.push("/NFTPage");
     } catch (error) {
@@ -218,8 +208,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
   const createSale = async (url, formInputPrice, isReselling, id) => {
     try {
       const ethers = require("ethers");
-      console.log("url sale", url, formInputPrice, isReselling, id);
-
       // Kiểm tra và phân tích giá từ form
       const price = ethers.utils.parseUnits(formInputPrice, "ether");
 
@@ -602,7 +590,8 @@ export const NFTMarketplaceProvider = ({ children }) => {
         // checkContract
         checkIfWalletConnected,
         connectWallet,
-        uploadToIPFS,
+        uploadFileToIPFS,
+        uploadJSONToPinata,
         createNFT,
         fetchNFTS,
         fetchMyNFTsOrListedNFTs,

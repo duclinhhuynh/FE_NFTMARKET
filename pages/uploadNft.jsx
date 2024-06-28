@@ -6,7 +6,7 @@ import {UploadNFT} from '../components/uploadNFT/UploadNFTIndex'
 import { NFTMarketplaceContext } from '../Context/NFTMarketplaceContext'
 import ThemeSwitcherText from '../components/theme/ThemeSwitcherText'
 const uploadNft = () => {
-  const {uploadToIPFS, createNFT} = useContext(NFTMarketplaceContext);
+  const {uploadFileToIPFS, createNFT} = useContext(NFTMarketplaceContext);
   return (
     <div className={Style.uploadNft}>
       <ThemeSwitcherText>
@@ -16,7 +16,7 @@ const uploadNft = () => {
           <p>Once your item is minted you will not be able to change any of its information.</p>
         </div>
         <div className={Style.uploadNft_box_form}>
-          <UploadNFT uploadToIPFS = {uploadToIPFS}
+          <UploadNFT uploadFileToIPFS = {uploadFileToIPFS}
             createNFT = {createNFT}
           />
         </div>
