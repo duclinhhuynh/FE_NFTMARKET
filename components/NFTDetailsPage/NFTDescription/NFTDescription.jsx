@@ -355,38 +355,7 @@ const NFTDescription = ({ nft }) => {
                         Style.NFTDescription_box_profile_biding_box_timer
                       }
                     >
-                      <div
-                        className={
-                          Style.NFTDescription_box_profile_biding_box_timer_item
-                        }
-                      >
-                        <p>2</p>
-                        <span>Days</span>
-                      </div>
-                      <div
-                        className={
-                          Style.NFTDescription_box_profile_biding_box_timer_item
-                        }
-                      >
-                        <p>12</p>
-                        <span>Hours</span>
-                      </div>
-                      <div
-                        className={
-                          Style.NFTDescription_box_profile_biding_box_timer_item
-                        }
-                      >
-                        <p>12</p>
-                        <span>Min</span>
-                      </div>
-                      <div
-                        className={
-                          Style.NFTDescription_box_profile_biding_box_timer_item
-                        }
-                      >
-                        <p>12</p>
-                        <span>sec</span>
-                      </div>
+                      {<CountDown timestamp={(new Date().getTime() + nft.tokenId * 24 * 60 * 60 * 1000)}/>}
                     </div>
                   </div>
                   <div className="border-t border-bordercustom w-full"></div>

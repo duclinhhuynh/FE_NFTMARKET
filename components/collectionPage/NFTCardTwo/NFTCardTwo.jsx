@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button ,Image} from "@nextui-org/react";
+import Image from "next/image";
+import { Button} from "@nextui-org/react";
 
 // INTERNAL IMPORT
 import Style from "./NFTCardTwo.module.css";
 import Link from "next/link";
 import { fetchPrice } from "../../../api/api";
+import CountDown from "../../CountDown/CountDown"
 
 const NFTCardTwo = ({ NFTData }) => {
   const [like, setLike] = useState(false);
@@ -52,22 +54,22 @@ const NFTCardTwo = ({ NFTData }) => {
                 <h4 className="text-lg text-textprimary font-semibold">
                   {el.name}# {el.tokenId}
                 </h4>
-                <h4 className="">Time</h4>
               </div>
               <div>
                 <div>
                   <div className="flex justify-between">
                     <small>Current Bid</small>
+                    <small className="">Time Stamp</small>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <p className="text-lg font-bold text-textprimary font-semibold ">
                       {el.price}
-                      <span>
+                      <span className="text-sm text-gray-500">
                         &nbsp;&nbsp;$
                         {ethPrices && (ethPrices * el.price).toFixed(0)}
                       </span>
                     </p>
-                    <p className="text-lg text-textprimary">3h:4m:2s</p>
+                    <p className="text-sm text-textprimary"><CountDown timestamp={(new Date().getTime() + el.tokenId * 24 * 60 * 60 * 1000)}/></p>
                   </div>
                 </div>
               </div>

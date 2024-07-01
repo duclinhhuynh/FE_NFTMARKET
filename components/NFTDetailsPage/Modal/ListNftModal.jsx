@@ -65,16 +65,16 @@ const ListNftModal = ({
   const handleCreateSale = async () => {
     try {
       setIsLoadingSell(true);
-      if (!name || !description || !price || !imageurl) {
-        console.log("Data Is Missing");
-        setError("Data Is Missing");
-      }
+      // if (!name || !description || !price || !imageurl) {
+      //   console.log("Data Is Missing");
+      //   setError("Data Is Missing");
+      // }
       console.log("all set set", tokenURI, price, true, nft.tokenId);
       const unpinfshash = tokenURI.split('/').pop();
       console.log("ip hast ", unpinfshash);
       const data = { name, description, imageurl, category };
-      const imghash = await uploadJSONToPinata(data);
-      await createSale(imghash, price, true, nft.tokenId);
+      // const imghash = await uploadJSONToPinata(data);
+      await createSale(tokenURI, price, true, nft.tokenId);
       // await unpinFromPinata(unpinfshash);
       router.push("/NFTPage");
     } catch (error) {
@@ -102,7 +102,7 @@ const ListNftModal = ({
                     Available balance: {parseFloat(accountBalance).toFixed(4)}
                   </p>
                 </div>
-                <Image src={imageurl} isBlurred width={240} />
+                <Image src={nft.imageurl} isBlurred width={240} />
               </div>
               <div className="w-[50%] flex flex-col gap-4 relative ">
                 <Input
@@ -112,7 +112,7 @@ const ListNftModal = ({
                   label="Name your Nft"
                   maxLength={30}
                   defaultValue=""
-                  value={name}
+                  value={nft.name}
                   onChange={(e) => setName(e.target.value)}
                   className="max-w-xs"
                 />

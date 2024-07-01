@@ -47,7 +47,6 @@ const Author = () => {
 
   return (
     <div className={Style.banner}>
-      <AuthorProfileCard currentAccount={currentAccount} />
       <AuthorTaps 
         setColleciables={setColleciables} 
         setCreated={setCreated} 

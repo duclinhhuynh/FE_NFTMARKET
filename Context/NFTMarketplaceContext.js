@@ -16,8 +16,6 @@ import {
   NFTMarketplaceABI,
   TransferFundsAddress,
   TransferFundsABI,
-  NftAuctionAddress,
-  NftAuctionABI,
 } from "./Constants";
 
 //Fetching smart contract
