@@ -3,7 +3,7 @@ import { BsImages } from "react-icons/bs";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import Style from "./NFTDetailsImg.module.css";
 import { useTheme } from "next-themes";
-import { Button ,Image} from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { GoHeart } from "react-icons/go";
 import { FaCamera } from "react-icons/fa";
 const NFTDetailsImg = ({ nft }) => {
@@ -59,7 +59,7 @@ const NFTDetailsImg = ({ nft }) => {
           </div>
           <div className={`mb-2 ${Style.NFTDetailsImg_box_NFT_img}`}>
             <Image
-               isBlurred 
+              isBlurred
               src={nft.imageurl} // Ensure this path is correct
               className={`p-1 border border-bordercustom ${Style.NFTDetailsImg_box_NFT_img_img}`}
               alt="NFT image"

@@ -270,7 +270,6 @@ export const NFTMarketplaceProvider = ({ children }) => {
       } else {
         setError("Error while creating sale: " + error.message);
       }
-      setOpenError(true);
     }
   };
 

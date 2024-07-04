@@ -34,7 +34,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
     struct Offer {
         address bidder;
         uint256 price;
-        uint256 timestamp; // Thêm timestamp để theo dõi thời gian offer
+        uint256 timestamp; 
         bool active;
     }
 
@@ -112,7 +112,8 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
 
     function resellToken(
         uint256 tokenId,
-        uint256 price
+        uint256 price,
+        uint256 timeActions
     ) public payable nonReentrant {
         require(
             idToMarketItem[tokenId].owner == msg.sender,
@@ -122,6 +123,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             msg.value == listingPrice,
             "Price must be equal to listing price"
         );
+        idToMarketItem[tokenId].timestamp = timeActions;
         idToMarketItem[tokenId].sold = false;
         idToMarketItem[tokenId].canceled = false;
         idToMarketItem[tokenId].price = price;

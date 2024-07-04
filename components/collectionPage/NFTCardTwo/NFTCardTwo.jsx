@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Button} from "@nextui-org/react";
+import { Button, Image} from "@nextui-org/react";
 
 // INTERNAL IMPORT
 import Style from "./NFTCardTwo.module.css";
@@ -41,6 +40,7 @@ const NFTCardTwo = ({ NFTData }) => {
           <div key={i + 1} className="bg-itembackground rounded-xl shadow-xl">
             <div className="">
               <Image
+                isBlurred
                 src={el.imageurl}
                 alt="NFT images"
                 width={250}

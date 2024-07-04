@@ -212,6 +212,7 @@ const OfferModal = ({
               startContent={isLoadingOffer ? "Loading..." : <BsFillTagsFill />}
               color="primary"
               variant="bordered"
+              isDisabled={!(selectedDates && valueOffer)}
               isLoading={isLoadingOffer}
             >
               {isLoadingOffer ? "Placing..." : "Place Offer"}

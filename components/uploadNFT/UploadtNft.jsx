@@ -128,7 +128,7 @@ const UploadNFT = ({ uploadFileToIPFS, createNFT }) => {
       console.error("No valid end date selected.");
       return;
     }
-        const timeActions = Math.floor(
+    const timeActions = Math.floor(
       new Date(desiredTimestamp).getTime() / 1000
     );
     createNFT(
@@ -259,7 +259,6 @@ const UploadNFT = ({ uploadFileToIPFS, createNFT }) => {
               defaultValue="Linh is a expert blockchain..."
               placeholder="Enter your description"
               onChange={(e) => setDescription(e.target.value)}
-              errorMessage="The description should be at least 255 characters long."
               classNames={{
                 base: "max-w-full",
                 input: "resize-y min-h-[40px]",
@@ -282,16 +281,17 @@ const UploadNFT = ({ uploadFileToIPFS, createNFT }) => {
             </div>
           </div>
           <div className="m-2 flex justify-around">
-            <Button
-              color="secondary"
-              onClick={async () => handleCreateLoading()}
-              isLoading={isLoading}
-              startContent={
-                isLoading ? "Loading..." : <MdOutlineCreate />
-              }
-            >
-              {isLoading ? "Creating..." : "Create NFT"}
-            </Button>
+              <Button
+                color="secondary"
+                onClick={async () => handleCreateLoading()}
+                isLoading={isLoading}
+                startContent={
+                  isLoading ? "Loading..." : <MdOutlineCreate />
+                }
+                isDisabled = { !(image && category && name && selectedDates && price && description)}
+              >
+                {isLoading ? "Creating..." : "Create NFT"}
+              </Button>
           </div>
         </div>
       </div>
