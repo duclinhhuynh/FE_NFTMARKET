@@ -20,6 +20,7 @@ const NFTDetails = () => {
   const router = useRouter();
   useEffect(() => {
     if(!router.isReady) return;
+    console.log("router.query", router.query);
     setNfts(router.query)
   },[router.isReady]);
   return (

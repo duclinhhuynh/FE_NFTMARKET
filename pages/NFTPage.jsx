@@ -27,7 +27,9 @@ const NFTPage = () => {
   }, []);
 
   // Log the updated nfts state
-  useEffect(() => {}, [nfts]);
+  useEffect(() => {
+    console.log("nft", nfts)
+  }, [nfts]);
   const onHandleSearch = (value) => {
     const filteredNFTS = nfts.filter(({ name }) =>
       name.toLowerCase().includes(value.toLowerCase())

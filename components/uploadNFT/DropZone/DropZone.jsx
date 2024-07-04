@@ -11,12 +11,11 @@ const DropZone = ({title, heading, subHeading, name,price, website, description,
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
       const url = await uploadFileToIPFS(acceptedFiles[0]); // Wait for the promise to resolve
-      console.log("url dropzone", url);
         setFileUrl(url);
         setImage(url);
         console.log("url of drop ", url);
     } catch (error) {
-      console.error("Error uploading file to IPFS:", error);
+      // console.error("Error uploading file to IPFS:", error);
     }
   },[setImage, uploadFileToIPFS]);
    const {getRootProps, getInputProps} = useDropzone({

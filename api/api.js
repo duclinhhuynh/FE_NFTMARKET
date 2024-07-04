@@ -5,7 +5,7 @@ export const fetchPrice = async () => {
     const { data } = response;
     return data;
   } catch (error) {
-    console.error('Error fetching ETH price:', error);
+    // console.error('Error fetching ETH price:', error);
     return null;
   }
 };

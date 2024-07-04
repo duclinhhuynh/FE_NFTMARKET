@@ -2,12 +2,12 @@ const { ethers } = require("hardhat");
 
 async function main() {
     try {
-        const NFTMarketplaceFactory = await ethers.getContractFactory("NFTMarketplace");
-        const deploymentTransaction = await NFTMarketplaceFactory.deploy();
+        const NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
+        const nftmartketplace = await NFTMarketplace.deploy();
 
         // Check if deploymentTransaction is a contract instance
-        await deploymentTransaction.deployed();
-        console.log(`NFTMarketplace contract deployed to address: ${deploymentTransaction.address}`);
+        await nftmartketplace.deployed();
+        console.log(`NFTMarketplace contract deployed to address: ${nftmartketplace.address}`);
 
         // transfer funds
         // const MarketplaceTransferFunds = await ethers.getContractFactory("TransferFunds");
@@ -28,6 +28,13 @@ async function main() {
         //   const nftAuction = await NftAuction.deploy(startingPrice, discountRate, nftAddress, nftId);
         //   await nftAuction.deployed();
         //   console.log("NftAuction deployed to:", nftAuction.address);
+
+        // const NFTAuction = await ethers.getContractFactory("NFTAuction");
+        // const auction = await NFTAuction.deploy(nftmartketplace.address);
+
+        // // Check if deploymentTransaction is a contract instance
+        // await auction.deployed();
+        // console.log(`auction contract deployed to address: ${auction.address}`);
 
     } catch (error) {
         console.error("Deployment failed:", error);

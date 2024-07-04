@@ -28,7 +28,7 @@ const NFTCardTwo = ({ NFTData }) => {
         const response = await fetchPrice();
         setEthPrices(response.ethereum.usd);
       } catch (error) {
-        console.error("Error fetching ETH price:", error);
+        // console.error("Error fetching ETH price:", error);
       }
     };
 
@@ -45,7 +45,6 @@ const NFTCardTwo = ({ NFTData }) => {
                 alt="NFT images"
                 width={250}
                 height={100}
-                objectFit="contain"
                 className={Style.NFTCardTwo_box_img_img}
               />
             </div>
@@ -69,7 +68,7 @@ const NFTCardTwo = ({ NFTData }) => {
                         {ethPrices && (ethPrices * el.price).toFixed(0)}
                       </span>
                     </p>
-                    <p className="text-sm text-textprimary"><CountDown timestamp={(new Date().getTime() + el.tokenId * 24 * 60 * 60 * 1000)}/></p>
+                    <p className="text-sm text-textprimary"><CountDown timestamp={el.timestamp}/></p>
                   </div>
                 </div>
               </div>

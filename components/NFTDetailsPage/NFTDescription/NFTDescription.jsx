@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext} from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { MdVerified } from "react-icons/md";
 import {
@@ -207,7 +206,6 @@ const NFTDescription = ({ nft }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   return (
     <>
       <div className={Style.NFTDescription}>
@@ -355,7 +353,7 @@ const NFTDescription = ({ nft }) => {
                         Style.NFTDescription_box_profile_biding_box_timer
                       }
                     >
-                      {<CountDown timestamp={(new Date().getTime() + nft.tokenId * 24 * 60 * 60 * 1000)}/>}
+                      {<CountDown timestamp={nft.timestamp}/>}
                     </div>
                   </div>
                   <div className="border-t border-bordercustom w-full"></div>

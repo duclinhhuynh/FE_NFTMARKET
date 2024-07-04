@@ -28,6 +28,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         uint256 price;
         bool sold;
         bool canceled;
+        uint256 timestamp;
     }
 
     struct Offer {
@@ -43,7 +44,8 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         address owner,
         uint256 price,
         bool sold,
-        bool canceled
+        bool canceled,
+        uint256 timestamp
     );
 
     modifier onlyOwner() {
@@ -69,7 +71,8 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
 
     function createToken(
         string memory tokenURI,
-        uint256 price
+        uint256 price,
+        uint256 timesAuctions
     ) public payable nonReentrant returns (uint256) {
         require(
             msg.value == listingPrice,
@@ -79,11 +82,11 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
-        createMarketItem(newTokenId, price);
+        createMarketItem(newTokenId, price, timesAuctions);
         return newTokenId;
     }
 
-    function createMarketItem(uint256 tokenId, uint256 price) private {
+    function createMarketItem(uint256 tokenId, uint256 price, uint256 timesAuctions) private {
         require(price > 0, "Price must be greater than 0");
 
         idToMarketItem[tokenId] = MarketItem(
@@ -92,7 +95,8 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             payable(address(this)),
             price,
             false,
-            false
+            false,
+            timesAuctions
         );
         _transfer(msg.sender, address(this), tokenId);
         emit MarketItemCreated(
@@ -101,7 +105,8 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             address(this),
             price,
             false,
-            false
+            false,
+            timesAuctions
         );
     }
 
@@ -122,19 +127,21 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         idToMarketItem[tokenId].price = price;
         idToMarketItem[tokenId].seller = payable(msg.sender);
         idToMarketItem[tokenId].owner = payable(address(this));
-         if (_itemsSold.current() > 0) {
+        if (_itemsSold.current() > 0) {
             _itemsSold.decrement();
         }
         _transfer(msg.sender, address(this), tokenId);
     }
 
     function createMarketSale(uint256 tokenId) public payable nonReentrant {
+        cancelExpiredMarketItems();
         uint256 price = idToMarketItem[tokenId].price;
         address payable seller = idToMarketItem[tokenId].seller;
         require(
             msg.value == price,
             "Please submit the asking price in order to complete the purchase"
         );
+       
         idToMarketItem[tokenId].owner = payable(msg.sender);
         idToMarketItem[tokenId].sold = true;
         _itemsSold.increment();
@@ -355,4 +362,47 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             }
         }
     }
+
+    function cancelExpiredMarketItems() public {
+        uint256 itemCount = _tokenIds.current();
+        for (uint256 i = 1; i <= itemCount; i++) {
+            if (
+                idToMarketItem[i].owner == address(this) &&
+                !idToMarketItem[i].canceled
+            ) {
+                // Kiểm tra nếu thời gian đã hết hạn
+                if (block.timestamp >= idToMarketItem[i].timestamp) {
+                    // Hủy MarketItem và chuyển token về cho người bán
+                    idToMarketItem[i].canceled = true;
+                    _transfer(
+                        address(this),
+                        idToMarketItem[i].seller,
+                        idToMarketItem[i].tokenId
+                    );
+                }
+            }
+        }
+    }
+
+    // function decreasePrice(
+    //     uint256 tokenId,
+    //     uint256 newPrice,
+    //     uint256 desiredTimestamp
+    // ) public {
+    //     require(
+    //         idToMarketItem[tokenId].owner == msg.sender,
+    //         "Only item owner can decrease price"
+    //     );
+    //     require(
+    //         !idToMarketItem[tokenId].sold,
+    //         "Cannot decrease price of a sold item"
+    //     );
+    //     require(
+    //         !idToMarketItem[tokenId].canceled,
+    //         "Cannot decrease price of a canceled item"
+    //     );
+    //     idToMarketItem[tokenId].timestamp == desiredTimestamp;
+    //     uint256 discount = idToMarketItem[tokenId].price - (idToMarketItem[tokenId].price * newPrice / 100);
+    //     idToMarketItem[tokenId].price = discount;
+    // }
 }
