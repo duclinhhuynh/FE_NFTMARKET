@@ -273,6 +273,15 @@ export const NFTMarketplaceProvider = ({ children }) => {
     }
   };
 
+  const transferNFT = async (nft, address) => {
+    const contract = await connectingWithSmartContract('marketplace');
+    const maxFeePerGas = await getGasPrice()
+    const transaction = await contract.transferNFT(nft.tokenId, address, {
+      gasPrice: maxFeePerGas
+    });
+    await transaction.wait();
+  }
+
   // --FETCH nft functino
   // const fetchNFTS = async () => {
   //   try {
@@ -678,6 +687,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         uploadJSONToPinata,
         unpinFromPinata,
         createNFT,
+        transferNFT,
         fetchNFTS,
         fetchMyNFTsOrListedNFTs,
         buyNFT,

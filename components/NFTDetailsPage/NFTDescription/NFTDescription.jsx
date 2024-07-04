@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { MdVerified } from "react-icons/md";
@@ -10,6 +10,7 @@ import {
   FaListUl,
   FaCheck,
 } from "react-icons/fa";
+import { FaGift } from "react-icons/fa6";
 import { BiBug } from "react-icons/bi";
 import { BsFillTagsFill, BsThreeDots } from "react-icons/bs";
 import { FiCopy, FiRefreshCcw } from "react-icons/fi";
@@ -21,8 +22,10 @@ import images from "../../../img";
 import CountDown from "../../CountDown/CountDown";
 import { fetchPrice } from "../../../api/api";
 import { NFTMarketplaceContext } from "../../../Context/NFTMarketplaceContext";
+// modal
 import OfferModal from "../Modal/OfferModal";
 import ListNftModal from "../Modal/ListNftModal";
+import GiftNftModal from "../Modal/GiftNftModal";
 // next ui
 import ThemeSwitcherText from "../../theme/ThemeSwitcherText";
 import {
@@ -48,6 +51,7 @@ const NFTDescription = ({ nft }) => {
   const [isLoadingOffer, setIsLoadingOffer] = useState(false);
   const [openModelOffer, setOpenModalOffer] = useState(false);
   const [openModelSell, setOpenModalSell] = useState(false);
+  const [openModelGift, setOpenModalGift] = useState(false);
   const router = useRouter();
   // data select offer
   // SMART CONTRACT DATA
@@ -63,7 +67,8 @@ const NFTDescription = ({ nft }) => {
     accountBalance,
     createSale,
     uploadJSONToPinata,
-    unpinFromPinata
+    unpinFromPinata,
+    transferNFT
   } = useContext(NFTMarketplaceContext);
   // loading
 
@@ -73,6 +78,10 @@ const NFTDescription = ({ nft }) => {
   const handleOpenSell = () => {
     setOpenModalSell(true);
   };
+
+  const handleOpenGift= () => {
+    setOpenModalGift(true);
+  }
 
   const handleCancelMarket = async () => {
     try {
@@ -353,7 +362,7 @@ const NFTDescription = ({ nft }) => {
                         Style.NFTDescription_box_profile_biding_box_timer
                       }
                     >
-                      {<CountDown timestamp={nft.timestamp}/>}
+                      {<CountDown timestamp={nft.timestamp} />}
                     </div>
                   </div>
                   <div className="border-t border-bordercustom w-full"></div>
@@ -396,20 +405,36 @@ const NFTDescription = ({ nft }) => {
                             {isLoadingCancel ? "Cancelling..." : "Cancel"}
                           </Button>
                         ) : currentAccount == nft.owner.toLowerCase() ? (
-                          <Button
-                            color="primary"
-                            variant="bordered"
-                            startContent={<FaListUl />}
-                            onClick={() =>
-                              // router.push(
-                              //   `/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
-                              // )
-                              handleOpenSell()
-                            }
-                            classStyle={Style.button}
-                          >
-                            List on Martketplace
-                          </Button>
+                          <div className="flex gap-10">
+                            <Button
+                              color="primary"
+                              variant="bordered"
+                              startContent={<FaListUl />}
+                              onClick={() =>
+                                // router.push(
+                                //   `/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
+                                // )
+                                handleOpenSell()
+                              }
+                              classStyle={Style.button}
+                            >
+                              Sell on Market
+                            </Button>
+                            <Button
+                              color="primary"
+                              variant="bordered"
+                              startContent={<FaGift />}
+                              onClick={() =>
+                                // router.push(
+                                //   `/reSellToken?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
+                                // )
+                                handleOpenGift()
+                              }
+                              classStyle={Style.button}
+                            >
+                              Gift your NFT
+                            </Button>
+                          </div>
                         ) : (
                           <Button
                             color="primary"
@@ -543,19 +568,26 @@ const NFTDescription = ({ nft }) => {
           openModelOffer={openModelOffer}
           setOpenModalOffer={setOpenModalOffer}
           makeOffer={makeOffer}
-          fetchOffers = {fetchOffers}
-          setIsActiveOffer = {setIsActiveOffer}
-          nft = {nft} 
-          accountBalance = {accountBalance}
+          fetchOffers={fetchOffers}
+          setIsActiveOffer={setIsActiveOffer}
+          nft={nft}
+          accountBalance={accountBalance}
         />
-        <ListNftModal 
-         setOpenModalSell = {setOpenModalSell}
-         openModelSell = {openModelSell}
-         createSale = {createSale}
-         nft = {nft}
-         accountBalance = {accountBalance}
-         uploadJSONToPinata = {uploadJSONToPinata}
-         unpinFromPinata = {unpinFromPinata}
+        <ListNftModal
+          setOpenModalSell={setOpenModalSell}
+          openModelSell={openModelSell}
+          createSale={createSale}
+          nft={nft}
+          accountBalance={accountBalance}
+          uploadJSONToPinata={uploadJSONToPinata}
+          unpinFromPinata={unpinFromPinata}
+        />
+        <GiftNftModal
+          currentAccount = {currentAccount}
+          openModelGift = {openModelGift}
+          setOpenModalGift = {setOpenModalGift}
+          nft={nft}
+          transferNFT = {transferNFT}
         />
       </div>
     </>
