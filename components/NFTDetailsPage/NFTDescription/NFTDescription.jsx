@@ -124,7 +124,7 @@ const NFTDescription = ({ nft }) => {
   const handleAcceptOffer = async () => {
     try {
       setIsLoadingAccept(true);
-      await acceptOffer(nft);
+      await acceptOffer(nft.tokenId);
       await fetchOffers(nft.tokenId);
       setIsLoadingAccept(false);
     } catch (error) {

@@ -2,12 +2,31 @@ const { ethers } = require("hardhat");
 
 async function main() {
     try {
+
+        // const NFT = await ethers.getContractFactory("NFT");
+        // const nft= await NFT.deploy();
+
+        // // Check if deploymentTransaction is a contract instance
+        // await nft.deployed();
+        // console.log(`NFT contract deployed to address: ${nft.address}`);
+
+        const NFTAuction = await ethers.getContractFactory("NFTAuction");
+        const nftAuction = await NFTAuction.deploy();
+
+        // Check if deploymentTransaction is a contract instance
+        await nftAuction.deployed();
+        console.log(`NFT Auction contract deployed to address: ${nftAuction.address}`);
+        ///// 
+        
         const NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
-        const nftmartketplace = await NFTMarketplace.deploy();
+        const nftmartketplace = await NFTMarketplace.deploy(nftAuction.address);
 
         // Check if deploymentTransaction is a contract instance
         await nftmartketplace.deployed();
         console.log(`NFTMarketplace contract deployed to address: ${nftmartketplace.address}`);
+
+
+
 
         // transfer funds
         // const MarketplaceTransferFunds = await ethers.getContractFactory("TransferFunds");
@@ -17,24 +36,6 @@ async function main() {
         // await marketplaceTransferFunds.deployed();
         // console.log(`marketplaceTransferFunds contract deployed to address: ${marketplaceTransferFunds.address}`);
 
-         //We get the contract to deploy
-         // Deploy NftAuction contract with appropriate parameters
-        //   const NftAuction = await ethers.getContractFactory("NftAuction");
-        //   const startingPrice = ethers.utils.parseEther("7"); // Example: 7 ETH starting price
-        //   const discountRate = ethers.utils.parseEther("0.00001"); // Example: 0.00001 ETH discount rate
-        //   const nftAddress = "0x681c15D5928d5BEA767777a8769F7694AaF505A7"; // Use the deployed NFT contract address
-        //   const nftId = 1; // Example: NFT ID to auction
-  
-        //   const nftAuction = await NftAuction.deploy(startingPrice, discountRate, nftAddress, nftId);
-        //   await nftAuction.deployed();
-        //   console.log("NftAuction deployed to:", nftAuction.address);
-
-        // const NFTAuction = await ethers.getContractFactory("NFTAuction");
-        // const auction = await NFTAuction.deploy(nftmartketplace.address);
-
-        // // Check if deploymentTransaction is a contract instance
-        // await auction.deployed();
-        // console.log(`auction contract deployed to address: ${auction.address}`);
 
     } catch (error) {
         console.error("Deployment failed:", error);
