@@ -493,7 +493,7 @@ const NFTDescription = ({ nft }) => {
                     </div>
                   </div>
                 </div>
-                <div className="border rounded-lg border-bordercustom rounded-xl bg-itembackground">
+                <div className="border rounded-lg border-bordercustom rounded-lg bg-itembackground">
                   <div className="w-full flex justify-center item-center m-auto">
                     <div className="w-full ">
                       <Table removeWrapper>

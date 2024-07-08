@@ -291,18 +291,18 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             .getHighestBidder(tokenId);
 
         require(highestBidder != address(0), "Highest bidder is zero address");
-
         // Ensure the auction contract has enough balance
         require(
             address(auctionContract).balance >= highestPrice,
             "Insufficient balance in auction contract"
         );
-
+        auctionContract.acceptOffer(tokenId);
+        
         // Transfer NFT to the highest bidder
         _transfer(address(this), highestBidder, tokenId);
 
         // Transfer funds to the seller through the auction contract
-        auctionContract.handleFundTransfer(tokenId, item.seller);
+        auctionContract.handleFundTransfer(item.seller, highestPrice);
 
         // Update market item status
         item.owner = payable(highestBidder);

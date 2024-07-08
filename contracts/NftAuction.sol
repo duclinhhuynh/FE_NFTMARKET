@@ -66,7 +66,7 @@ contract NFTAuction is ReentrancyGuard {
     function acceptOffer(uint256 tokenId) external nonReentrant {
         Offer[] storage offers = tokenIdToOffers[tokenId];
         require(offers.length > 0, "No offers available");
-
+        _cancelExpiredOffers(tokenId);
         uint256 highestOfferIndex = 0;
         uint256 highestPrice = 0;
         for (uint256 i = 0; i < offers.length; i++) {
@@ -95,34 +95,12 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function handleFundTransfer(
-        uint256 tokenId,
-        address payable seller
+        address payable seller,
+        uint256 highestPrice
     ) external nonReentrant {
-        Offer[] storage offers = tokenIdToOffers[tokenId];
-        uint256 highestPrice = 0;
-        address highestBidder = address(0);
-        for (uint256 i = 0; i < offers.length; i++) {
-            if (offers[i].active && offers[i].price > highestPrice) {
-                highestPrice = offers[i].price;
-                highestBidder = offers[i].bidder;
-            }
-        }
-
-        require(highestBidder != address(0), "No valid offer found");
-
         // Transfer funds to the seller
         (bool success, ) = seller.call{value: highestPrice}("");
         require(success, "Transfer to seller failed");
-
-        // Mark all offers as inactive
-        for (uint256 i = 0; i < offers.length; i++) {
-            if (offers[i].active) {
-                offers[i].active = false;
-                if (offers[i].bidder != highestBidder) {
-                    offers[i].bidder.transfer(offers[i].price);
-                }
-            }
-        }
     }
 
     function getHighestBidder(
