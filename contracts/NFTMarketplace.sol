@@ -39,6 +39,7 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
         bool canceled,
         uint256 timestamp
     );
+    event MarketItemSold(uint256 indexed tokenId, address buyer, uint256 price);
     // Constructor
     constructor(
         address _auctionContractAddress
@@ -285,22 +286,29 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             item.seller == msg.sender,
             "Only item seller can accept offers"
         );
+
         (address highestBidder, uint256 highestPrice) = auctionContract
             .getHighestBidder(tokenId);
 
-        auctionContract.acceptOffer(tokenId);
-
         require(highestBidder != address(0), "Highest bidder is zero address");
-        // transfer nft for buyer
+
+        // Ensure the auction contract has enough balance
+        require(
+            address(auctionContract).balance >= highestPrice,
+            "Insufficient balance in auction contract"
+        );
+
+        // Transfer NFT to the highest bidder
         _transfer(address(this), highestBidder, tokenId);
-                // chuyển tiền cho người bán nft
-        payable(item.seller).transfer(highestPrice);
-        // set owner of nft is highestbidder
+
+        // Transfer funds to the seller through the auction contract
+        auctionContract.handleFundTransfer(tokenId, item.seller);
+
+        // Update market item status
         item.owner = payable(highestBidder);
         item.sold = true;
-        // set address of seller is 0 avoid error nft in your bag
-        item.seller = payable(address(0));
-        // increment your sold
-        _itemsSold.increment();
+        item.seller = payable(address(0)); // Set seller to zero address to avoid NFT in your bag
+
+        emit MarketItemSold(tokenId, highestBidder, highestPrice);
     }
 }

@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./NFTMarketplace.sol";
 
 contract NFTAuction is ReentrancyGuard {
     using SafeMath for uint256;
@@ -15,7 +16,7 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     mapping(uint256 => Offer[]) public tokenIdToOffers;
-
+    NFTMarketplace private nftMarketplaceContract;
     event OfferMade(
         uint256 indexed tokenId,
         address bidder,
@@ -74,7 +75,6 @@ contract NFTAuction is ReentrancyGuard {
                 highestOfferIndex = i;
             }
         }
-
         Offer storage highestOffer = offers[highestOfferIndex];
         require(highestOffer.active, "Highest offer is not active");
         require(
@@ -94,13 +94,43 @@ contract NFTAuction is ReentrancyGuard {
         emit OfferAccepted(tokenId, highestOffer.bidder, highestOffer.price);
     }
 
+    function handleFundTransfer(
+        uint256 tokenId,
+        address payable seller
+    ) external nonReentrant {
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+        uint256 highestPrice = 0;
+        address highestBidder = address(0);
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active && offers[i].price > highestPrice) {
+                highestPrice = offers[i].price;
+                highestBidder = offers[i].bidder;
+            }
+        }
+
+        require(highestBidder != address(0), "No valid offer found");
+
+        // Transfer funds to the seller
+        (bool success, ) = seller.call{value: highestPrice}("");
+        require(success, "Transfer to seller failed");
+
+        // Mark all offers as inactive
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active) {
+                offers[i].active = false;
+                if (offers[i].bidder != highestBidder) {
+                    offers[i].bidder.transfer(offers[i].price);
+                }
+            }
+        }
+    }
+
     function getHighestBidder(
         uint256 tokenId
     ) external view returns (address, uint256) {
         Offer[] storage offers = tokenIdToOffers[tokenId];
         uint256 highestPrice = 0;
         address highestBidder = address(0);
-
         for (uint256 i = 0; i < offers.length; i++) {
             if (offers[i].active && offers[i].price > highestPrice) {
                 highestPrice = offers[i].price;
