@@ -159,12 +159,13 @@ contract NFTMarketplace is ERC721URIStorage, ReentrancyGuard {
             "Only item seller can perform this operation"
         );
         require(item.sold == false, "Cannot cancel a sold item");
+        // close all offers 
+        auctionContract.cancelAllOffers(tokenId);
         _itemsSold.increment();
         item.owner = item.seller;
         item.seller = payable(address(0));
         item.sold = false;
         item.canceled = true;
-
         _transfer(address(this), msg.sender, tokenId);
     }
 

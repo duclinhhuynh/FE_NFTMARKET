@@ -123,6 +123,16 @@ contract NFTAuction is ReentrancyGuard {
         return tokenIdToOffers[tokenId];
     }
 
+    function cancelAllOffers(uint256 tokenId) external nonReentrant {
+        Offer[] storage offers = tokenIdToOffers[tokenId];
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].active) {
+                offers[i].active = false;
+                offers[i].bidder.transfer(offers[i].price);
+            }
+        }
+    }
+
     function _cancelExpiredOffers(uint256 tokenId) internal {
         Offer[] storage offers = tokenIdToOffers[tokenId];
         uint256 currentTime = block.timestamp;

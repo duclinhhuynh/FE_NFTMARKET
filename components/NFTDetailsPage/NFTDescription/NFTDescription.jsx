@@ -79,7 +79,7 @@ const NFTDescription = ({ nft }) => {
     setOpenModalSell(true);
   };
 
-  const handleOpenGift= () => {
+  const handleOpenGift = () => {
     setOpenModalGift(true);
   }
 
@@ -126,7 +126,7 @@ const NFTDescription = ({ nft }) => {
       setIsLoadingAccept(true);
       await acceptOffer(nft.tokenId);
       await fetchOffers(nft.tokenId);
-      setIsLoadingAccept(false);
+      setDisplaytimestamp(false);
     } catch (error) {
       setIsLoadingAccept(false);
       return;
@@ -221,7 +221,7 @@ const NFTDescription = ({ nft }) => {
         <ThemeSwitcherText>
           <div className={Style.NFTDescription_box}>
             <div className="flex justify-between">
-              <p>Virtural Words</p>
+              <p>Virtural Worlds</p>
               <div className={Style.NFTDescription_box_share_box}>
                 <div className="relative">
                   <Tooltip
@@ -353,19 +353,21 @@ const NFTDescription = ({ nft }) => {
 
               <div className={Style.NFTDescription_box_profile_bidding}>
                 <div className="border border-bordercustom rounded-xl bg-itembackground">
-                  <div className="p-5">
-                    <p>
-                      <span>Auction ending in:</span>
-                    </p>
-                    <div
-                      className={
-                        Style.NFTDescription_box_profile_biding_box_timer
-                      }
-                    >
-                      {<CountDown timestamp={nft.timestamp} />}
+                  <div>
+                    <div className="p-5">
+                      <p>
+                        <span>Auction ending in:</span>
+                      </p>
+                      <div
+                        className={
+                          Style.NFTDescription_box_profile_biding_box_timer
+                        }
+                      >
+                        {<CountDown timestamp={nft.timestamp}/>}
+                      </div>
                     </div>
+                    <div className="border-t border-bordercustom w-full"></div>
                   </div>
-                  <div className="border-t border-bordercustom w-full"></div>
                   <div className="p-5">
                     <div className="flex flex-wrap">
                       <div>
@@ -504,7 +506,7 @@ const NFTDescription = ({ nft }) => {
                           Bidder
                         </TableColumn>
                         <TableColumn>Price</TableColumn>
-                        <TableColumn>Bidding ends</TableColumn>
+                        <TableColumn>Expiration</TableColumn>
 
                         <TableColumn className="text-right">
                           {currentAccount.toLowerCase() ===
@@ -583,11 +585,11 @@ const NFTDescription = ({ nft }) => {
           unpinFromPinata={unpinFromPinata}
         />
         <GiftNftModal
-          currentAccount = {currentAccount}
-          openModelGift = {openModelGift}
-          setOpenModalGift = {setOpenModalGift}
+          currentAccount={currentAccount}
+          openModelGift={openModelGift}
+          setOpenModalGift={setOpenModalGift}
           nft={nft}
-          transferNFT = {transferNFT}
+          transferNFT={transferNFT}
         />
       </div>
     </>
